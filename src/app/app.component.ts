@@ -1,14 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, computed, inject} from '@angular/core';
+import {RouterLink, RouterOutlet} from '@angular/router';
 import {HttpService} from '../services/http.service';
+import {MatAnchor, MatButton, MatMiniFabButton} from '@angular/material/button';
+import {NgOptimizedImage} from '@angular/common';
+import {AuthService} from '../services/auth.service';
+import {EntityStorage} from '../storage/entity.storage';
+import {UserService} from '../services/user.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  providers: [HttpService],
+  imports: [RouterOutlet, MatMiniFabButton, NgOptimizedImage, RouterLink, MatAnchor, MatButton],
+  providers: [HttpService, AuthService, UserService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'client-travel-ag';
+  private readonly store = inject(EntityStorage);
+
+  username = computed(()=> this.store.username());
+
+  constructor(private http:HttpService, private auth:AuthService, private userService:UserService) {}
+
+  isLogin(): boolean {
+    return this.auth.isAuthenticated();
+  }
+
+  onLogout(): void {
+    this.userService.singOut();
+  }
 }

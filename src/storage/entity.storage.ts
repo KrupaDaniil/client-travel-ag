@@ -1,7 +1,8 @@
-import {patchState, signalStore, type, withMethods} from '@ngrx/signals'
-import {addEntity, entityConfig, removeEntity, setAllEntities, withEntities} from '@ngrx/signals/entities';
+import {patchState, signalStore, type, withMethods, withState} from '@ngrx/signals'
+import {addEntity, entityConfig, removeEntity, setAllEntities, setEntity, withEntities} from '@ngrx/signals/entities';
 import {IUser} from '../interfaces/i-user';
 import {IRole} from '../interfaces/i-role';
+import {IUserStartData} from '../interfaces/user-auth/i-user-start-data';
 
 
 const userConfig = entityConfig({
@@ -17,9 +18,17 @@ const roleConfig = entityConfig({
   });
 
 export const EntityStorage = signalStore(
+  {providedIn: "root"},
+  withState<IUserStartData>({
+    roles: [],
+    username: ""
+  }),
   withEntities(userConfig),
   withEntities(roleConfig),
   withMethods((store)=> ({
+    addUserStartData(startData: IUserStartData):void {
+      patchState(store, startData)
+    },
     addUser(user: IUser): void {
       patchState(store, addEntity(user, userConfig))
     },
@@ -37,12 +46,16 @@ export const EntityStorage = signalStore(
       patchState(store, setAllEntities(roles, roleConfig))
     },
 
+    removeUserStartData():void {
+      patchState(store, {roles:[], username: ""})
+    },
     removeUser(id: number): void {
       patchState(store, removeEntity(id, userConfig))
     },
     removeRole(id: number): void {
       patchState(store, removeEntity(id, roleConfig))
-    }
+    },
+
   }))
   )
 

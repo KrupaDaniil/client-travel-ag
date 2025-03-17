@@ -27,14 +27,17 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const token:string|null = this.getToken();
+    return this.getToken() !== null && this.getToken() !== undefined;
+  }
 
+  isTokenExpired(): boolean {
+    const token:string|null = this.getToken();
     return token ? !this.jwtHelper.isTokenExpired(token) : false;
   }
 
   getDecodeToken(): ITokenData|null {
     const token:string|null = this.getToken();
-
+    console.log(this.getToken())
     if (token != null) {
       return this.jwtHelper.decodeToken(token) as ITokenData;
     } else {

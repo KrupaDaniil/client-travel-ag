@@ -1,0 +1,20 @@
+.registration-form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+mat-card {
+  width: 17rem !important;
+}
+
+.singUpButton {
+  color: black !important;
+  height: 2rem;
+}
+
+.singUpButton:hover {
+  background: rgba(238, 238, 238, 0.5) !important;
+}
+

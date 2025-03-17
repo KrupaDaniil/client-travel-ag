@@ -1,0 +1,30 @@
+.main-container {
+  display: block;
+  position: relative;
+}
+
+.login-form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+mat-card {
+  width: 17rem;
+}
+
+mat-card-header, mat-card-actions {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.singInButton {
+  color: black !important;
+  height: 2rem;
+}
+
+.singInButton:hover {
+  background: rgba(238, 238, 238, 0.5) !important;
+}
