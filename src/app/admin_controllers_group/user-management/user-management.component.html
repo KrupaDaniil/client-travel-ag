@@ -1,1 +1,48 @@
-<p>user-management works!</p>
+
+@if (userList().length > 0) {
+  <div class="my-3">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Username</th>
+          <th scope="col">Name</th>
+          <th scope="col">Surname</th>
+          <th scope="col">Birthday</th>
+          <th scope="col">Email</th>
+          <th scope="col">Is Active</th>
+          <th scope="col">Roles</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of userList(); track user.id; let i = $index) {
+          <tr>
+            <th scope="row">{{i}}</th>
+            <td>{{user.username}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.firstName}}</td>
+            <td>{{user.birthday}}</td>
+            <td>{{user.email}}</td>
+            <td>
+              @if (user.isActive) {
+                <input type="checkbox" class="form-check-input" checked>
+              } @else {
+                <input type="checkbox" class="form-check-input"/>
+              }
+
+            </td>
+            <td>
+              @if (user.roles.length > 0) {
+                @for(role of user.roles; track $index) {
+                  <div class="mb-1">{{role.name}}</div>
+                }
+              } @else {
+                <div class="mb-1">No roles assigned</div>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

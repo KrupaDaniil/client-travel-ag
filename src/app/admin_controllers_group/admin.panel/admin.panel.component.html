@@ -1,1 +1,17 @@
-<p>admin.panel works!</p>
+<div class="container">
+  <div class="d-block align-items-center justify-content-center my-3">
+    <div class="my-3 text-center fw-semibold fs-4">Control panel</div>
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="user-management">Users</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="admin-panel/role-management">Roles</a>
+      </li>
+
+    </ul>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
+

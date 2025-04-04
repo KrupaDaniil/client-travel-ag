@@ -113,7 +113,21 @@ export class UserService {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
-          this.store.setAllUsers(item as IUser[]);
+          for (const user of item as IUser[]) {
+            this.store.addUser(user);
+          }
+        }
+      },
+    });
+  }
+
+  loadingUserById(id: number): void {
+    this.http.loadingUserById(id).subscribe({
+      next: (item: IUser | IError): void => {
+        if (this.isError(item)) {
+          this.messageService.setMessage((item as unknown as IError).message);
+        } else {
+          this.store.setUser(item as IUser);
         }
       },
     });
