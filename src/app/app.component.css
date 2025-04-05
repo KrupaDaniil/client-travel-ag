@@ -1,13 +1,9 @@
-.link-button {
-    color: black !important;
-}
-
 .menu-button {
   background: transparent !important;
   box-shadow: none !important;
 }
 
-:is(.link-button, .menu-button):hover {
+.menu-button:hover {
   background: rgba(238, 238, 238, 0.5) !important;
 }
 

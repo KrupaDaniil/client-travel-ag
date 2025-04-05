@@ -1,8 +1,15 @@
-
-@if (userList().length > 0) {
-  <div class="my-3">
-    <table class="table table-striped table-hover">
-      <thead>
+@if (errorMessage() && errorMessage() !== null) {
+  <div class="d-flex align-items-center justify-content-center mt-3 fs-4">{{errorMessage()}}</div>
+} @else {
+  <div class="d-flex align-items-center justify-content-end my-3">
+    <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3">Add user</button>
+    <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3">Edit user</button>
+    <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3">Remove user</button>
+  </div>
+  @if (userList().length > 0) {
+    <div class="my-3">
+      <table class="table table-hover align-middle">
+        <thead>
         <tr>
           <th scope="col"></th>
           <th scope="col">Username</th>
@@ -13,36 +20,49 @@
           <th scope="col">Is Active</th>
           <th scope="col">Roles</th>
         </tr>
-      </thead>
-      <tbody>
-        @for (user of userList(); track user.id; let i = $index) {
-          <tr>
-            <th scope="row">{{i}}</th>
-            <td>{{user.username}}</td>
-            <td>{{user.lastName}}</td>
-            <td>{{user.firstName}}</td>
-            <td>{{user.birthday}}</td>
-            <td>{{user.email}}</td>
-            <td>
-              @if (user.isActive) {
-                <input type="checkbox" class="form-check-input" checked>
-              } @else {
-                <input type="checkbox" class="form-check-input"/>
-              }
-
-            </td>
-            <td>
-              @if (user.roles.length > 0) {
-                @for(role of user.roles; track $index) {
-                  <div class="mb-1">{{role.name}}</div>
+        </thead>
+        <tbody class="table-group-divider" #usersBlock>
+          @for (user of userList(); track user.id; let i = $index) {
+            <tr [attr.data-user-id]="user.id">
+              <th scope="row">
+                <div class="d-flex align-items-center justify-content-center">
+                  <input type="radio" class="form-check p-0 m-0" name="userId" #userCheck>
+                  <div class="ms-2">{{i + 1}}</div>
+                </div>
+              </th>
+              <td>{{user.username}}</td>
+              <td>{{user.lastName}}</td>
+              <td>{{user.firstName}}</td>
+              <td>{{user.birthday}}</td>
+              <td>{{user.email}}</td>
+              <td>
+                @if (user.active) {
+                  <input type="checkbox" class="form-check-input" checked>
+                } @else {
+                  <input type="checkbox" class="form-check-input"/>
                 }
-              } @else {
-                <div class="mb-1">No roles assigned</div>
-              }
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+
+              </td>
+              <td>
+                @if (user.roles.length > 0) {
+                  @for(role of user.roles; track $index) {
+                    <div class="mb-1">{{role.name}}</div>
+                  }
+                } @else {
+                  <div class="mb-1">No roles assigned</div>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="d-flex align-items-center justify-content-center mt-3 fs-4">
+      There seem to be no users. Please add them
+    </div>
+  }
+
 }
+
+

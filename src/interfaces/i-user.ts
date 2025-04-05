@@ -8,6 +8,6 @@ export interface IUser {
   lastName: string;
   email: string;
   birthday: Date;
-  isActive: boolean;
+  active: boolean;
   roles: IRole[];
 }

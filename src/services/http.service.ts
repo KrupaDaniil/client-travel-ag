@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@angular/common/http';
-import { IUserReg } from '../interfaces/user-auth/i-user-reg';
-import { catchError, map, Observable, of } from 'rxjs';
-import { IUserLogin } from '../interfaces/user-auth/i-user-login';
-import { IError } from '../interfaces/i-error';
-import { AuthService } from './auth.service';
-import { JWTResponse } from '../interfaces/user-auth/jwtresponse';
-import { ITokenData } from '../interfaces/user-auth/i-token-data';
-import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
-import { IUser } from '../interfaces/i-user';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse, HttpResponse,} from '@angular/common/http';
+import {IUserReg} from '../interfaces/user-auth/i-user-reg';
+import {catchError, map, Observable, of} from 'rxjs';
+import {IUserLogin} from '../interfaces/user-auth/i-user-login';
+import {IError} from '../interfaces/i-error';
+import {AuthService} from './auth.service';
+import {JWTResponse} from '../interfaces/user-auth/jwtresponse';
+import {ITokenData} from '../interfaces/user-auth/i-token-data';
+import {IUserStartData} from '../interfaces/user-auth/i-user-start-data';
+import {IUser} from '../interfaces/i-user';
 
 @Injectable({
   providedIn: 'root',
@@ -87,12 +83,9 @@ export class HttpService {
       .pipe(
         map((response: HttpResponse<Object>): IUser[] | IError => {
           if (response.status === 200) {
-            const users: IUser[] = response.body as IUser[];
-
-            return users;
+            return response.body as IUser[];
           } else {
-            const error = response.body as IError;
-            return error;
+            return response.body as IError;
           }
         })
       );
@@ -104,13 +97,9 @@ export class HttpService {
       .pipe(
         map((response: HttpResponse<Object>): IUser | IError => {
           if (response.status === 200) {
-            const user: IUser = response.body as IUser;
-
-            return user;
+            return response.body as IUser;
           } else {
-            const error = response.body as IError;
-
-            return error;
+            return response.body as IError;
           }
         })
       );
@@ -122,13 +111,9 @@ export class HttpService {
       .pipe(
         map((response: HttpResponse<Object>): IUser | IError => {
           if (response.status === 200) {
-            const user: IUser = response.body as IUser;
-
-            return user;
+            return response.body as IUser;
           } else {
-            const error = response.body as IError;
-
-            return error;
+            return response.body as IError;
           }
         })
       );
@@ -142,9 +127,7 @@ export class HttpService {
           if (response.status === 200) {
             return true;
           } else {
-            const error = response.body as IError;
-
-            return error;
+            return response.body as IError;
           }
         })
       );
@@ -160,9 +143,7 @@ export class HttpService {
           if (response.status === 200) {
             return true;
           } else {
-            const error = response.body as IError;
-
-            return error;
+            return response.body as IError;
           }
         })
       );

@@ -18,8 +18,8 @@
           <span class="me-3 fw-semibold">{{username()}}</span>
           <button mat-stroked-button class="link-button" (click)="onLogout()">Logout</button>
         } @else {
-          <a mat-stroked-button class="me-2 link-button" routerLink="/login">SingIn</a>
-          <a mat-stroked-button class="link-button" routerLink="/registration">SingUp</a>
+          <a class="btn btn-outline-secondary rounded-5 px-4 me-2" routerLink="/login">SingIn</a>
+          <a class="btn btn-outline-secondary rounded-5 px-4" routerLink="/registration">SingUp</a>
         }
       </div>
 

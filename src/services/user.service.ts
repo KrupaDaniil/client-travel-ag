@@ -40,9 +40,7 @@ export class UserService {
               map((res: boolean): boolean => {
                 res
                   ? this.messageService.setMessage('Incorrect password entered')
-                  : this.messageService.setMessage(
-                      'Such a user does not exist'
-                    );
+                  : this.messageService.setMessage('Such a user does not exist');
                 return false;
               })
             );
@@ -79,6 +77,8 @@ export class UserService {
     this.activeRoute.queryParams.subscribe((params: Params): void => {
       if (params['error']) {
         this.messageService.setMessage('Authorization error');
+      } else {
+        this.messageService.setMessage(null);
       }
     });
 
@@ -113,6 +113,7 @@ export class UserService {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
+          this.messageService.setMessage(null);
           for (const user of item as IUser[]) {
             this.store.addUser(user);
           }
@@ -127,6 +128,7 @@ export class UserService {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
+          this.messageService.setMessage(null);
           this.store.setUser(item as IUser);
         }
       },

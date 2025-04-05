@@ -9,7 +9,7 @@ import {UserService} from '../services/user.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatMiniFabButton, NgOptimizedImage, RouterLink, MatAnchor, MatButton],
+  imports: [RouterOutlet, MatMiniFabButton, NgOptimizedImage, RouterLink, MatButton],
   providers: [HttpService, AuthService, UserService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
