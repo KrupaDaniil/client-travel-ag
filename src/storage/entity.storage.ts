@@ -51,6 +51,9 @@ export const EntityStorage = signalStore(
     setUser(user: IUser): void {
       patchState(store, addEntity(user, userConfig));
     },
+    setRole(role: IRole): void {
+      patchState(store, addEntity(role, roleConfig));
+    },
     setAllUsers(users: IUser[]): void {
       patchState(store, setAllEntities(users, userConfig));
     },

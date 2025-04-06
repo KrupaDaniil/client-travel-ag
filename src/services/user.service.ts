@@ -40,7 +40,9 @@ export class UserService {
               map((res: boolean): boolean => {
                 res
                   ? this.messageService.setMessage('Incorrect password entered')
-                  : this.messageService.setMessage('Such a user does not exist');
+                  : this.messageService.setMessage(
+                      'Such a user does not exist'
+                    );
                 return false;
               })
             );
