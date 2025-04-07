@@ -10,7 +10,7 @@ import {
   entityConfig,
   removeEntity,
   setAllEntities,
-  setEntity,
+  setEntity, updateEntities, updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
 import { IUser } from '../interfaces/i-user';
@@ -49,10 +49,10 @@ export const EntityStorage = signalStore(
     },
 
     setUser(user: IUser): void {
-      patchState(store, addEntity(user, userConfig));
+      patchState(store, updateEntity({id: user.id, changes: user}, userConfig));
     },
     setRole(role: IRole): void {
-      patchState(store, addEntity(role, roleConfig));
+      patchState(store, updateEntity({id: role.id, changes: role}, roleConfig));
     },
     setAllUsers(users: IUser[]): void {
       patchState(store, setAllEntities(users, userConfig));

@@ -132,8 +132,25 @@ export class UserService {
         } else {
           this.messageService.setMessage(null);
           this.store.setUser(item as IUser);
+          console.log(this.store.usersEntities().filter(user => user.id === id));
+
         }
       },
+    });
+  }
+
+  updateUser(user: IUser): void {
+    this.http.updateUser(user).subscribe({
+      next:(item: boolean | IError): void => {
+        if (this.isError(item)) {
+          this.messageService.setMessage((item as unknown as IError).message);
+        } else {
+          this.messageService.setMessage(null);
+          if (item === true) {
+            this.loadingUserById(user.id);
+          }
+        }
+      }
     });
   }
 
@@ -142,6 +159,6 @@ export class UserService {
   }
 
   private isError(item: any): boolean {
-    return 'timestamp' in item && item.timestamp instanceof Date;
+    return typeof item === "object" && item !== null && 'timestamp' in item && item.timestamp instanceof Date;
   }
 }

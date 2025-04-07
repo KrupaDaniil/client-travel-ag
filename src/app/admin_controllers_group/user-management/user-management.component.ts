@@ -1,17 +1,13 @@
 import {
   AfterViewChecked,
-  AfterViewInit,
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
-  OnDestroy,
   OnInit,
   Renderer2,
   Signal,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import { EntityStorage } from '../../../storage/entity.storage';
 import { UserService } from '../../../services/user.service';
@@ -38,6 +34,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private store = inject(EntityStorage);
   private userId: number | undefined;
   private selectUser: IUser | undefined;
+  private defaultRole: string;
   userList: Signal<IUser[]> = computed(() => this.store.usersEntities());
   userRoles: Signal<IRole[]> = computed(() => this.store.rolesEntities());
   errorMessage: Signal<string | null> = computed(() =>
@@ -47,8 +44,9 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   editUserForm: FormGroup | undefined;
 
   @ViewChild('usersBlock') usersBlock?: ElementRef<HTMLTableSectionElement>;
-  @ViewChild('editUserModel') editUserModel?: ElementRef<HTMLDialogElement>;
-  @ViewChild('editUserBtn') editUserBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild("editUserModal") editUserModel?: ElementRef<HTMLDialogElement>;
+  @ViewChild("editUserBtn") editUserBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild("editModalBtnClose") editModalBtnClose?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private userService: UserService,
@@ -56,22 +54,29 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     private roleService: RoleService,
     private render2: Renderer2,
     private elementRef: ElementRef
-  ) {}
+  ) {
+    this.defaultRole = "ROLE_USER";
+  }
 
   ngAfterViewChecked(): void {
     this.checkTableRow();
-    if (this.editUserBtn?.nativeElement) {
+
+    if (this.editUserBtn?.nativeElement && this.editUserForm) {
       this.render2.listen(this.editUserBtn.nativeElement, 'click', () =>
         this.openEditUserModel()
       );
+    }
+
+    if (this.editModalBtnClose?.nativeElement) {
+      this.render2.listen(this.editModalBtnClose.nativeElement, 'click', () =>{
+        this.closeEditUserModel();
+      });
     }
   }
 
   ngOnInit(): void {
     this.roleService.setAllRoles();
     this.userService.loadingAllUsers();
-
-    this.createEditUserForm();
   }
 
   private checkTableRow(): void {
@@ -91,13 +96,18 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
                 this.render2.setProperty(radio, 'checked', true);
               }
 
-              this.userId = r.dataset['userId'] as unknown as number;
+              this.userId = Number.parseInt(r.dataset['userId'] as string);
 
-              this.store.usersEntities().filter((user: IUser) => {
-                if (user.id === this.userId) {
+              this.userList().forEach((user:IUser): void=> {
+                if (user.id === (this.userId as number)) {
                   this.selectUser = user;
+                  return;
                 }
-              });
+              })
+
+              if (this.selectUser) {
+                this.createEditUserForm();
+              }
             }
           }
         }
@@ -108,11 +118,12 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private openEditUserModel(): void {
     if (this.editUserModel?.nativeElement) {
       this.editUserModel.nativeElement.showModal();
-      this.render2.setStyle(
-        this.editUserModel.nativeElement,
-        'display',
-        'block'
-      );
+    }
+  }
+
+  private closeEditUserModel(): void {
+    if (this.editUserModel?.nativeElement) {
+      this.editUserModel.nativeElement.close();
     }
   }
 
@@ -138,15 +149,29 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
   private createCheckedRole(): FormGroup {
     const formGroup = new FormGroup({});
-    const userRolesSet = new Set(this.selectUser?.roles.map(role => role.name));// створюємо Set з roleName
+    const userRolesSet = new Set(this.selectUser?.roles.map(role => role.name));
 
     if (this.userRoles) {
       this.userRoles().forEach((role) => {
-        console.log('Adding control for role:', role);
-        const isSelected = userRolesSet.has(role.name); // перевіряємо, чи є роль користувача
+        const isSelected = userRolesSet.has(role.name);
         formGroup.addControl(role.name, new FormControl(isSelected));
       });
     }
+    return formGroup;
+  }
+
+  private createAddUserForm(): void {
+    // add form group
+  }
+
+  private createEmptyRole(): FormGroup {
+    const formGroup = new FormGroup({});
+    if (this.userRoles) {
+      this.userRoles().forEach((role) => {
+        formGroup.addControl(role.name, new FormControl(role.name === this.defaultRole));
+      })
+    }
+
     return formGroup;
   }
 
@@ -176,5 +201,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
       active: formValue.active,
       roles: userRoles as IRole[],
     };
+
+    this.userService.updateUser(user);
   }
 }

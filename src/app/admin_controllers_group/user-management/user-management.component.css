@@ -1,6 +1,22 @@
-
 .focused {
   outline: 2px solid #4CAF50;
   background-color: #e8f5e9;
   transition: background-color 0.3s;
+}
+
+.custom-dialog {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 1px 1px 10px #343434;
+}
+
+.closeBtnContainer {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+::backdrop {
+  background-color: rgba(157, 157, 157, 0.7);
 }

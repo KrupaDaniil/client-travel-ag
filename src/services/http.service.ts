@@ -5,7 +5,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { IUserReg } from '../interfaces/user-auth/i-user-reg';
-import { catchError, map, Observable, of } from 'rxjs';
+import {catchError, map, Observable, of, timestamp} from 'rxjs';
 import { IUserLogin } from '../interfaces/user-auth/i-user-login';
 import { IError } from '../interfaces/i-error';
 import { AuthService } from './auth.service';
@@ -188,5 +188,25 @@ export class HttpService {
           (response: HttpResponse<object>): boolean => response.status === 200
         )
       );
+  }
+
+  updateUser(user: IUser): Observable<boolean | IError> {
+    return this.http.post(`${this.baseUrl}/update-user`, user, {observe: "response"}).pipe(
+      map((resp: HttpResponse<object>): boolean | IError => {
+        if (resp.status === 200) {
+          return true;
+        } else {
+          return  resp.body as IError;
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> => {
+        const body = error.error.body;
+        const _error: IError = {
+          status: body?.status || error.status,
+          message: body?.message || "Error update user data",
+          timestamp: body?.timestamp || new Date()
+        }
+        return of(_error)
+      })
+    );
   }
 }
