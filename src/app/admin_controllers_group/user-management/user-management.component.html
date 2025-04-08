@@ -4,9 +4,9 @@
 </div>
 } @else {
 <div class="d-flex align-items-center justify-content-end my-3">
-  <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3">Add user</button>
+  <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #addUserBtn>Add user</button>
   <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3" #editUserBtn>Edit user</button>
-  <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3">Remove user</button>
+  <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3" #RemoveUserBtn>Remove user</button>
 </div>
 @if (userList().length > 0) {
 <div class="my-3">
@@ -28,7 +28,7 @@
       <tr [attr.data-user-id]="user.id">
         <th scope="row">
           <div class="d-flex align-items-center justify-content-center">
-            <input type="radio" class="form-check-input p-0 m-0" name="userId" #userCheck/>
+            <input type="radio" class="form-check-input p-0 m-0" name="userId"/>
             <div class="ms-2">{{ i + 1 }}</div>
           </div>
         </th>
@@ -59,7 +59,63 @@
   </table>
 </div>
 
-<dialog id="addUserModal">
+<dialog id="addUserModal" #addUserModal class="custom-dialog">
+  <div class="closeBtnContainer">
+    <button class="btn-close" #addModelBtnClose></button>
+  </div>
+
+
+  <form method="dialog" *ngIf="addUserForm" [formGroup]="addUserForm" class="m-3">
+    <div class="row mb-3">
+      <div class="col input-group input-group-sm">
+        <span class="input-group-text">Username</span>
+        <input type="text" class="form-control" formControlName="username" aria-label="Username">
+      </div>
+      <div class="col input-group input-group-sm">
+        <span class="input-group-text">Email</span>
+        <input type="text" class="form-control" formControlName="email" aria-label="Email">
+      </div>
+      <div class="col input-group input-group-sm">
+        <span class="input-group-text">Password</span>
+        <input type="password" class="form-control" formControlName="password" aria-label="Password">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col input-group input-group-sm">
+        <span class="input-group-text">Name</span>
+        <input type="text" class="form-control" formControlName="firstName" aria-label="Name">
+      </div>
+      <div class="col input-group input-group-sm">
+        <span class="input-group-text">Surname</span>
+        <input type="text" class="form-control" formControlName="lastName" aria-label="Surname">
+      </div>
+      <div class="col input-group input-group-sm">
+        <span class="input-group-text">Birthday</span>
+        <input type="date" class="form-control" formControlName="birthday" aria-label="Birthday">
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-start mb-3">
+      <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" formControlName="active" aria-label="Is Active">
+        <label class="form-check-label">Is Active</label>
+      </div>
+      <div formGroupName="roles">
+        @for (user_role of userRoles(); track $index) {
+          <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input me-1" [formControlName]="user_role.name">
+            <label class="form-check-label me-2">{{user_role.name}}</label>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end">
+      <button class="btn btn-sm btn-outline-success px-4">Add</button>
+    </div>
+
+  </form>
 
 </dialog>
 
@@ -85,7 +141,7 @@
 
       <div class="col input-group input-group-sm">
         <span class="input-group-text">Password</span>
-        <input type="text" class="form-control" formControlName="password" aria-label="Password"/>
+        <input type="password" class="form-control" formControlName="password" aria-label="Password"/>
       </div>
     </div>
 
