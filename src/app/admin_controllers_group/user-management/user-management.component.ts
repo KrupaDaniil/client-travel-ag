@@ -138,6 +138,14 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
               if (this.selectUser) {
                 this.createEditUserForm();
+
+                if (this.removeUserBtn?.nativeElement) {
+                  this.render2.listen(this.removeUserBtn.nativeElement, 'click', (e: Event) => {
+                    if (this.selectUser?.id) {
+                     this.userService.deleteUserById(this.selectUser.id);
+                    }
+                  });
+                }
               }
             }
           }

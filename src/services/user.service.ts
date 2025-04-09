@@ -168,6 +168,21 @@ export class UserService {
     });
   }
 
+  deleteUserById(id: number): void {
+    this.http.deleteUser(id).subscribe({
+      next: (item: boolean | IError): void => {
+        if (this.isError(item)) {
+          this.messageService.setMessage((item as unknown as IError).message);
+        } else {
+          this.messageService.setMessage(null);
+          if (item === true) {
+            this.store.removeUser(id);
+          }
+        }
+      }
+    })
+  }
+
   private isUser(item: any): boolean {
     return 'roles' in item && Array.isArray(item.roles);
   }

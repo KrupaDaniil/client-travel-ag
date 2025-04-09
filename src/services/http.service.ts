@@ -201,4 +201,18 @@ export class HttpService {
       })
     );
   }
+
+  deleteUser(id: number): Observable<boolean | IError> {
+    return this.http
+      .delete(`${this.baseUrl}/delete-user/${id}`, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): boolean | IError => {
+          if (response.status === 200) {
+            return true;
+          } else {
+            return response.body as IError;
+          }
+        })
+      );
+  }
 }
