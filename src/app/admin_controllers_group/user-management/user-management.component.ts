@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { RoleService } from '../../../services/role.service';
 import { IRole } from '../../../interfaces/i-role';
 import {NgIf} from '@angular/common';
+import {INewUser} from '../../../interfaces/i-new-user';
 
 @Component({
   selector: 'app-user-management',
@@ -228,24 +229,62 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     }
 
     const formValue = this.editUserForm?.value;
-    const userRoles = Object.entries(formValue.roles)
-      .filter(([_, checked]) => checked)
-      .map(([name]) =>
-        this.store.rolesEntities().find((role) => role.name === name)
-      );
+    if (formValue) {
+      const userRoles:IRole[]= Object.entries(formValue.roles)
+        .filter(([_, checked]) => checked)
+        .map(([name]) =>
+          this.store.rolesEntities().find((role) => role.name === name)
+        ).filter((role: IRole | undefined): role is IRole => this.isRole(role));
 
-    const user: IUser = {
-      id: formValue.id,
-      username: formValue.username,
-      password: formValue.password,
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
-      birthday: formValue.birthday,
-      active: formValue.active,
-      roles: userRoles as IRole[],
-    };
+      const user: IUser = {
+        id: formValue.id,
+        username: formValue.username,
+        password: formValue.password,
+        firstName: formValue.firstName,
+        lastName: formValue.lastName,
+        email: formValue.email,
+        birthday: formValue.birthday,
+        active: formValue.active,
+        roles: userRoles,
+      };
 
-    this.userService.updateUser(user);
+      this.userService.updateUser(user);
+    }
+
+  }
+
+  addingUser(): void {
+    if (this.addUserForm?.invalid) {
+      this.messageService.setMessage('Incorrect data provided');
+      return;
+    } else {
+      this.messageService.setMessage(null);
+    }
+
+    const formValue = this.addUserForm?.value;
+
+    if (formValue) {
+      const _roles: IRole[] = Object.entries(formValue.roles)
+        .filter(([_, checked]) => checked)
+        .map(([name]) => this.store.rolesEntities().find((role)=> role.name === name))
+        .filter((role: IRole | undefined): role is IRole => this.isRole(role))
+
+      const newUser: INewUser = {
+        username: formValue.username,
+        password: formValue.password,
+        firstName: formValue.firstName,
+        lastName: formValue.lastName,
+        email: formValue.email,
+        birthday: formValue.birthday,
+        active: formValue.active,
+        roles: _roles
+      }
+
+      this.userService.addUserByAdmin(newUser)
+    }
+  }
+
+  private isRole(role: IRole | undefined): role is IRole {
+    return role !== undefined;
   }
 }

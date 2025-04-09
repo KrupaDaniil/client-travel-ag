@@ -12,6 +12,7 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { ITokenData } from '../interfaces/user-auth/i-token-data';
 import { UserStartData } from '../models/user-start-data';
 import { IUser } from '../interfaces/i-user';
+import {INewUser} from '../interfaces/i-new-user';
 
 @Injectable({
   providedIn: 'root',
@@ -139,6 +140,19 @@ export class UserService {
     });
   }
 
+  addUserByAdmin(user: INewUser): void {
+    this.http.addUser(user).subscribe({
+      next: (item: IUser | IError): void => {
+        if (this.isError(item)) {
+          this.messageService.setMessage((item as unknown as IError).message);
+        } else {
+          this.messageService.setMessage(null);
+          this.store.addUser(item as IUser);
+        }
+      }
+    });
+  }
+
   updateUser(user: IUser): void {
     this.http.updateUser(user).subscribe({
       next:(item: boolean | IError): void => {
@@ -159,6 +173,6 @@ export class UserService {
   }
 
   private isError(item: any): boolean {
-    return typeof item === "object" && item !== null && 'timestamp' in item && item.timestamp instanceof Date;
+    return item !== null && typeof item === "object" && "timestamp" in item && item.timestamp instanceof Date;
   }
 }

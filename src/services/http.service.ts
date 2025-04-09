@@ -5,7 +5,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { IUserReg } from '../interfaces/user-auth/i-user-reg';
-import {catchError, map, Observable, of, timestamp} from 'rxjs';
+import {catchError, map, Observable, of} from 'rxjs';
 import { IUserLogin } from '../interfaces/user-auth/i-user-login';
 import { IError } from '../interfaces/i-error';
 import { AuthService } from './auth.service';
@@ -14,6 +14,7 @@ import { ITokenData } from '../interfaces/user-auth/i-token-data';
 import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
 import { IUser } from '../interfaces/i-user';
 import { IRole } from '../interfaces/i-role';
+import {INewUser} from '../interfaces/i-new-user';
 
 @Injectable({
   providedIn: 'root',
@@ -124,39 +125,9 @@ export class HttpService {
       );
   }
 
-  loadingUserByEmail(email: string): Observable<IUser | IError> {
-    return this.http
-      .get<Object>(`${this.baseUrl}/user/${email}`, { observe: 'response' })
-      .pipe(
-        map((response: HttpResponse<Object>): IUser | IError => {
-          if (response.status === 200) {
-            return response.body as IUser;
-          } else {
-            return response.body as IError;
-          }
-        })
-      );
-  }
-
   blockUserById(id: number): Observable<boolean | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/block-user/${id}`, { observe: 'response' })
-      .pipe(
-        map((response: HttpResponse<Object>): boolean | IError => {
-          if (response.status === 200) {
-            return true;
-          } else {
-            return response.body as IError;
-          }
-        })
-      );
-  }
-
-  blockUserByEmail(email: string): Observable<boolean | IError> {
-    return this.http
-      .get<Object>(`${this.baseUrl}/block-user/${email}`, {
-        observe: 'response',
-      })
       .pipe(
         map((response: HttpResponse<Object>): boolean | IError => {
           if (response.status === 200) {
@@ -205,6 +176,27 @@ export class HttpService {
           message: body?.message || "Error update user data",
           timestamp: body?.timestamp || new Date()
         }
+        return of(_error)
+      })
+    );
+  }
+
+  addUser(user: INewUser): Observable<IUser | IError> {
+    return this.http.post(`${this.baseUrl}/add-user`, user, {observe: "response"}).pipe(
+      map((resp: HttpResponse<object>): IUser | IError => {
+        if (resp.status === 200) {
+          return resp.body as IUser;
+        } else {
+          return resp.body as IError;
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> => {
+        const body = error.error.body;
+        const _error: IError = {
+          status: body?.status || error.status,
+          message: body?.message || "Error when forming a user's addition request",
+          timestamp: new Date()
+        }
+
         return of(_error)
       })
     );
