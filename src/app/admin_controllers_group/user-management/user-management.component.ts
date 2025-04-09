@@ -1,24 +1,10 @@
-import {
-  AfterViewChecked,
-  Component,
-  computed, effect,
-  ElementRef,
-  inject,
-  OnInit,
-  Renderer2,
-  Signal,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewChecked, Component, computed, effect, ElementRef, inject,
+  OnInit, Renderer2, Signal, ViewChild} from '@angular/core';
 import { EntityStorage } from '../../../storage/entity.storage';
 import { UserService } from '../../../services/user.service';
 import { IUser } from '../../../interfaces/i-user';
 import { MessageService } from '../../../services/message.service';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { RoleService } from '../../../services/role.service';
 import { IRole } from '../../../interfaces/i-role';
@@ -40,9 +26,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private initAddForm: boolean;
   userList: Signal<IUser[]> = computed(() => this.store.usersEntities());
   userRoles: Signal<IRole[]> = computed(() => this.store.rolesEntities());
-  errorMessage: Signal<string | null> = computed(() =>
-    this.messageService.message()
-  );
+  errorMessage: Signal<string | null> = computed(() => this.messageService.message());
   addUserForm: FormGroup | undefined;
   editUserForm: FormGroup | undefined;
 

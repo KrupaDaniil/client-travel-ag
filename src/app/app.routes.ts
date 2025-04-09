@@ -10,6 +10,7 @@ import { MainUserComponent } from './user_controllers_group/main.user/main.user.
 import { AdminPanelComponent } from './admin_controllers_group/admin.panel/admin.panel.component';
 import { Component } from '@angular/core';
 import { UserManagementComponent } from './admin_controllers_group/user-management/user-management.component';
+import {RoleManagementComponent} from './admin_controllers_group/role-management/role-management.component';
 
 export const routes: Routes = [
   { path: '', component: MainUserComponent },
@@ -25,6 +26,7 @@ export const routes: Routes = [
     path: 'admin-panel', component: AdminPanelComponent,
     children: [
       { path: 'user-management', component: UserManagementComponent },
+      { path: "role-management", component: RoleManagementComponent }
     ],
   },
   { path: '**', component: Error404Component },

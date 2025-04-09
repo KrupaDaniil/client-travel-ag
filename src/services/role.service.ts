@@ -28,7 +28,35 @@ export class RoleService {
     });
   }
 
+  addUserRole(role: IRole): void {
+    this.http.addRole(role).subscribe({
+      next: (item: IRole | IError): void => {
+        if (this.isError(item)) {
+          this.message.setMessage((item as IError).message);
+        } else {
+          this.message.setMessage(null);
+          this.store.addRole(item as IRole);
+        }
+      }
+    });
+  }
+
+  deleteUserRole(id: number): void {
+    this.http.deleteRole(id).subscribe({
+      next: (item: boolean | IError): void => {
+        if (this.isError(item)) {
+          this.message.setMessage((item as IError).message);
+        } else {
+          if (item === true) {
+            this.message.setMessage(null);
+            this.store.removeRole(id);
+          }
+        }
+      }
+    });
+  }
+
   private isError(item: any): boolean {
-    return 'timestamp' in item && item.timestamp instanceof Date;
+    return item !== null && typeof item === "object" && "timestamp" in item && item.timestamp instanceof Date;
   }
 }

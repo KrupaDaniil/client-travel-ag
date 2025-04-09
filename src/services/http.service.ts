@@ -215,4 +215,43 @@ export class HttpService {
         })
       );
   }
+
+  addRole(role: IRole): Observable<IRole | IError> {
+    return this.http.post(`${this.baseUrl}/add-role`, role, {observe: 'response'}).pipe(
+      map((response: HttpResponse<Object>): IRole | IError => {
+        if (response.status === 200) {
+          return response.body as IRole;
+        } else {
+          return response.body as IError;
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> => {
+        const errorBody = error.error?.body;
+
+        return of({
+          status: errorBody?.status || error.status,
+          message: "Data transmission error",
+          timestamp: new Date(),
+        } as IError);
+      }));
+  }
+
+  deleteRole(id: number): Observable<boolean | IError> {
+    return this.http.delete(`${this.baseUrl}/delete-role/${id}`, {observe: 'response'}).pipe(
+      map((response: HttpResponse<Object>): boolean | IError => {
+        if (response.status === 200) {
+          return true;
+        } else {
+          return response.body as IError;
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> => {
+        const errorBody = error.error?.body;
+
+        return of({
+          status: errorBody?.status || error.status,
+          message: "Data transmission error",
+          timestamp: new Date(),
+        } as IError);
+      })
+    );
+  }
 }

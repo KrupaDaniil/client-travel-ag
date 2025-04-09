@@ -159,8 +159,8 @@ export class UserService {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
-          this.messageService.setMessage(null);
           if (item === true) {
+            this.messageService.setMessage(null);
             this.loadingUserById(user.id);
           }
         }
@@ -174,8 +174,8 @@ export class UserService {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
-          this.messageService.setMessage(null);
           if (item === true) {
+            this.messageService.setMessage(null);
             this.store.removeUser(id);
           }
         }
