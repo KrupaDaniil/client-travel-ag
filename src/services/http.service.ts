@@ -15,6 +15,7 @@ import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
 import { IUser } from '../interfaces/i-user';
 import { IRole } from '../interfaces/i-role';
 import {INewUser} from '../interfaces/i-new-user';
+import {INewRole} from '../interfaces/i-new-role';
 
 @Injectable({
   providedIn: 'root',
@@ -216,7 +217,7 @@ export class HttpService {
       );
   }
 
-  addRole(role: IRole): Observable<IRole | IError> {
+  addRole(role: INewRole): Observable<IRole | IError> {
     return this.http.post(`${this.baseUrl}/add-role`, role, {observe: 'response'}).pipe(
       map((response: HttpResponse<Object>): IRole | IError => {
         if (response.status === 200) {

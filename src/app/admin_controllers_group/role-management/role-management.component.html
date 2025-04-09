@@ -1,9 +1,20 @@
 @if (errorMessage() !== null) {
   <div class="text-center fs-4 mt-3">{{errorMessage()}}</div>
 } @else {
-  <div class="d-flex align-items-center justify-content-end my-3">
-    <button class="btn btn-sm btn-outline-success rounded-5 px-3 me-2" #addRoleBtn>Add role</button>
-    <button class="btn btn-sm btn-outline-danger  rounded-5 px-3 me-2" #removeRoleBtn>Remove role</button>
+  <div class="row my-3">
+    <div class="col-5 mx-2">
+      <div class="input-group input-group-sm hide-block" #addRoleBlock>
+        <span class="input-group-text rounded-start-5">Role name</span>
+        <input type="text" class="form-control form-control-sm" [formControl]="roleName" aria-label="Role name" required/>
+        <button class="btn btn-sm btn-outline-success px-3 rounded-end-5" (click)="createRole()">Add role</button>
+      </div>
+    </div>
+    <div class="col">
+      <div class="d-flex align-items-center justify-content-end" #buttonsGroup>
+        <button class="btn btn-sm btn-outline-success rounded-5 px-3 me-2" #addRoleBtn>Add role</button>
+        <button class="btn btn-sm btn-outline-danger  rounded-5 px-3 me-2" #removeRoleBtn>Remove role</button>
+      </div>
+    </div>
   </div>
 
   @if (userRoles().length > 0) {

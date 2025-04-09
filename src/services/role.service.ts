@@ -4,6 +4,7 @@ import { EntityStorage } from '../storage/entity.storage';
 import { IRole } from '../interfaces/i-role';
 import { IError } from '../interfaces/i-error';
 import { MessageService } from './message.service';
+import {INewRole} from '../interfaces/i-new-role';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,7 @@ export class RoleService {
     });
   }
 
-  addUserRole(role: IRole): void {
+  addUserRole(role: INewRole): void {
     this.http.addRole(role).subscribe({
       next: (item: IRole | IError): void => {
         if (this.isError(item)) {

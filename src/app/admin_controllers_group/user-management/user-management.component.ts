@@ -24,6 +24,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private selectUser: IUser | undefined;
   private readonly defaultRole: string;
   private initAddForm: boolean;
+  private isSelectedRow: boolean;
   userList: Signal<IUser[]> = computed(() => this.store.usersEntities());
   userRoles: Signal<IRole[]> = computed(() => this.store.rolesEntities());
   errorMessage: Signal<string | null> = computed(() => this.messageService.message());
@@ -47,6 +48,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   ) {
     this.defaultRole = "ROLE_USER";
     this.initAddForm = false;
+    this.isSelectedRow = false;
 
     effect(() => {
       const roles = this.userRoles();
@@ -95,11 +97,8 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   }
 
   private checkTableRow(): void {
-    if (this.usersBlock?.nativeElement) {
-      this.render2.listen(
-        this.usersBlock.nativeElement,
-        'click',
-        (e: Event) => {
+    if (this.usersBlock?.nativeElement && !this.isSelectedRow) {
+      this.render2.listen(this.usersBlock.nativeElement, 'click', (e: Event) => {
           const t = e.target as HTMLElement;
           if (t.tagName.toLowerCase() === 'td') {
             const r = t.closest('tr') as HTMLTableRowElement;
@@ -127,6 +126,9 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
                   this.render2.listen(this.removeUserBtn.nativeElement, 'click', (e: Event) => {
                     if (this.selectUser?.id) {
                      this.userService.deleteUserById(this.selectUser.id);
+                      this.selectUser = undefined;
+                      this.isSelectedRow = false;
+                      this.render2.setProperty(this.usersBlock!.nativeElement, 'checked', false);
                     }
                   });
                 }
