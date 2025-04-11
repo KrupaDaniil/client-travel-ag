@@ -134,7 +134,6 @@ export class UserService {
           this.messageService.setMessage(null);
           this.store.setUser(item as IUser);
           console.log(this.store.usersEntities().filter(user => user.id === id));
-
         }
       },
     });
