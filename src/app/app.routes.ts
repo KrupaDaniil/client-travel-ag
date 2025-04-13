@@ -11,6 +11,11 @@ import { AdminPanelComponent } from './admin_controllers_group/admin.panel/admin
 import { Component } from '@angular/core';
 import { UserManagementComponent } from './admin_controllers_group/user-management/user-management.component';
 import {RoleManagementComponent} from './admin_controllers_group/role-management/role-management.component';
+import {
+  UserCompletedToursComponent
+} from './user_controllers_group/user-completed-tours/user-completed-tours.component';
+import {BookedToursComponent} from './user_controllers_group/booked-tours/booked-tours.component';
+import {UserInformationComponent} from './user_controllers_group/user-information/user-information.component';
 
 export const routes: Routes = [
   { path: '', component: MainUserComponent },
@@ -22,6 +27,9 @@ export const routes: Routes = [
     path: 'successful-registration',
     component: SuccessfulRegistrationComponent,
   },
+  {path: "user-tours", component: UserCompletedToursComponent},
+  {path: "booked-tours", component: BookedToursComponent},
+  {path: "user-information", component: UserInformationComponent},
   {
     path: 'admin-panel', component: AdminPanelComponent,
     children: [

@@ -28,7 +28,7 @@
       <tr [attr.data-user-id]="user.id">
         <th scope="row">
           <div class="d-flex align-items-center justify-content-center">
-            <input type="radio" class="form-check-input p-0 m-0" name="userId"/>
+            <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId"/>
             <div class="ms-2">{{ i + 1 }}</div>
           </div>
         </th>
@@ -39,9 +39,9 @@
         <td>{{ user.email }}</td>
         <td>
           @if (user.active) {
-          <input type="checkbox" class="form-check-input" checked />
+          <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
           } @else {
-          <input type="checkbox" class="form-check-input" />
+          <input type="checkbox" class="checked-flag form-check-input" disabled/>
           }
         </td>
         <td>
@@ -69,7 +69,7 @@
     <div class="row mb-3">
       <div class="col input-group input-group-sm">
         <span class="input-group-text">Username</span>
-        <input type="text" class="form-control" formControlName="username" aria-label="Username">
+        <input type="text" class="form-control disabled" formControlName="username" aria-label="Username">
       </div>
       <div class="col input-group input-group-sm">
         <span class="input-group-text">Email</span>
@@ -104,7 +104,7 @@
       <div formGroupName="roles">
         @for (user_role of userRoles(); track $index) {
           <div class="form-check form-check-inline">
-            <input type="checkbox" class="form-check-input me-1" [formControlName]="user_role.name">
+            <input type="checkbox" class="form-check-input checked-flag me-1" [formControlName]="user_role.name">
             <label class="form-check-label me-2">{{user_role.name}}</label>
           </div>
         }
@@ -162,14 +162,14 @@
 
     <div class="d-flex align-items-center justify-content-start mb-3">
       <div class="form-check me-3">
-        <input type="checkbox" class="form-check-input" formControlName="active" aria-label="Is Active"/>
+        <input type="checkbox" class="form-check-input checked-flag" formControlName="active" aria-label="Is Active"/>
         <label class="form-check-label">Is Active</label>
       </div>
 
       <div formGroupName="roles">
         @for (_role of userRoles(); track $index) {
           <div class="form-check form-check-inline">
-            <input type="checkbox" class="form-check-input me-1" [formControlName]="_role.name"/>
+            <input type="checkbox" class="form-check-input checked-flag me-1" [formControlName]="_role.name"/>
             <label class="form-check-label me-2">{{ _role.name }}</label>
           </div>
         }

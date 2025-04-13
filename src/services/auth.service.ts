@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {ITokenData} from '../interfaces/user-auth/i-token-data';
+import {IUserStartData} from '../interfaces/user-auth/i-user-start-data';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthService {
 
   constructor() {
     this.jwtHelper = new JwtHelperService();
-    this.tokenName = "au-token";
+    this.tokenName = "auth-token";
   }
 
   setToken(token: string):void {
@@ -37,9 +38,23 @@ export class AuthService {
 
   getDecodeToken(): ITokenData|null {
     const token:string|null = this.getToken();
-    console.log(this.getToken())
+
     if (token != null) {
       return this.jwtHelper.decodeToken(token) as ITokenData;
+    } else {
+      return null;
+    }
+  }
+
+  getUserStartData(): IUserStartData | null {
+    const currentToken: string | null = this.getToken();
+
+    if (currentToken != null) {
+      const decodedToken: ITokenData = this.jwtHelper.decodeToken(currentToken) as ITokenData;
+      return {
+        roles: decodedToken.roles,
+        username: decodedToken.sub
+      } as IUserStartData;
     } else {
       return null;
     }

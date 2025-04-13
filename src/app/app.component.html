@@ -15,7 +15,26 @@
 
       <div class="d-flex align-items-center justify-content-end px-4">
         @if (isLogin()) {
-          <span class="me-3 fw-semibold">{{username()}}</span>
+          <div class="dropdown">
+            <button type="button" class="btn fw-semibold me-3 border-0" data-bs-toggle="dropdown" aria-expanded="false">{{username()}}</button>
+            <ul class="dropdown-menu user-menu">
+              <li class="user-d-item">
+                <a class="dropdown-item" routerLink="booked-tours">Booked tours</a>
+              </li>
+
+              <li class="user-d-item"><hr class="dropdown-divider"></li>
+
+              <li class="user-d-item">
+                <a class="dropdown-item" routerLink="user-tours">Completed tours</a>
+              </li>
+
+              <li class="user-d-item"><hr class="dropdown-divider"></li>
+
+              <li class="user-d-item">
+                <a class="dropdown-item" routerLink="user-information">User information</a>
+              </li>
+            </ul>
+          </div>
           <button mat-stroked-button class="link-button" (click)="onLogout()">Logout</button>
         } @else {
           <a class="btn btn-outline-secondary rounded-5 px-4 me-2" routerLink="/login">SingIn</a>

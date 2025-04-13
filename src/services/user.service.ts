@@ -41,9 +41,7 @@ export class UserService {
               map((res: boolean): boolean => {
                 res
                   ? this.messageService.setMessage('Incorrect password entered')
-                  : this.messageService.setMessage(
-                      'Such a user does not exist'
-                    );
+                  : this.messageService.setMessage('Such a user does not exist');
                 return false;
               })
             );
@@ -67,9 +65,7 @@ export class UserService {
           this.authService.setToken(token);
           const data: ITokenData | null = this.authService.getDecodeToken();
           if (data != null) {
-            this.store.addUserStartData(
-              new UserStartData(data.roles, data.sub)
-            );
+            this.store.addUserStartData(new UserStartData(data.roles, data.sub));
             flag = true;
             this.router.navigate(['/']).then();
           }

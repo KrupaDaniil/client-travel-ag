@@ -10,12 +10,26 @@ import {
   entityConfig,
   removeEntity,
   setAllEntities,
-  setEntity, updateEntities, updateEntity,
+  updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
 import { IUser } from '../interfaces/i-user';
 import { IRole } from '../interfaces/i-role';
 import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
+import {inject} from '@angular/core';
+import {AuthService} from '../services/auth.service';
+
+function loadUserStartData(): () => IUserStartData {
+  return () => {
+    const authService = inject(AuthService);
+    const userData: IUserStartData | null = authService.getUserStartData();
+    if (userData != null) {
+      return userData;
+    } else {
+      return { roles: [], username: "" };
+    }
+  };
+}
 
 const userConfig = entityConfig({
   entity: type<IUser>(),
@@ -31,10 +45,8 @@ const roleConfig = entityConfig({
 
 export const EntityStorage = signalStore(
   { providedIn: 'root' },
-  withState<IUserStartData>({
-    roles: [],
-    username: '',
-  }),
+
+  withState<IUserStartData>(loadUserStartData()),
   withEntities(userConfig),
   withEntities(roleConfig),
   withMethods((store) => ({

@@ -155,7 +155,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private createEditUserForm(): void {
     this.editUserForm = new FormGroup({
       id: new FormControl(this.selectUser?.id),
-      username: new FormControl(this.selectUser?.username, Validators.required),
+      username: new FormControl({value: this.selectUser?.username, disabled: true}, Validators.required, ),
       password: new FormControl(''),
       firstName: new FormControl(this.selectUser?.firstName, Validators.required),
       lastName: new FormControl(this.selectUser?.lastName, Validators.required),

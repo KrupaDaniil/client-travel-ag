@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpResponse,} from '@angular/common/http';
 import { IUserReg } from '../interfaces/user-auth/i-user-reg';
 import {catchError, map, Observable, of} from 'rxjs';
 import { IUserLogin } from '../interfaces/user-auth/i-user-login';
@@ -64,7 +60,7 @@ export class HttpService {
               return {
                 roles: data.roles,
                 username: data.sub,
-              };
+              } as IUserStartData;
             }
             return null;
           } else {
