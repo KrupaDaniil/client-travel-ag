@@ -110,7 +110,7 @@ export class HttpService {
 
   loadingUserById(id: number): Observable<IUser | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/user/${id}`, { observe: 'response' })
+      .get<Object>(`${this.baseUrl}/user-get-id/${id}`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IUser | IError => {
           if (response.status === 200) {
