@@ -232,7 +232,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
       const user: IUser = {
         id: formValue.id,
-        username: formValue.username,
+        username: this.selectUser!.username,
         password: formValue.password,
         firstName: formValue.firstName,
         lastName: formValue.lastName,

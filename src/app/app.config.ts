@@ -1,9 +1,9 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {ApplicationConfig, inject, Injector, provideZoneChangeDetection} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {HTTP_INTERCEPTORS, provideHttpClient} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from '@angular/common/http';
 import {AuthService} from '../services/auth.service';
 import {JWTInterceptor} from '../service-classes/jwtinterceptor';
 
@@ -13,11 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     AuthService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JWTInterceptor,
-      multi: true,
-    },
+    provideHttpClient(withInterceptors([JWTInterceptor])),
     provideHttpClient()
   ]
 };

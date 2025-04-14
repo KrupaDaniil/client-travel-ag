@@ -130,7 +130,6 @@ export class UserService {
         } else {
           this.messageService.setMessage(null);
           this.store.setUser(item as IUser);
-          console.log(this.store.usersEntities().filter(user => user.id === id));
         }
       },
     });
@@ -177,6 +176,22 @@ export class UserService {
         }
       }
     });
+  }
+
+  async updateUserByUser(user: IUserInfo): Promise<IUserInfo | null> {
+    return await firstValueFrom(
+      this.http.updateUserInfo(user).pipe(
+        map(async (item: IUserInfo | IError): Promise<IUserInfo | null> => {
+          if (this.isError(item)) {
+            this.messageService.setMessage((item as unknown as IError).message);
+            return null;
+          } else {
+            this.messageService.setMessage(null);
+            return item as IUserInfo;
+          }
+        })
+      )
+    );
   }
 
   deleteUserById(id: number): void {

@@ -53,7 +53,7 @@ export class HttpService {
         map((response: HttpResponse<any>): IUserStartData | IError | null => {
           if (response.status === 200) {
             const jwtResponse: JWTResponse = {
-              token: response.body.body.token,
+              token: response.body.token,
             };
             this.authService.setToken(jwtResponse.token);
             const data: ITokenData | null = this.authService.getDecodeToken();
@@ -194,6 +194,26 @@ export class HttpService {
           status: body?.status || error.status,
           message: body?.message || "Error update user data",
           timestamp: body?.timestamp || new Date()
+        }
+        return of(_error)
+      })
+    );
+  }
+
+  updateUserInfo(user: IUserInfo): Observable<IUserInfo | IError> {
+    return this.http.post(`${this.baseUrl}/update-user-info`, user, {observe: "response"}).pipe(
+      map((resp: HttpResponse<object>): IUserInfo | IError => {
+        if (resp.status === 200) {
+          return resp.body as IUserInfo;
+        } else {
+          return resp.body as IError;
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> => {
+        const body = error.error.body;
+        const _error: IError = {
+          status: body?.status || error.status,
+          message: body?.message || "Error update user data",
+          timestamp: new Date()
         }
         return of(_error)
       })
