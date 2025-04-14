@@ -8,11 +8,12 @@ import { MessageService } from './message.service';
 import { IUserReg } from '../interfaces/user-auth/i-user-reg';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import {firstValueFrom, map, Observable, of, switchMap} from 'rxjs';
 import { ITokenData } from '../interfaces/user-auth/i-token-data';
 import { UserStartData } from '../models/user-start-data';
 import { IUser } from '../interfaces/i-user';
 import {INewUser} from '../interfaces/i-new-user';
+import {IUserInfo} from '../interfaces/user-auth/i-user-info';
 
 @Injectable({
   providedIn: 'root',
@@ -133,6 +134,21 @@ export class UserService {
         }
       },
     });
+  }
+
+  async loadingUserByUsername(username: string): Promise<IUserInfo | null>{
+    return await firstValueFrom(
+      this.http.loadingUserByUsername(username).pipe(
+      map((item: IUserInfo | IError): IUserInfo | null => {
+        if (this.isError(item)) {
+          this.messageService.setMessage((item as unknown as IError).message);
+          return null;
+        } else {
+          this.messageService.setMessage(null);
+          return item as IUserInfo;
+        }
+      })
+    ));
   }
 
   addUserByAdmin(user: INewUser): void {

@@ -12,6 +12,7 @@ import { IUser } from '../interfaces/i-user';
 import { IRole } from '../interfaces/i-role';
 import {INewUser} from '../interfaces/i-new-user';
 import {INewRole} from '../interfaces/i-new-role';
+import {IUserInfo} from '../interfaces/user-auth/i-user-info';
 
 @Injectable({
   providedIn: 'root',
@@ -120,6 +121,27 @@ export class HttpService {
           }
         })
       );
+  }
+
+  loadingUserByUsername(username: string): Observable<IUserInfo | IError> {
+    return this.http.get<Object>(`${this.baseUrl}/user-get-username/${username}`, { observe: 'response' }).pipe(
+      map((response: HttpResponse<Object>): IUserInfo | IError => {
+        if (response.status === 200) {
+          return response.body as IUserInfo;
+        } else {
+          return response.body as IError;
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> => {
+        const errorObj = error.error?.body;
+        const _error: IError = {
+          status: errorObj?.status || error.status,
+          message: errorObj?.message || 'Error loading user by username',
+          timestamp: new Date(),
+        };
+
+        return of(_error);
+      })
+    );
   }
 
   blockUserById(id: number): Observable<boolean | IError> {

@@ -19,6 +19,7 @@ import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
 import {inject} from '@angular/core';
 import {AuthService} from '../services/auth.service';
 
+
 function loadUserStartData(): () => IUserStartData {
   return () => {
     const authService = inject(AuthService);
@@ -71,6 +72,14 @@ export const EntityStorage = signalStore(
     },
     setAllRoles(roles: IRole[]): void {
       patchState(store, setAllEntities(roles, roleConfig));
+    },
+    updateUserStartData(userStartData: Partial<IUserStartData>): void {
+      if (Object.keys(userStartData).length > 0) {
+        patchState(store, (state) => ({
+          ...state,
+          ...userStartData,
+        }));
+      }
     },
 
     removeUserStartData(): void {
