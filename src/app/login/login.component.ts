@@ -20,7 +20,6 @@ import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgOptimizedImage } from '@angular/common';
-import { EntityStorage } from '../../storage/entity.storage';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +41,6 @@ import { EntityStorage } from '../../storage/entity.storage';
 })
 export class LoginComponent implements OnInit {
   private snackBar: MatSnackBar = inject(MatSnackBar);
-  private store = inject(EntityStorage);
   private isEmpty: RegExp | undefined;
   loginForm: FormGroup | undefined;
   readonly errorMessage: string[];

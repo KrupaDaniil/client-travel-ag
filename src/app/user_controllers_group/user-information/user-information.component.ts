@@ -6,6 +6,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 import {MatGridList, MatGridTile} from '@angular/material/grid-list';
 import {MatButton} from '@angular/material/button';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MessageService} from '../../../services/message.service';
 
 @Component({
   selector: 'app-user-information',
@@ -20,17 +22,18 @@ import {MatButton} from '@angular/material/button';
     MatCardActions,
     MatButton
   ],
-  providers: [UserService, FormBuilder],
+  providers: [UserService, FormBuilder, MessageService],
   templateUrl: './user-information.component.html',
   styleUrl: './user-information.component.css'
 })
 export class UserInformationComponent implements OnInit {
   private store = inject(EntityStorage);
+  private snackBar: MatSnackBar = inject(MatSnackBar);
   private userInfo: WritableSignal<IUserInfo | null> = signal<IUserInfo | null>(null);
   private readonly username: Signal<string> = computed(() => this.store.username());
   formData: FormGroup | undefined;
 
-  constructor(private userService: UserService, private fb: FormBuilder) {
+  constructor(private userService: UserService, private fb: FormBuilder, private messageService: MessageService) {
     this.loadUserInfo();
   }
 
@@ -75,8 +78,20 @@ export class UserInformationComponent implements OnInit {
       this.userService.updateUserByUser(updateUser).then((user: IUserInfo | null): void => {
         if (user !== null) {
           this.userInfo.set(user);
+          this.messageService.setMessage("User information updated successfully");
+        } else {
+          this.messageService.setMessage("Failed to update user information");
         }
+
+        this.showMessage();
       })
     }
+  }
+
+  private showMessage(): void {
+    this.snackBar.open(this.messageService.message() as string, 'close', {
+      verticalPosition: "bottom",
+      horizontalPosition: "center",
+    });
   }
 }
