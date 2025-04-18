@@ -7,7 +7,7 @@ import {
 } from '@ngrx/signals';
 import {
   addEntity,
-  entityConfig,
+  entityConfig, EntityId, removeEntities,
   removeEntity,
   setAllEntities,
   updateEntity,
@@ -87,6 +87,9 @@ export const EntityStorage = signalStore(
     },
     removeUser(id: number): void {
       patchState(store, removeEntity(id, userConfig));
+    },
+    removeUsers(ids: EntityId[]): void {
+      patchState(store, removeEntities(ids, userConfig));
     },
     removeRole(id: number): void {
       patchState(store, removeEntity(id, roleConfig));

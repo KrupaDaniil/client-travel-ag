@@ -3,61 +3,98 @@
   {{ errorMessage() }}
 </div>
 } @else {
-<div class="d-flex align-items-center justify-content-end my-3">
-  <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #addUserBtn>Add user</button>
-  <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3" #editUserBtn>Edit user</button>
-  <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3" #RemoveUserBtn>Remove user</button>
-</div>
+  <div class="row my-3">
+    <div class="col">
+      <div class="d-flex align-items-center justify-content">
+        <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #searchBtn>Search</button>
+      </div>
+
+    </div>
+    <div class="col">
+      <div class="d-flex align-items-center justify-content-end">
+        <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #addUserBtn>Add user</button>
+        <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3" #editUserBtn>Edit user</button>
+        <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3" #RemoveUserBtn>Remove user</button>
+      </div>
+    </div>
+  </div>
+
 @if (userList().length > 0) {
-<div class="my-3">
-  <table class="table table-hover align-middle">
-    <thead>
-      <tr>
-        <th scope="col"></th>
-        <th scope="col">Username</th>
-        <th scope="col">Name</th>
-        <th scope="col">Surname</th>
-        <th scope="col">Birthday</th>
-        <th scope="col">Email</th>
-        <th scope="col">Is Active</th>
-        <th scope="col">Roles</th>
-      </tr>
-    </thead>
-    <tbody class="table-group-divider" #usersBlock>
-      @for (user of userList(); track user.id; let i = $index) {
-      <tr [attr.data-user-id]="user.id">
-        <th scope="row">
-          <div class="d-flex align-items-center justify-content-center">
-            <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId"/>
-            <div class="ms-2">{{ i + 1 }}</div>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav class="bg-body" mode="side" position="start">
+      <div class="d-flex align-items-center justify-content-end pe-5">
+        <button class="btn-close" #btnCloseSdv></button>
+      </div>
+      <div class="d-flex align-items-center justify-content-center flex-column my-3">
+        <form *ngIf="searchDataForm" [formGroup]="searchDataForm" class="w-75">
+          <div class="col input-group input-group-sm mb-3">
+            <span class="input-group-text">Username</span>
+            <input type="text" class="form-control" aria-label="Username" formControlName="search_username">
           </div>
-        </th>
-        <td>{{ user.username }}</td>
-        <td>{{ user.firstName }}</td>
-        <td>{{ user.lastName }}</td>
-        <td>{{ user.birthday }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          @if (user.active) {
-          <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
-          } @else {
-          <input type="checkbox" class="checked-flag form-check-input" disabled/>
-          }
-        </td>
-        <td>
-          @if (user.roles.length > 0) {
-            @for(role of user.roles; track $index) {
-            <div class="mb-1">{{role.name}}</div>
-          }
-        } @else {
-          <div class="mb-1">No roles assigned</div>
-          }
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
+          <div class="col input-group input-group-sm mb-3">
+            <span class="input-group-text">Email</span>
+            <input type="text" class="form-control" aria-label="Email" formControlName="search_email">
+          </div>
+          <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-sm btn-outline-success px-4 me-2 rounded-5" #searchDataBtn>Search</button>
+            <button type="button" class="btn btn-sm btn-outline-danger px-4 rounded-5" #clearSearchBtn>Clear</button>
+          </div>
+        </form>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="my-3">
+        <table class="table table-hover align-middle">
+          <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Username</th>
+            <th scope="col">Name</th>
+            <th scope="col">Surname</th>
+            <th scope="col">Birthday</th>
+            <th scope="col">Email</th>
+            <th scope="col">Is Active</th>
+            <th scope="col">Roles</th>
+          </tr>
+          </thead>
+          <tbody class="table-group-divider" #usersBlock>
+            @for (user of userList(); track user.id; let i = $index) {
+              <tr [attr.data-user-id]="user.id">
+                <th scope="row">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId"/>
+                    <div class="ms-2">{{ i + 1 }}</div>
+                  </div>
+                </th>
+                <td>{{ user.username }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.birthday }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  @if (user.active) {
+                    <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
+                  } @else {
+                    <input type="checkbox" class="checked-flag form-check-input" disabled/>
+                  }
+                </td>
+                <td>
+                  @if (user.roles.length > 0) {
+                    @for(role of user.roles; track $index) {
+                      <div class="mb-1">{{role.name}}</div>
+                    }
+                  } @else {
+                    <div class="mb-1">No roles assigned</div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
 
 <dialog id="addUserModal" #addUserModal class="custom-dialog">
   <div class="closeBtnContainer">

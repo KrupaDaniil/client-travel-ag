@@ -37,7 +37,6 @@ export class RegistrationComponent implements OnInit {
 
       email: new FormControl("", {
         validators: [Validators.required, Validators.email],
-        asyncValidators: [this.validationService.validationEmail()],
         updateOn: "blur"
       }),
       birthday: new FormControl("")
@@ -89,6 +88,4 @@ export class RegistrationComponent implements OnInit {
 
     return /^\s*$/.test(item);
   }
-
-
 }

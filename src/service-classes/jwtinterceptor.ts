@@ -13,7 +13,7 @@ export const JWTInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token:string|null = authService.getToken();
 
-  if (token !== null) {
+  if (token) {
     if (authService.isTokenExpired()) {
       authService.removeToken()
       router.navigate(['/login']).then();

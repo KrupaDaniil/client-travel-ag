@@ -10,10 +10,11 @@ import { RoleService } from '../../../services/role.service';
 import { IRole } from '../../../interfaces/i-role';
 import {NgIf} from '@angular/common';
 import {INewUser} from '../../../interfaces/i-new-user';
+import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-user-management',
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, MatSidenavContainer, MatSidenavContent, MatSidenav],
   providers: [UserService, MessageService],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.css',
@@ -30,6 +31,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   errorMessage: Signal<string | null> = computed(() => this.messageService.message());
   addUserForm: FormGroup | undefined;
   editUserForm: FormGroup | undefined;
+  searchDataForm: FormGroup | undefined;
 
   @ViewChild('usersBlock') usersBlock?: ElementRef<HTMLTableSectionElement>;
   @ViewChild("addUserBtn") addUserBtn?: ElementRef<HTMLButtonElement>;
@@ -39,6 +41,11 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   @ViewChild("editUserBtn") editUserBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild("editModalBtnClose") editModalBtnClose?: ElementRef<HTMLButtonElement>;
   @ViewChild("RemoveUserBtn") removeUserBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild("sidenav") sidenav?: MatSidenav;
+  @ViewChild("searchBtn") searchBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild("btnCloseSdv") btnCloseSdv?: ElementRef<HTMLButtonElement>;
+  @ViewChild("searchDataBtn") searchDataBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild("clearSearchBtn") clearSearchBtn?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private userService: UserService,
@@ -89,11 +96,35 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
       });
     }
 
+    if (this.searchBtn?.nativeElement) {
+      this.render2.listen(this.searchBtn.nativeElement, 'click', () => {
+        this.sidenav?.open().then();
+      });
+    }
+
+    if (this.btnCloseSdv?.nativeElement) {
+      this.render2.listen(this.btnCloseSdv.nativeElement, 'click', () => {
+        this.sidenav?.close().then();
+      });
+    }
+
+    if (this.searchDataBtn?.nativeElement) {
+      this.render2.listen(this.searchDataBtn.nativeElement, 'click', () => {
+        this.searchUser();
+      })
+    }
+
+    if (this.clearSearchBtn?.nativeElement) {
+      this.render2.listen(this.clearSearchBtn.nativeElement, 'click', () => {
+        this.clearSearch();
+      })
+    }
   }
 
   ngOnInit(): void {
     this.roleService.setAllRoles();
     this.userService.loadingAllUsers();
+    this.createSearchForm();
   }
 
   private checkTableRow(): void {
@@ -123,7 +154,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
                 this.createEditUserForm();
 
                 if (this.removeUserBtn?.nativeElement) {
-                  this.render2.listen(this.removeUserBtn.nativeElement, 'click', (e: Event) => {
+                  this.render2.listen(this.removeUserBtn.nativeElement, 'click', () => {
                     if (this.selectUser?.id) {
                      this.userService.deleteUserById(this.selectUser.id);
                       this.selectUser = undefined;
@@ -280,5 +311,30 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
   private isRole(role: IRole | undefined): role is IRole {
     return role !== undefined;
+  }
+
+  private createSearchForm(): void {
+    this.searchDataForm = new FormGroup({
+      search_username: new FormControl(""),
+      search_email: new FormControl(""),
+    })
+  }
+
+  private searchUser(): void {
+/*    const formValue = this.searchDataForm?.value;
+
+    if (formValue) {
+      this.searchUsers = this.userList().filter((user: IUser) => {
+        return (
+          (formValue.search_username ? user.username.includes(formValue.search_username) : true) &&
+          (formValue.search_email ? user.email.includes(formValue.search_email) : true)
+        );
+      });
+    }*/
+  }
+
+  private clearSearch(): void {
+/*    this.searchDataForm?.reset();
+    this.searchUsers = null;*/
   }
 }

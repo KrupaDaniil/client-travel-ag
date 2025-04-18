@@ -23,20 +23,4 @@ export class ValidationService {
       );
     }
   }
-
-  validationEmail(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return this.http.checkEmail(control.value).pipe(
-        map((res: boolean) => {
-          if (res) {
-            return {checkEmail: true}
-          } else {
-            return null;
-          }
-        })
-      )
-    }
-  }
-
-
 }

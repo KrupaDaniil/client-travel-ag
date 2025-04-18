@@ -114,9 +114,7 @@ export class UserService {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
           this.messageService.setMessage(null);
-          for (const user of item as IUser[]) {
-            this.store.addUser(user);
-          }
+          this.store.setAllUsers(item as IUser[]);
         }
       },
     });
