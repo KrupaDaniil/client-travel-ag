@@ -1,5 +1,7 @@
-import { AfterViewChecked, Component, computed, effect, ElementRef, inject,
-  OnInit, Renderer2, Signal, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked, Component, computed, effect, ElementRef, inject,
+  OnInit, Renderer2, signal, Signal, ViewChild, WritableSignal
+} from '@angular/core';
 import { EntityStorage } from '../../../storage/entity.storage';
 import { UserService } from '../../../services/user.service';
 import { IUser } from '../../../interfaces/i-user';
@@ -26,9 +28,11 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private readonly defaultRole: string;
   private initAddForm: boolean;
   private isSelectedRow: boolean;
+  private searchList: IUser[] | undefined;
   userList: Signal<IUser[]> = computed(() => this.store.usersEntities());
   userRoles: Signal<IRole[]> = computed(() => this.store.rolesEntities());
   errorMessage: Signal<string | null> = computed(() => this.messageService.message());
+  displayContent: WritableSignal<IUser[] | null> = signal<IUser[] | null>(null);
   addUserForm: FormGroup | undefined;
   editUserForm: FormGroup | undefined;
   searchDataForm: FormGroup | undefined;
@@ -44,8 +48,6 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   @ViewChild("sidenav") sidenav?: MatSidenav;
   @ViewChild("searchBtn") searchBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild("btnCloseSdv") btnCloseSdv?: ElementRef<HTMLButtonElement>;
-  @ViewChild("searchDataBtn") searchDataBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild("clearSearchBtn") clearSearchBtn?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private userService: UserService,
@@ -57,27 +59,8 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     this.initAddForm = false;
     this.isSelectedRow = false;
 
-    effect(() => {
-      const roles = this.userRoles();
-
-      if (roles && roles.length > 0 && !this.initAddForm) {
-        this.createAddUserForm();
-        this.initAddForm = true;
-
-        if (this.addUserBtn?.nativeElement && this.addUserForm) {
-
-          this.render2.listen(this.addUserBtn.nativeElement, 'click', () => {
-            this.openAddUserModal();
-          });
-
-          if (this.addModelBtnClose?.nativeElement) {
-            this.render2.listen(this.addModelBtnClose.nativeElement, 'click', () => {
-              this.closeAddUserModal();
-            });
-          }
-        }
-      }
-    })
+    this.initRolesBlock();
+    this.initDisplayBlock();
   }
 
   ngAfterViewChecked(): void {
@@ -107,24 +90,48 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         this.sidenav?.close().then();
       });
     }
-
-    if (this.searchDataBtn?.nativeElement) {
-      this.render2.listen(this.searchDataBtn.nativeElement, 'click', () => {
-        this.searchUser();
-      })
-    }
-
-    if (this.clearSearchBtn?.nativeElement) {
-      this.render2.listen(this.clearSearchBtn.nativeElement, 'click', () => {
-        this.clearSearch();
-      })
-    }
   }
 
   ngOnInit(): void {
     this.roleService.setAllRoles();
     this.userService.loadingAllUsers();
     this.createSearchForm();
+  }
+
+  private initRolesBlock(): void {
+    effect(() => {
+      const roles = this.userRoles();
+
+      if (roles && roles.length > 0 && !this.initAddForm) {
+        this.createAddUserForm();
+        this.initAddForm = true;
+
+        if (this.addUserBtn?.nativeElement && this.addUserForm) {
+
+          this.render2.listen(this.addUserBtn.nativeElement, 'click', () => {
+            this.openAddUserModal();
+          });
+
+          if (this.addModelBtnClose?.nativeElement) {
+            this.render2.listen(this.addModelBtnClose.nativeElement, 'click', () => {
+              this.closeAddUserModal();
+            });
+          }
+        }
+      }
+    })
+  }
+
+  private initDisplayBlock(): void {
+    effect(() => {
+      const users = this.userList();
+
+      if (this.displayContent() === null) {
+        if (users && users.length > 0) {
+          this.displayContent.set(users);
+        }
+      }
+    });
   }
 
   private checkTableRow(): void {
@@ -143,7 +150,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
               this.userId = Number.parseInt(r.dataset['userId'] as string);
 
-              this.userList().forEach((user:IUser): void=> {
+              this.displayContent()!.forEach((user:IUser): void => {
                 if (user.id === (this.userId as number)) {
                   this.selectUser = user;
                   return;
@@ -156,7 +163,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
                 if (this.removeUserBtn?.nativeElement) {
                   this.render2.listen(this.removeUserBtn.nativeElement, 'click', () => {
                     if (this.selectUser?.id) {
-                     this.userService.deleteUserById(this.selectUser.id);
+                      this.deleteUser(this.selectUser?.id);
                       this.selectUser = undefined;
                       this.isSelectedRow = false;
                       this.render2.setProperty(this.usersBlock!.nativeElement, 'checked', false);
@@ -273,7 +280,28 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         roles: userRoles,
       };
 
-      this.userService.updateUser(user);
+      this.userService.updateUser(user).subscribe({
+        next:(item: boolean): void => {
+          if (item) {
+            this.userService.loadingUserById(user.id).subscribe({
+              next:(updateUser: IUser | null): void => {
+                if (updateUser !== null) {
+                  this.displayContent.update((u) => {
+                    if (u) {
+                      const index = u.findIndex((user: IUser) => user.id === updateUser.id);
+                      console.log(index);
+                      if (index !== -1) {
+                        u[index] = updateUser;
+                      }
+                    }
+                    return u;
+                  })
+                }
+              }
+            })
+          }
+        }
+      })
     }
 
   }
@@ -305,8 +333,35 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         roles: _roles
       }
 
-      this.userService.addUserByAdmin(newUser)
+      this.userService.addUserByAdmin(newUser).subscribe({
+          next: (item: IUser | null): void => {
+            if (item !== null) {
+              const tmpArr: IUser[] = this.displayContent() || [];
+              tmpArr.push(item);
+              this.displayContent.set(tmpArr);
+            }
+          }
+      });
     }
+  }
+
+  private deleteUser(id: number): void {
+    this.userService.deleteUserById(id).subscribe({
+      next:(item: boolean): void => {
+        if (item) {
+          if (this.displayContent() !== null) {
+            const tmpArr: IUser[] = this.displayContent()!;
+            for (let i = 0; i < tmpArr.length; i++) {
+              if (tmpArr[i].id === id) {
+                tmpArr.splice(i, 1);
+                this.displayContent.set(tmpArr);
+                break;
+              }
+            }
+          }
+        }
+      }
+    });
   }
 
   private isRole(role: IRole | undefined): role is IRole {
@@ -320,21 +375,27 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     })
   }
 
-  private searchUser(): void {
-/*    const formValue = this.searchDataForm?.value;
+  searchUser(): void {
+    const formValue = this.searchDataForm?.value;
 
     if (formValue) {
-      this.searchUsers = this.userList().filter((user: IUser) => {
+      this.searchList = this.userList().filter((user: IUser) => {
         return (
           (formValue.search_username ? user.username.includes(formValue.search_username) : true) &&
           (formValue.search_email ? user.email.includes(formValue.search_email) : true)
         );
-      });
-    }*/
+      })
+
+      if (this.searchList && this.searchList.length > 0) {
+        this.displayContent.set(this.searchList);
+      }
+    }
   }
 
-  private clearSearch(): void {
-/*    this.searchDataForm?.reset();
-    this.searchUsers = null;*/
+  clearSearch(): void {
+    this.searchDataForm?.reset();
+    this.searchList = [];
+    this.searchList = undefined;
+    this.displayContent.set(this.userList());
   }
 }

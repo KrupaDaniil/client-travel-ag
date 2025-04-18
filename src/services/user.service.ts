@@ -120,17 +120,19 @@ export class UserService {
     });
   }
 
-  loadingUserById(id: number): void {
-    this.http.loadingUserById(id).subscribe({
-      next: (item: IUser | IError): void => {
+  loadingUserById(id: number): Observable<IUser | null> {
+    return this.http.loadingUserById(id).pipe(
+      map((item: IUser | IError): IUser | null => {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
+          return null;
         } else {
           this.messageService.setMessage(null);
           this.store.setUser(item as IUser);
+          return item as IUser;
         }
-      },
-    });
+      })
+    );
   }
 
   async loadingUserByUsername(username: string): Promise<IUserInfo | null>{
@@ -148,32 +150,37 @@ export class UserService {
     ));
   }
 
-  addUserByAdmin(user: INewUser): void {
-    this.http.addUser(user).subscribe({
-      next: (item: IUser | IError): void => {
+  addUserByAdmin(user: INewUser): Observable<IUser | null> {
+    return this.http.addUser(user).pipe(
+      map((item: IUser | IError): IUser | null => {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
+          return null;
         } else {
           this.messageService.setMessage(null);
           this.store.addUser(item as IUser);
+          return item as IUser;
         }
-      }
-    });
+      })
+    );
   }
 
-  updateUser(user: IUser): void {
-    this.http.updateUser(user).subscribe({
-      next:(item: boolean | IError): void => {
+  updateUser(user: IUser): Observable<boolean> {
+    return this.http.updateUser(user).pipe(
+      map((item: boolean | IError): boolean => {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
+          return false;
         } else {
           if (item === true) {
             this.messageService.setMessage(null);
-            this.loadingUserById(user.id);
+            return true;
+          } else {
+            return false;
           }
         }
-      }
-    });
+      })
+    );
   }
 
   async updateUserByUser(user: IUserInfo): Promise<IUserInfo | null> {
@@ -192,19 +199,23 @@ export class UserService {
     );
   }
 
-  deleteUserById(id: number): void {
-    this.http.deleteUser(id).subscribe({
-      next: (item: boolean | IError): void => {
+  deleteUserById(id: number): Observable<boolean> {
+    return this.http.deleteUser(id).pipe(
+      map((item: boolean | IError): boolean => {
         if (this.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
+          return false;
         } else {
           if (item === true) {
             this.messageService.setMessage(null);
             this.store.removeUser(id);
+            return true;
           }
+
+          return false;
         }
-      }
-    })
+      })
+    );
   }
 
   private isUser(item: any): boolean {

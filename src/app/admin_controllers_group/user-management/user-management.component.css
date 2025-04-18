@@ -44,3 +44,7 @@ input:focus {
   border-color: #e4e7ea;
 }
 
+.searchBlock {
+  min-height: 20dvh;
+}
+
