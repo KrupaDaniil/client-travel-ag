@@ -25,7 +25,7 @@
   background-color: rgba(49, 190, 154, 0.85);
   border-color: rgba(49, 190, 154, 0.85);
 }
-.checked-flag:disabled {
+:is(.selected-flag, .checked-flag):disabled {
   opacity: 1;
 }
 
