@@ -10,12 +10,14 @@ import { MainUserComponent } from './user_controllers_group/main.user/main.user.
 import { AdminPanelComponent } from './admin_controllers_group/admin.panel/admin.panel.component';
 import { Component } from '@angular/core';
 import { UserManagementComponent } from './admin_controllers_group/user-management/user-management.component';
-import {RoleManagementComponent} from './admin_controllers_group/role-management/role-management.component';
-import {
-  UserCompletedToursComponent
-} from './user_controllers_group/user-completed-tours/user-completed-tours.component';
-import {BookedToursComponent} from './user_controllers_group/booked-tours/booked-tours.component';
-import {UserInformationComponent} from './user_controllers_group/user-information/user-information.component';
+import { RoleManagementComponent } from './admin_controllers_group/role-management/role-management.component';
+import { UserCompletedToursComponent } from './user_controllers_group/user-completed-tours/user-completed-tours.component';
+import { BookedToursComponent } from './user_controllers_group/booked-tours/booked-tours.component';
+import { UserInformationComponent } from './user_controllers_group/user-information/user-information.component';
+import { CountryManagementComponent } from './admin_controllers_group/country-management/country-management.component';
+import { CityManagementComponent } from './admin_controllers_group/city-management/city-management.component';
+import { ClimateManagementComponent } from './admin_controllers_group/climate-management/climate-management.component';
+import { LanguageManagementComponent } from './admin_controllers_group/language-management/language-management.component';
 
 export const routes: Routes = [
   { path: '', component: MainUserComponent },
@@ -27,14 +29,19 @@ export const routes: Routes = [
     path: 'successful-registration',
     component: SuccessfulRegistrationComponent,
   },
-  {path: "user-tours", component: UserCompletedToursComponent},
-  {path: "booked-tours", component: BookedToursComponent},
-  {path: "user-information", component: UserInformationComponent},
+  { path: 'user-tours', component: UserCompletedToursComponent },
+  { path: 'booked-tours', component: BookedToursComponent },
+  { path: 'user-information', component: UserInformationComponent },
   {
-    path: 'admin-panel', component: AdminPanelComponent,
+    path: 'admin-panel',
+    component: AdminPanelComponent,
     children: [
       { path: 'user-management', component: UserManagementComponent },
-      { path: "role-management", component: RoleManagementComponent }
+      { path: 'role-management', component: RoleManagementComponent },
+      { path: 'county-management', component: CountryManagementComponent },
+      { path: 'city-management', component: CityManagementComponent },
+      { path: 'climate-management', component: ClimateManagementComponent },
+      { path: 'language-management', component: LanguageManagementComponent },
     ],
   },
   { path: '**', component: Error404Component },

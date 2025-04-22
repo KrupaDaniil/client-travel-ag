@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpResponse,} from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpResponse,
+  HttpStatusCode,
+} from '@angular/common/http';
 import { IUserReg } from '../interfaces/user-auth/i-user-reg';
-import {catchError, map, Observable, of} from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { IUserLogin } from '../interfaces/user-auth/i-user-login';
 import { IError } from '../interfaces/i-error';
 import { AuthService } from './auth.service';
@@ -10,9 +15,11 @@ import { ITokenData } from '../interfaces/user-auth/i-token-data';
 import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
 import { IUser } from '../interfaces/i-user';
 import { IRole } from '../interfaces/i-role';
-import {INewUser} from '../interfaces/i-new-user';
-import {INewRole} from '../interfaces/i-new-role';
-import {IUserInfo} from '../interfaces/user-auth/i-user-info';
+import { INewUser } from '../interfaces/i-new-user';
+import { INewRole } from '../interfaces/i-new-role';
+import { IUserInfo } from '../interfaces/user-auth/i-user-info';
+import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
+import { ErrorMessage } from '../models/error-message';
 
 @Injectable({
   providedIn: 'root',
@@ -109,6 +116,32 @@ export class HttpService {
       );
   }
 
+  loadingAllClimate(): Observable<IClimateEntity[] | IError> {
+    return this.http
+      .get<Object>(`${this.baseUrl}/api/climates`, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): IClimateEntity[] | IError => {
+          if (response.status === 200) {
+            return response.body as IClimateEntity[];
+          } else {
+            return new ErrorMessage(
+              HttpStatusCode.NoContent,
+              'The list is empty'
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          const errorBody = error.error?.body;
+          return of(
+            new ErrorMessage(
+              errorBody?.status || error.status,
+              errorBody?.message || 'Error loading climate data'
+            )
+          );
+        })
+      );
+  }
+
   loadingUserById(id: number): Observable<IUser | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/user-get-id/${id}`, { observe: 'response' })
@@ -124,24 +157,29 @@ export class HttpService {
   }
 
   loadingUserByUsername(username: string): Observable<IUserInfo | IError> {
-    return this.http.get<Object>(`${this.baseUrl}/user-get-username/${username}`, { observe: 'response' }).pipe(
-      map((response: HttpResponse<Object>): IUserInfo | IError => {
-        if (response.status === 200) {
-          return response.body as IUserInfo;
-        } else {
-          return response.body as IError;
-        }
-      }), catchError((error: HttpErrorResponse): Observable<IError> => {
-        const errorObj = error.error?.body;
-        const _error: IError = {
-          status: errorObj?.status || error.status,
-          message: errorObj?.message || 'Error loading user by username',
-          timestamp: new Date(),
-        };
-
-        return of(_error);
+    return this.http
+      .get<Object>(`${this.baseUrl}/user-get-username/${username}`, {
+        observe: 'response',
       })
-    );
+      .pipe(
+        map((response: HttpResponse<Object>): IUserInfo | IError => {
+          if (response.status === 200) {
+            return response.body as IUserInfo;
+          } else {
+            return response.body as IError;
+          }
+        }),
+        catchError((error: HttpErrorResponse): Observable<IError> => {
+          const errorObj = error.error?.body;
+          const _error: IError = {
+            status: errorObj?.status || error.status,
+            message: errorObj?.message || 'Error loading user by username',
+            timestamp: new Date(),
+          };
+
+          return of(_error);
+        })
+      );
   }
 
   blockUserById(id: number): Observable<boolean | IError> {
@@ -181,64 +219,74 @@ export class HttpService {
   }
 
   updateUser(user: IUser): Observable<boolean | IError> {
-    return this.http.post(`${this.baseUrl}/update-user`, user, {observe: "response"}).pipe(
-      map((resp: HttpResponse<object>): boolean | IError => {
-        if (resp.status === 200) {
-          return true;
-        } else {
-          return  resp.body as IError;
-        }
-      }), catchError((error: HttpErrorResponse): Observable<IError> => {
-        const body = error.error.body;
-        const _error: IError = {
-          status: body?.status || error.status,
-          message: body?.message || "Error update user data",
-          timestamp: body?.timestamp || new Date()
-        }
-        return of(_error)
-      })
-    );
+    return this.http
+      .post(`${this.baseUrl}/update-user`, user, { observe: 'response' })
+      .pipe(
+        map((resp: HttpResponse<object>): boolean | IError => {
+          if (resp.status === 200) {
+            return true;
+          } else {
+            return resp.body as IError;
+          }
+        }),
+        catchError((error: HttpErrorResponse): Observable<IError> => {
+          const body = error.error.body;
+          const _error: IError = {
+            status: body?.status || error.status,
+            message: body?.message || 'Error update user data',
+            timestamp: body?.timestamp || new Date(),
+          };
+          return of(_error);
+        })
+      );
   }
 
   updateUserInfo(user: IUserInfo): Observable<IUserInfo | IError> {
-    return this.http.post(`${this.baseUrl}/update-user-info`, user, {observe: "response"}).pipe(
-      map((resp: HttpResponse<object>): IUserInfo | IError => {
-        if (resp.status === 200) {
-          return resp.body as IUserInfo;
-        } else {
-          return resp.body as IError;
-        }
-      }), catchError((error: HttpErrorResponse): Observable<IError> => {
-        const body = error.error.body;
-        const _error: IError = {
-          status: body?.status || error.status,
-          message: body?.message || "Error update user data",
-          timestamp: new Date()
-        }
-        return of(_error)
-      })
-    );
+    return this.http
+      .post(`${this.baseUrl}/update-user-info`, user, { observe: 'response' })
+      .pipe(
+        map((resp: HttpResponse<object>): IUserInfo | IError => {
+          if (resp.status === 200) {
+            return resp.body as IUserInfo;
+          } else {
+            return resp.body as IError;
+          }
+        }),
+        catchError((error: HttpErrorResponse): Observable<IError> => {
+          const body = error.error.body;
+          const _error: IError = {
+            status: body?.status || error.status,
+            message: body?.message || 'Error update user data',
+            timestamp: new Date(),
+          };
+          return of(_error);
+        })
+      );
   }
 
   addUser(user: INewUser): Observable<IUser | IError> {
-    return this.http.post(`${this.baseUrl}/add-user`, user, {observe: "response"}).pipe(
-      map((resp: HttpResponse<object>): IUser | IError => {
-        if (resp.status === 200) {
-          return resp.body as IUser;
-        } else {
-          return resp.body as IError;
-        }
-      }), catchError((error: HttpErrorResponse): Observable<IError> => {
-        const body = error.error.body;
-        const _error: IError = {
-          status: body?.status || error.status,
-          message: body?.message || "Error when forming a user's addition request",
-          timestamp: new Date()
-        }
+    return this.http
+      .post(`${this.baseUrl}/add-user`, user, { observe: 'response' })
+      .pipe(
+        map((resp: HttpResponse<object>): IUser | IError => {
+          if (resp.status === 200) {
+            return resp.body as IUser;
+          } else {
+            return resp.body as IError;
+          }
+        }),
+        catchError((error: HttpErrorResponse): Observable<IError> => {
+          const body = error.error.body;
+          const _error: IError = {
+            status: body?.status || error.status,
+            message:
+              body?.message || "Error when forming a user's addition request",
+            timestamp: new Date(),
+          };
 
-        return of(_error)
-      })
-    );
+          return of(_error);
+        })
+      );
   }
 
   deleteUser(id: number): Observable<boolean | IError> {
@@ -256,41 +304,48 @@ export class HttpService {
   }
 
   addRole(role: INewRole): Observable<IRole | IError> {
-    return this.http.post(`${this.baseUrl}/add-role`, role, {observe: 'response'}).pipe(
-      map((response: HttpResponse<Object>): IRole | IError => {
-        if (response.status === 200) {
-          return response.body as IRole;
-        } else {
-          return response.body as IError;
-        }
-      }), catchError((error: HttpErrorResponse): Observable<IError> => {
-        const errorBody = error.error?.body;
+    return this.http
+      .post(`${this.baseUrl}/add-role`, role, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): IRole | IError => {
+          if (response.status === 200) {
+            return response.body as IRole;
+          } else {
+            return response.body as IError;
+          }
+        }),
+        catchError((error: HttpErrorResponse): Observable<IError> => {
+          const errorBody = error.error?.body;
 
-        return of({
-          status: errorBody?.status || error.status,
-          message: "Data transmission error",
-          timestamp: new Date(),
-        } as IError);
-      }));
+          return of({
+            status: errorBody?.status || error.status,
+            message: 'Data transmission error',
+            timestamp: new Date(),
+          } as IError);
+        })
+      );
   }
 
   deleteRole(id: number): Observable<boolean | IError> {
-    return this.http.delete(`${this.baseUrl}/delete-role/${id}`, {observe: 'response'}).pipe(
-      map((response: HttpResponse<Object>): boolean | IError => {
-        if (response.status === 200) {
-          return true;
-        } else {
-          return response.body as IError;
-        }
-      }), catchError((error: HttpErrorResponse): Observable<IError> => {
-        const errorBody = error.error?.body;
+    return this.http
+      .delete(`${this.baseUrl}/delete-role/${id}`, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): boolean | IError => {
+          if (response.status === 200) {
+            return true;
+          } else {
+            return response.body as IError;
+          }
+        }),
+        catchError((error: HttpErrorResponse): Observable<IError> => {
+          const errorBody = error.error?.body;
 
-        return of({
-          status: errorBody?.status || error.status,
-          message: "Data transmission error",
-          timestamp: new Date(),
-        } as IError);
-      })
-    );
+          return of({
+            status: errorBody?.status || error.status,
+            message: 'Data transmission error',
+            timestamp: new Date(),
+          } as IError);
+        })
+      );
   }
 }
