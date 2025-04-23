@@ -1,4 +1,4 @@
 export interface ILanguageEntity {
-  id: number | null;
+  id: number;
   name: string;
 }

@@ -1,4 +1,4 @@
 export interface IClimateEntity {
-  id: number | null;
+  id: number;
   name: string;
 }

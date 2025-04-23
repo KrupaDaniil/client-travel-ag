@@ -8,12 +8,13 @@ import { MessageService } from './message.service';
 import { IUserReg } from '../interfaces/user-auth/i-user-reg';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import {firstValueFrom, map, Observable, of, switchMap} from 'rxjs';
+import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { ITokenData } from '../interfaces/user-auth/i-token-data';
 import { UserStartData } from '../models/user-start-data';
 import { IUser } from '../interfaces/i-user';
-import {INewUser} from '../interfaces/i-new-user';
-import {IUserInfo} from '../interfaces/user-auth/i-user-info';
+import { INewUser } from '../interfaces/i-new-user';
+import { IUserInfo } from '../interfaces/user-auth/i-user-info';
+import { ValidationService } from './validation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,8 @@ export class UserService {
     private messageService: MessageService,
     private activeRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private check: ValidationService
   ) {}
 
   singIn(user: IUserLogin): Observable<boolean> {
@@ -37,12 +39,14 @@ export class UserService {
             this.store.addUserStartData(item as IUserStartData);
             this.router.navigate(['/']).then();
             return of(true);
-          } else if (this.isError(item)) {
+          } else if (this.check.isError(item)) {
             return this.http.checkUsername(user.username).pipe(
               map((res: boolean): boolean => {
                 res
                   ? this.messageService.setMessage('Incorrect password entered')
-                  : this.messageService.setMessage('Such a user does not exist');
+                  : this.messageService.setMessage(
+                      'Such a user does not exist'
+                    );
                 return false;
               })
             );
@@ -66,7 +70,9 @@ export class UserService {
           this.authService.setToken(token);
           const data: ITokenData | null = this.authService.getDecodeToken();
           if (data != null) {
-            this.store.addUserStartData(new UserStartData(data.roles, data.sub));
+            this.store.addUserStartData(
+              new UserStartData(data.roles, data.sub)
+            );
             flag = true;
             this.router.navigate(['/']).then();
           }
@@ -88,7 +94,7 @@ export class UserService {
   singUp(user: IUserReg): void {
     this.http.registrationUser(user).subscribe({
       next: (item: boolean | IError): void => {
-        if (this.isError(item)) {
+        if (this.check.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
           if (item === true) {
@@ -110,7 +116,7 @@ export class UserService {
   loadingAllUsers(): void {
     this.http.loadingAllUsers().subscribe({
       next: (item: IUser[] | IError): void => {
-        if (this.isError(item)) {
+        if (this.check.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
         } else {
           this.messageService.setMessage(null);
@@ -123,7 +129,7 @@ export class UserService {
   loadingUserById(id: number): Observable<IUser | null> {
     return this.http.loadingUserById(id).pipe(
       map((item: IUser | IError): IUser | null => {
-        if (this.isError(item)) {
+        if (this.check.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
           return null;
         } else {
@@ -135,25 +141,26 @@ export class UserService {
     );
   }
 
-  async loadingUserByUsername(username: string): Promise<IUserInfo | null>{
+  async loadingUserByUsername(username: string): Promise<IUserInfo | null> {
     return await firstValueFrom(
       this.http.loadingUserByUsername(username).pipe(
-      map((item: IUserInfo | IError): IUserInfo | null => {
-        if (this.isError(item)) {
-          this.messageService.setMessage((item as unknown as IError).message);
-          return null;
-        } else {
-          this.messageService.setMessage(null);
-          return item as IUserInfo;
-        }
-      })
-    ));
+        map((item: IUserInfo | IError): IUserInfo | null => {
+          if (this.check.isError(item)) {
+            this.messageService.setMessage((item as unknown as IError).message);
+            return null;
+          } else {
+            this.messageService.setMessage(null);
+            return item as IUserInfo;
+          }
+        })
+      )
+    );
   }
 
   addUserByAdmin(user: INewUser): Observable<IUser | null> {
     return this.http.addUser(user).pipe(
       map((item: IUser | IError): IUser | null => {
-        if (this.isError(item)) {
+        if (this.check.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
           return null;
         } else {
@@ -168,7 +175,7 @@ export class UserService {
   updateUser(user: IUser): Observable<boolean> {
     return this.http.updateUser(user).pipe(
       map((item: boolean | IError): boolean => {
-        if (this.isError(item)) {
+        if (this.check.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
           return false;
         } else {
@@ -187,7 +194,7 @@ export class UserService {
     return await firstValueFrom(
       this.http.updateUserInfo(user).pipe(
         map(async (item: IUserInfo | IError): Promise<IUserInfo | null> => {
-          if (this.isError(item)) {
+          if (this.check.isError(item)) {
             this.messageService.setMessage((item as unknown as IError).message);
             return null;
           } else {
@@ -202,7 +209,7 @@ export class UserService {
   deleteUserById(id: number): Observable<boolean> {
     return this.http.deleteUser(id).pipe(
       map((item: boolean | IError): boolean => {
-        if (this.isError(item)) {
+        if (this.check.isError(item)) {
           this.messageService.setMessage((item as unknown as IError).message);
           return false;
         } else {
@@ -220,9 +227,5 @@ export class UserService {
 
   private isUser(item: any): boolean {
     return 'roles' in item && Array.isArray(item.roles);
-  }
-
-  private isError(item: any): boolean {
-    return item !== null && typeof item === "object" && "timestamp" in item && item.timestamp instanceof Date;
   }
 }

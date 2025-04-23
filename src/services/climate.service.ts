@@ -1,61 +1,57 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpService } from './http.service';
-import { EntityStorage } from '../storage/entity.storage';
-import { IRole } from '../interfaces/i-role';
+import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
 import { IError } from '../interfaces/i-error';
 import { MessageService } from './message.service';
-import { INewRole } from '../interfaces/i-new-role';
 import { ValidationService } from './validation.service';
+import { EntityStorage } from '../storage/entity.storage';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RoleService {
+export class ClimateService {
   private store = inject(EntityStorage);
-
   constructor(
-    private http: HttpService,
+    private http_s: HttpService,
     private message: MessageService,
     private check: ValidationService
   ) {}
 
-  setAllRoles(): void {
-    this.http.loadingAllRoles().subscribe({
-      next: (item: IRole[] | IError): void => {
+  addingAllClimates(): void {
+    this.http_s.loadingAllClimate().subscribe({
+      next: (item: IClimateEntity[] | IError) => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
         } else {
           this.message.setMessage(null);
-          for (const rl of item as IRole[]) {
-            this.store.addRole(rl);
-          }
+          this.store.setAllClimates(item as IClimateEntity[]);
         }
       },
     });
   }
 
-  addUserRole(role: INewRole): void {
-    this.http.addRole(role).subscribe({
-      next: (item: IRole | IError): void => {
+  addClimate(climate: IClimateEntity): void {
+    this.http_s.addClimate(climate).subscribe({
+      next: (item: IClimateEntity | IError): void => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
         } else {
           this.message.setMessage(null);
-          this.store.addRole(item as IRole);
+          this.store.setClimate(item as IClimateEntity);
         }
       },
     });
   }
 
-  deleteUserRole(id: number): void {
-    this.http.deleteRole(id).subscribe({
+  deleteClimate(id: number): void {
+    this.http_s.deleteClimate(id).subscribe({
       next: (item: boolean | IError): void => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
         } else {
           if (item === true) {
             this.message.setMessage(null);
-            this.store.removeRole(id);
+            this.store.removeClimate(id);
           }
         }
       },

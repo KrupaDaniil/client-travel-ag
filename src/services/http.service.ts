@@ -20,15 +20,22 @@ import { INewRole } from '../interfaces/i-new-role';
 import { IUserInfo } from '../interfaces/user-auth/i-user-info';
 import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
 import { ErrorMessage } from '../models/error-message';
+import { ILanguageEntity } from '../interfaces/country-block/i-language.entity';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
   private readonly baseUrl: string;
+  private readonly errorDefaultMessage: string[];
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.baseUrl = 'http://localhost:8080';
+    this.errorDefaultMessage = [
+      'An unexpected error occurred while adding',
+      'An unexpected error occurred during the update',
+      'An unexpected error occurred during deletion',
+    ];
   }
 
   registrationUser(user: IUserReg): Observable<boolean | IError> {
@@ -38,18 +45,14 @@ export class HttpService {
         map((response) => {
           return response.status === 200;
         }),
-        catchError((error: HttpErrorResponse) => {
-          const errorBody = error.error?.body;
-          const errorObj: IError = {
-            status: errorBody?.status || error.status,
-            message:
-              errorBody?.message ||
-              'User with that name or email already exists',
-            timestamp: errorBody.timestamp || new Date(),
-          };
-
-          return of(errorObj);
-        })
+        catchError((error: HttpErrorResponse) =>
+          of(
+            this.getErrorMessage(
+              error,
+              'User with that name or email already exists'
+            )
+          )
+        )
       );
   }
 
@@ -75,16 +78,9 @@ export class HttpService {
             return response.body.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse) => {
-          const errorBody = error.error?.body;
-          const errorObj: IError = {
-            status: errorBody?.status || error.status,
-            message: errorBody?.message || 'Authorization error',
-            timestamp: errorBody?.timestamp || new Date(),
-          };
-
-          return of(errorObj);
-        })
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, 'Authorization error'))
+        )
       );
   }
 
@@ -98,7 +94,10 @@ export class HttpService {
           } else {
             return response.body as IError;
           }
-        })
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, error.message))
+        )
       );
   }
 
@@ -112,7 +111,10 @@ export class HttpService {
           } else {
             return response.body as IError;
           }
-        })
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, error.message))
+        )
       );
   }
 
@@ -130,15 +132,9 @@ export class HttpService {
             );
           }
         }),
-        catchError((error: HttpErrorResponse) => {
-          const errorBody = error.error?.body;
-          return of(
-            new ErrorMessage(
-              errorBody?.status || error.status,
-              errorBody?.message || 'Error loading climate data'
-            )
-          );
-        })
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, error.message))
+        )
       );
   }
 
@@ -152,10 +148,29 @@ export class HttpService {
           } else {
             return response.body as IError;
           }
-        })
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, error.message))
+        )
       );
   }
 
+  loadingClimateById(id: number): Observable<IClimateEntity | IError> {
+    return this.http
+      .get<Object>(`${this.baseUrl}/api/climate/${id}`, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): IClimateEntity | IError => {
+          if (response.status === 200) {
+            return response.body as IClimateEntity;
+          } else {
+            return new ErrorMessage(HttpStatusCode.NotFound, 'User not found');
+          }
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, 'Error loading climate'))
+        )
+      );
+  }
   loadingUserByUsername(username: string): Observable<IUserInfo | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/user-get-username/${username}`, {
@@ -169,30 +184,10 @@ export class HttpService {
             return response.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse): Observable<IError> => {
-          const errorObj = error.error?.body;
-          const _error: IError = {
-            status: errorObj?.status || error.status,
-            message: errorObj?.message || 'Error loading user by username',
-            timestamp: new Date(),
-          };
-
-          return of(_error);
-        })
-      );
-  }
-
-  blockUserById(id: number): Observable<boolean | IError> {
-    return this.http
-      .get<Object>(`${this.baseUrl}/block-user/${id}`, { observe: 'response' })
-      .pipe(
-        map((response: HttpResponse<Object>): boolean | IError => {
-          if (response.status === 200) {
-            return true;
-          } else {
-            return response.body as IError;
-          }
-        })
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, 'Error loading user by username'))
+        )
       );
   }
 
@@ -229,15 +224,10 @@ export class HttpService {
             return resp.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse): Observable<IError> => {
-          const body = error.error.body;
-          const _error: IError = {
-            status: body?.status || error.status,
-            message: body?.message || 'Error update user data',
-            timestamp: body?.timestamp || new Date(),
-          };
-          return of(_error);
-        })
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[1]))
+        )
       );
   }
 
@@ -252,15 +242,10 @@ export class HttpService {
             return resp.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse): Observable<IError> => {
-          const body = error.error.body;
-          const _error: IError = {
-            status: body?.status || error.status,
-            message: body?.message || 'Error update user data',
-            timestamp: new Date(),
-          };
-          return of(_error);
-        })
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[1]))
+        )
       );
   }
 
@@ -275,17 +260,10 @@ export class HttpService {
             return resp.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse): Observable<IError> => {
-          const body = error.error.body;
-          const _error: IError = {
-            status: body?.status || error.status,
-            message:
-              body?.message || "Error when forming a user's addition request",
-            timestamp: new Date(),
-          };
-
-          return of(_error);
-        })
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
       );
   }
 
@@ -299,7 +277,11 @@ export class HttpService {
           } else {
             return response.body as IError;
           }
-        })
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+        )
       );
   }
 
@@ -314,15 +296,10 @@ export class HttpService {
             return response.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse): Observable<IError> => {
-          const errorBody = error.error?.body;
-
-          return of({
-            status: errorBody?.status || error.status,
-            message: 'Data transmission error',
-            timestamp: new Date(),
-          } as IError);
-        })
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
       );
   }
 
@@ -337,15 +314,99 @@ export class HttpService {
             return response.body as IError;
           }
         }),
-        catchError((error: HttpErrorResponse): Observable<IError> => {
-          const errorBody = error.error?.body;
-
-          return of({
-            status: errorBody?.status || error.status,
-            message: 'Data transmission error',
-            timestamp: new Date(),
-          } as IError);
-        })
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+        )
       );
+  }
+
+  addClimate(climate: IClimateEntity): Observable<IClimateEntity | IError> {
+    return this.http
+      .post(`${this.baseUrl}/api/climates/create`, climate, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): IClimateEntity | IError => {
+          if (response.status === 200) {
+            return response.body as IError;
+          } else {
+            return new ErrorMessage(response.status, 'Error adding climate');
+          }
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  deleteClimate(id: number): Observable<boolean | IError> {
+    return this.http
+      .delete(`${this.baseUrl}/api/climates/remove/${id}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): boolean | IError => {
+          if (response.status === 200) {
+            return true;
+          } else {
+            return response.body as IError;
+          }
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+        )
+      );
+  }
+
+  addLanguage(language: ILanguageEntity): Observable<ILanguageEntity | IError> {
+    return this.http
+      .post(`${this.baseUrl}/api/languages/create`, language, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): ILanguageEntity | IError => {
+          if (response.status === 200) {
+            return response.body as ILanguageEntity;
+          } else {
+            return new ErrorMessage(response.status, 'Error adding language');
+          }
+        }),
+        catchError(
+          (response: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(response, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  deleteLanguage(id: number): Observable<boolean | IError> {
+    return this.http
+      .delete(`${this.baseUrl}/api/languages/remove/${id}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): boolean | IError => {
+          if (response.status === 200) {
+            return true;
+          } else {
+            return response.body as IError;
+          }
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  private getErrorMessage(error: HttpErrorResponse, message: string): IError {
+    const errorBody = error.error?.body;
+
+    return new ErrorMessage(
+      errorBody?.status || error.status,
+      errorBody?.message || message
+    );
   }
 }
