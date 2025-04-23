@@ -351,7 +351,7 @@ export class HttpService {
           if (response.status === 200) {
             return true;
           } else {
-            return response.body as IError;
+            return new ErrorMessage(HttpStatusCode.NotFound, 'Delete failed');
           }
         }),
         catchError(
@@ -391,7 +391,7 @@ export class HttpService {
           if (response.status === 200) {
             return true;
           } else {
-            return response.body as IError;
+            return new ErrorMessage(HttpStatusCode.NotFound, 'Delete failed');
           }
         }),
         catchError(
