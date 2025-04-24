@@ -1,1 +1,47 @@
-<p>climate-management works!</p>
+@if (showError() !== null) {
+    <div class="text-center fw-semibold fs-4 mt-3">{{showError()}}</div>
+} @else {
+    <div class="row my-3">
+        <div class="col">
+            <div class="input-group input-group-sm hide-block" #addClimateBlock>
+                <span class="input-group-text rounded-start-5">Climate name</span>
+                <input type="text" class="form-control form-control-sm" [formControl]="climateName" aria-label="Climate name"/>
+                <button class="btn btn-sm btn-outline-success px-3" (click)="createClimate()">Add climate</button>
+                <button class="btn btn-sm btn-outline-danger px-3 rounded-end-5" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex align-items-center justify-content-end" #buttonsGroup>
+                <button class="btn btn-sm btn-outline-success rounded-5 px-3 me-2" #addClimateBtn>Add climate</button>
+                <button class="btn btn-sm btn-outline-danger  rounded-5 px-3 me-2" #removeClimateBtn>Remove climate</button>
+            </div>
+        </div>
+    </div>
+    @if (climatesList() && climatesList().length > 0) {
+      <div class="my-3">
+         <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Climate</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider" #climateBlock>
+          @for (climate of climatesList(); track climate.id; let i = $index) {
+          <tr [attr.data-climate-id]="climate.id">
+            <th scope="row">
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="radio" class="form-check-input p-0 m-0" name="roleId"/>
+                <div class="ms-2">{{ i + 1 }}</div>
+              </div>
+            </th>
+            <td>{{ climate.name }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      </div>
+    } @else {
+      <div class="text-center fs-4 mt-3">List of climates is empty or uploading</div>
+    }
+}

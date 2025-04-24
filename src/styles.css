@@ -8,3 +8,12 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.hide-block {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.show-block {
+  opacity: 1;
+  transition: opacity 1s ease;
+}

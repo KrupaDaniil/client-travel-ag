@@ -6,7 +6,8 @@
       <div class="input-group input-group-sm hide-block" #addRoleBlock>
         <span class="input-group-text rounded-start-5">Role name</span>
         <input type="text" class="form-control form-control-sm" [formControl]="roleName" aria-label="Role name" required/>
-        <button class="btn btn-sm btn-outline-success px-3 rounded-end-5" (click)="createRole()">Add role</button>
+        <button class="btn btn-sm btn-outline-success px-3" (click)="createRole()">Add role</button>
+        <button class="btn btn-sm btn-outline-danger px-3 rounded-end-5" (click)="cancel()">Cancel</button>
       </div>
     </div>
     <div class="col">

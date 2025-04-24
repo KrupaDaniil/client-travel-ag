@@ -328,8 +328,8 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): IClimateEntity | IError => {
-          if (response.status === 200) {
-            return response.body as IError;
+          if (response.status === HttpStatusCode.Created) {
+            return response.body as IClimateEntity;
           } else {
             return new ErrorMessage(response.status, 'Error adding climate');
           }
