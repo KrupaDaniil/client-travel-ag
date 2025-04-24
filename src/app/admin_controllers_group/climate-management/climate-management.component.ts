@@ -24,24 +24,29 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class ClimateManagementComponent implements OnInit, AfterViewChecked {
   private readonly store = inject(EntityStorage);
+
   climatesList: Signal<IClimateEntity[]> = computed(() =>
     this.store.climatesEntities()
   );
   showError: Signal<string | null> = computed(() => this.message.message());
 
   climateName: FormControl;
+  private isSelectedRow: boolean;
+  private selectedClimate: IClimateEntity | undefined;
 
   @ViewChild('addClimateBlock') addClimateBlock?: ElementRef<HTMLDivElement>;
   @ViewChild('buttonsGroup') buttonsGroup?: ElementRef<HTMLDivElement>;
   @ViewChild('addClimateBtn') addClimateBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild('removeClimateBtn')
   removeClimateBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('climateBlock') climateBlock?: ElementRef<HTMLTableSectionElement>;
   constructor(
     private climateService: ClimateService,
     private message: MessageService,
     private render: Renderer2
   ) {
     this.climateName = new FormControl('', Validators.required);
+    this.isSelectedRow = false;
   }
 
   ngOnInit(): void {
@@ -49,6 +54,7 @@ export class ClimateManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
+    this.selectedTableRow();
     this.showAddClimateBlock();
   }
 
@@ -78,5 +84,62 @@ export class ClimateManagementComponent implements OnInit, AfterViewChecked {
   cancel(): void {
     this.render.removeClass(this.addClimateBlock?.nativeElement, 'show-block');
     this.render.removeClass(this.buttonsGroup?.nativeElement, 'hide-block');
+  }
+
+  private selectedTableRow(): void {
+    if (this.climateBlock?.nativeElement && !this.isSelectedRow) {
+      this.render.listen(
+        this.climateBlock.nativeElement,
+        'click',
+        (e: Event) => {
+          const t = e.target as HTMLElement;
+          if (t.tagName.toLowerCase() === 'td') {
+            const r = t.closest('tr') as HTMLTableRowElement;
+            if (r) {
+              const radio = r.querySelector(
+                'input[type="radio"]'
+              ) as HTMLInputElement;
+              if (radio) {
+                this.render.setProperty(radio, 'checked', true);
+              }
+
+              const selectedId = Number.parseInt(
+                r.dataset['climateId'] as string
+              );
+
+              this.climatesList()!.forEach((climate: IClimateEntity): void => {
+                if (climate.id === (selectedId as number)) {
+                  this.selectedClimate = climate;
+                  return;
+                }
+              });
+
+              if (this.selectedClimate) {
+                if (this.removeClimateBtn?.nativeElement) {
+                  this.render.listen(
+                    this.removeClimateBtn.nativeElement,
+                    'click',
+                    () => {
+                      if (this.selectedClimate?.id) {
+                        this.climateService.deleteClimate(
+                          this.selectedClimate.id
+                        );
+                        this.selectedClimate = undefined;
+                        this.isSelectedRow = false;
+                        this.render.setProperty(
+                          this.climateBlock!.nativeElement,
+                          'checked',
+                          false
+                        );
+                      }
+                    }
+                  );
+                }
+              }
+            }
+          }
+        }
+      );
+    }
   }
 }
