@@ -138,6 +138,26 @@ export class HttpService {
       );
   }
 
+  loadingAllLanguage(): Observable<ILanguageEntity[] | IError> {
+    return this.http
+      .get<Object>(`${this.baseUrl}/api/languages`, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): ILanguageEntity[] | IError => {
+          if (response.status === 200) {
+            return response.body as ILanguageEntity[];
+          } else {
+            return new ErrorMessage(
+              HttpStatusCode.NoContent,
+              'The list is empty'
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return of(this.getErrorMessage(error, error.message));
+        })
+      );
+  }
+
   loadingUserById(id: number): Observable<IUser | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/user-get-id/${id}`, { observe: 'response' })
@@ -368,7 +388,7 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): ILanguageEntity | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Created) {
             return response.body as ILanguageEntity;
           } else {
             return new ErrorMessage(response.status, 'Error adding language');

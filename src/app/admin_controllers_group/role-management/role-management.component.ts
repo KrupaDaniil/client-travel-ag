@@ -124,8 +124,6 @@ export class RoleManagementComponent implements OnInit, AfterViewChecked {
     if (this.roleName.value) {
       this.roleService.addUserRole({ name: this.roleName.value } as INewRole);
       this.roleName.reset();
-      this.render_2.removeClass(this.addRoleBlock?.nativeElement, 'show-block');
-      this.render_2.removeClass(this.buttonsGroup?.nativeElement, 'hide-block');
     }
   }
 
