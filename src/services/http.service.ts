@@ -21,6 +21,7 @@ import { IUserInfo } from '../interfaces/user-auth/i-user-info';
 import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
 import { ErrorMessage } from '../models/error-message';
 import { ILanguageEntity } from '../interfaces/country-block/i-language.entity';
+import { ICountryEntity } from '../interfaces/country-block/i-country.entity';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class HttpService {
       'An unexpected error occurred while adding',
       'An unexpected error occurred during the update',
       'An unexpected error occurred during deletion',
+      'Delete failed',
     ];
   }
 
@@ -84,6 +86,7 @@ export class HttpService {
       );
   }
 
+  // loading block // ------------------------------------------------------------
   loadingAllUsers(): Observable<IUser[] | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/all-users`, { observe: 'response' })
@@ -191,6 +194,7 @@ export class HttpService {
         )
       );
   }
+
   loadingUserByUsername(username: string): Observable<IUserInfo | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/user-get-username/${username}`, {
@@ -211,28 +215,153 @@ export class HttpService {
       );
   }
 
-  checkUsername(username: string): Observable<boolean> {
+  loadingAllCountry(): Observable<ICountryEntity[] | IError> {
     return this.http
-      .get(`${this.baseUrl}/check-username/${username}`, {
-        observe: 'response',
-      })
+      .get<Object>(`${this.baseUrl}/api/countries`, { observe: 'response' })
       .pipe(
-        map((response: HttpResponse<object>): boolean => {
-          return response.status === 200;
-        })
-      );
-  }
-
-  checkEmail(email: string): Observable<boolean> {
-    return this.http
-      .get(`${this.baseUrl}/check-email/${email}`, { observe: 'response' })
-      .pipe(
-        map(
-          (response: HttpResponse<object>): boolean => response.status === 200
+        map((response: HttpResponse<Object>): ICountryEntity[] | IError => {
+          if (response.status === 200) {
+            return response.body as ICountryEntity[];
+          } else {
+            return new ErrorMessage(
+              HttpStatusCode.NoContent,
+              'Data is temporarily unavailable'
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, 'Error loading countries data'))
         )
       );
   }
 
+  loadingCountryById(id: number): Observable<ICountryEntity | IError> {
+    return this.http
+      .get<Object>(`${this.baseUrl}/api/countries/${id}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): ICountryEntity | IError => {
+          if (response.status === 200) {
+            return response.body as ICountryEntity;
+          } else {
+            return new ErrorMessage(
+              response.status,
+              `Unable to load country with ID ${id}`
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(
+            this.getErrorMessage(
+              error,
+              'An error occurred while loading data from the server'
+            )
+          )
+        )
+      );
+  }
+
+  // block adding // ------------------------------------------------------------
+  addUser(user: INewUser): Observable<IUser | IError> {
+    return this.http
+      .post(`${this.baseUrl}/add-user`, user, { observe: 'response' })
+      .pipe(
+        map((resp: HttpResponse<object>): IUser | IError => {
+          if (resp.status === 200) {
+            return resp.body as IUser;
+          } else {
+            return resp.body as IError;
+          }
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  addRole(role: INewRole): Observable<IRole | IError> {
+    return this.http
+      .post(`${this.baseUrl}/add-role`, role, { observe: 'response' })
+      .pipe(
+        map((response: HttpResponse<Object>): IRole | IError => {
+          if (response.status === 200) {
+            return response.body as IRole;
+          } else {
+            return response.body as IError;
+          }
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  addClimate(climate: IClimateEntity): Observable<IClimateEntity | IError> {
+    return this.http
+      .post(`${this.baseUrl}/api/climates/create`, climate, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): IClimateEntity | IError => {
+          if (response.status === HttpStatusCode.Created) {
+            return response.body as IClimateEntity;
+          } else {
+            return new ErrorMessage(response.status, 'Error adding climate');
+          }
+        }),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  addLanguage(language: ILanguageEntity): Observable<ILanguageEntity | IError> {
+    return this.http
+      .post(`${this.baseUrl}/api/languages/create`, language, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): ILanguageEntity | IError => {
+          if (response.status === HttpStatusCode.Created) {
+            return response.body as ILanguageEntity;
+          } else {
+            return new ErrorMessage(response.status, 'Error adding language');
+          }
+        }),
+        catchError(
+          (response: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(response, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  addCountry(country: FormData): Observable<ICountryEntity | IError> {
+    return this.http
+      .post(`${this.baseUrl}/api/countries/create`, country, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>): ICountryEntity | IError => {
+          if (response.status === HttpStatusCode.Created) {
+            return response.body as ICountryEntity;
+          } else {
+            return new ErrorMessage(
+              HttpStatusCode.BadRequest,
+              'Country creation error'
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
+  // block update // ------------------------------------------------------------
   updateUser(user: IUser): Observable<boolean | IError> {
     return this.http
       .post(`${this.baseUrl}/update-user`, user, { observe: 'response' })
@@ -269,24 +398,29 @@ export class HttpService {
       );
   }
 
-  addUser(user: INewUser): Observable<IUser | IError> {
+  updateCountry(country: FormData): Observable<ICountryEntity | IError> {
     return this.http
-      .post(`${this.baseUrl}/add-user`, user, { observe: 'response' })
+      .put(`${this.baseUrl}/api/countries/update`, country, {
+        observe: 'response',
+      })
       .pipe(
-        map((resp: HttpResponse<object>): IUser | IError => {
-          if (resp.status === 200) {
-            return resp.body as IUser;
+        map((response: HttpResponse<Object>): ICountryEntity | IError => {
+          if (response.status === 200) {
+            return response.body as ICountryEntity;
           } else {
-            return resp.body as IError;
+            return new ErrorMessage(
+              HttpStatusCode.BadRequest,
+              'Failed to update country data'
+            );
           }
         }),
-        catchError(
-          (error: HttpErrorResponse): Observable<IError> =>
-            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, this.errorDefaultMessage[1]))
         )
       );
   }
 
+  //delete block // ------------------------------------------------------------
   deleteUser(id: number): Observable<boolean | IError> {
     return this.http
       .delete(`${this.baseUrl}/delete-user/${id}`, { observe: 'response' })
@@ -301,24 +435,6 @@ export class HttpService {
         catchError(
           (error: HttpErrorResponse): Observable<IError> =>
             of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
-        )
-      );
-  }
-
-  addRole(role: INewRole): Observable<IRole | IError> {
-    return this.http
-      .post(`${this.baseUrl}/add-role`, role, { observe: 'response' })
-      .pipe(
-        map((response: HttpResponse<Object>): IRole | IError => {
-          if (response.status === 200) {
-            return response.body as IRole;
-          } else {
-            return response.body as IError;
-          }
-        }),
-        catchError(
-          (error: HttpErrorResponse): Observable<IError> =>
-            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
         )
       );
   }
@@ -341,26 +457,6 @@ export class HttpService {
       );
   }
 
-  addClimate(climate: IClimateEntity): Observable<IClimateEntity | IError> {
-    return this.http
-      .post(`${this.baseUrl}/api/climates/create`, climate, {
-        observe: 'response',
-      })
-      .pipe(
-        map((response: HttpResponse<Object>): IClimateEntity | IError => {
-          if (response.status === HttpStatusCode.Created) {
-            return response.body as IClimateEntity;
-          } else {
-            return new ErrorMessage(response.status, 'Error adding climate');
-          }
-        }),
-        catchError(
-          (error: HttpErrorResponse): Observable<IError> =>
-            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
-        )
-      );
-  }
-
   deleteClimate(id: number): Observable<boolean | IError> {
     return this.http
       .delete(`${this.baseUrl}/api/climates/remove/${id}`, {
@@ -371,32 +467,15 @@ export class HttpService {
           if (response.status === 200) {
             return true;
           } else {
-            return new ErrorMessage(HttpStatusCode.NotFound, 'Delete failed');
+            return new ErrorMessage(
+              HttpStatusCode.NotFound,
+              this.errorDefaultMessage[3]
+            );
           }
         }),
         catchError(
           (error: HttpErrorResponse): Observable<IError> =>
             of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
-        )
-      );
-  }
-
-  addLanguage(language: ILanguageEntity): Observable<ILanguageEntity | IError> {
-    return this.http
-      .post(`${this.baseUrl}/api/languages/create`, language, {
-        observe: 'response',
-      })
-      .pipe(
-        map((response: HttpResponse<Object>): ILanguageEntity | IError => {
-          if (response.status === HttpStatusCode.Created) {
-            return response.body as ILanguageEntity;
-          } else {
-            return new ErrorMessage(response.status, 'Error adding language');
-          }
-        }),
-        catchError(
-          (response: HttpErrorResponse): Observable<IError> =>
-            of(this.getErrorMessage(response, this.errorDefaultMessage[0]))
         )
       );
   }
@@ -411,12 +490,60 @@ export class HttpService {
           if (response.status === 200) {
             return true;
           } else {
-            return new ErrorMessage(HttpStatusCode.NotFound, 'Delete failed');
+            return new ErrorMessage(
+              HttpStatusCode.NotFound,
+              this.errorDefaultMessage[3]
+            );
           }
         }),
         catchError(
           (error: HttpErrorResponse): Observable<IError> =>
-            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+            of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+        )
+      );
+  }
+
+  deleteCountry(id: number): Observable<boolean | IError> {
+    return this.http
+      .delete(`${this.baseUrl}/api/countries/remove/${id}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Object>) => {
+          if (response.status === 200) {
+            return true;
+          } else {
+            return new ErrorMessage(
+              HttpStatusCode.BadRequest,
+              this.errorDefaultMessage[3]
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+        )
+      );
+  }
+
+  // other methods block// ------------------------------------------------------------
+  checkUsername(username: string): Observable<boolean> {
+    return this.http
+      .get(`${this.baseUrl}/check-username/${username}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<object>): boolean => {
+          return response.status === 200;
+        })
+      );
+  }
+
+  checkEmail(email: string): Observable<boolean> {
+    return this.http
+      .get(`${this.baseUrl}/check-email/${email}`, { observe: 'response' })
+      .pipe(
+        map(
+          (response: HttpResponse<object>): boolean => response.status === 200
         )
       );
   }

@@ -42,6 +42,7 @@ export const routes: Routes = [
       { path: 'city-management', component: CityManagementComponent },
       { path: 'climate-management', component: ClimateManagementComponent },
       { path: 'language-management', component: LanguageManagementComponent },
+      { path: 'country-management', component: CountryManagementComponent },
     ],
   },
   { path: '**', component: Error404Component },

@@ -23,6 +23,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
 import { ILanguageEntity } from '../interfaces/country-block/i-language.entity';
+import { ICountryEntity } from '../interfaces/country-block/i-country.entity';
 
 function loadUserStartData(): () => IUserStartData {
   return () => {
@@ -60,6 +61,12 @@ const languageConfig = entityConfig({
   selectId: (language) => language.id,
 });
 
+const countryConfig = entityConfig({
+  entity: type<ICountryEntity>(),
+  collection: 'countries',
+  selectId: (country) => country.id,
+});
+
 export const EntityStorage = signalStore(
   { providedIn: 'root' },
 
@@ -68,6 +75,7 @@ export const EntityStorage = signalStore(
   withEntities(roleConfig),
   withEntities(climateConfig),
   withEntities(languageConfig),
+  withEntities(countryConfig),
   withMethods((store) => ({
     addUserStartData(startData: IUserStartData): void {
       patchState(store, startData);
@@ -91,6 +99,9 @@ export const EntityStorage = signalStore(
     setLanguage(language: ILanguageEntity): void {
       patchState(store, setEntity(language, languageConfig));
     },
+    setCountry(country: ICountryEntity): void {
+      patchState(store, setEntity(country, countryConfig));
+    },
 
     setAllUsers(users: IUser[]): void {
       patchState(store, setAllEntities(users, userConfig));
@@ -103,6 +114,9 @@ export const EntityStorage = signalStore(
     },
     setAllLanguages(languages: ILanguageEntity[]): void {
       patchState(store, setAllEntities(languages, languageConfig));
+    },
+    setAllCountries(countries: ICountryEntity[]): void {
+      patchState(store, setAllEntities(countries, countryConfig));
     },
     updateUserStartData(userStartData: Partial<IUserStartData>): void {
       if (Object.keys(userStartData).length > 0) {
@@ -130,6 +144,9 @@ export const EntityStorage = signalStore(
     },
     removeLanguage(id: number): void {
       patchState(store, removeEntity(id, languageConfig));
+    },
+    removeCountry(id: number): void {
+      patchState(store, removeEntity(id, countryConfig));
     },
   }))
 );
