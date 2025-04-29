@@ -3,6 +3,7 @@
 html, body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -16,4 +17,29 @@ body {
 .show-block {
   opacity: 1;
   transition: opacity 1s ease;
+}
+
+.searchBlock {
+  min-height: 20dvh;
+}
+
+.custom-dialog {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 1px 1px 10px #343434;
+}
+
+.closeBtnContainer {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+::backdrop {
+  background-color: rgba(157, 157, 157, 0.7);
+}
+
+.not-resize {
+  resize: none;
 }

@@ -1,22 +1,38 @@
 import {
-  AfterViewChecked, Component, computed, effect, ElementRef, inject,
-  OnInit, Renderer2, signal, Signal, ViewChild, WritableSignal
+  AfterViewChecked,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  OnInit,
+  Renderer2,
+  signal,
+  Signal,
+  ViewChild,
+  WritableSignal,
 } from '@angular/core';
-import { EntityStorage } from '../../../storage/entity.storage';
-import { UserService } from '../../../services/user.service';
-import { IUser } from '../../../interfaces/i-user';
-import { MessageService } from '../../../services/message.service';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { RoleService } from '../../../services/role.service';
-import { IRole } from '../../../interfaces/i-role';
+import {EntityStorage} from '../../../storage/entity.storage';
+import {UserService} from '../../../services/user.service';
+import {IUser} from '../../../interfaces/i-user';
+import {MessageService} from '../../../services/message.service';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {RoleService} from '../../../services/role.service';
+import {IRole} from '../../../interfaces/i-role';
 import {NgIf} from '@angular/common';
 import {INewUser} from '../../../interfaces/i-new-user';
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
+import {MatSidenav, MatSidenavContainer, MatSidenavContent,} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-user-management',
-  imports: [FormsModule, ReactiveFormsModule, NgIf, MatSidenavContainer, MatSidenavContent, MatSidenav],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    MatSidenavContainer,
+    MatSidenavContent,
+    MatSidenav,
+  ],
   providers: [UserService, MessageService],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.css',
@@ -31,31 +47,33 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private searchList: IUser[] | undefined;
   userList: Signal<IUser[]> = computed(() => this.store.usersEntities());
   userRoles: Signal<IRole[]> = computed(() => this.store.rolesEntities());
-  errorMessage: Signal<string | null> = computed(() => this.messageService.message());
+  errorMessage: Signal<string | null> = computed(() =>
+    this.messageService.message()
+  );
   displayContent: WritableSignal<IUser[] | null> = signal<IUser[] | null>(null);
   addUserForm: FormGroup | undefined;
   editUserForm: FormGroup | undefined;
   searchDataForm: FormGroup | undefined;
 
   @ViewChild('usersBlock') usersBlock?: ElementRef<HTMLTableSectionElement>;
-  @ViewChild("addUserBtn") addUserBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild("addUserModal") addUserModal?: ElementRef<HTMLDialogElement>;
-  @ViewChild("addModelBtnClose") addModelBtnClose?: ElementRef<HTMLButtonElement>;
-  @ViewChild("editUserModal") editUserModel?: ElementRef<HTMLDialogElement>;
-  @ViewChild("editUserBtn") editUserBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild("editModalBtnClose") editModalBtnClose?: ElementRef<HTMLButtonElement>;
-  @ViewChild("RemoveUserBtn") removeUserBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild("sidenav") sidenav?: MatSidenav;
-  @ViewChild("searchBtn") searchBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild("btnCloseSdv") btnCloseSdv?: ElementRef<HTMLButtonElement>;
+  @ViewChild('addUserBtn') addUserBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('addUserModal') addUserModal?: ElementRef<HTMLDialogElement>;
+  @ViewChild('addModelBtnClose') addModelBtnClose?: ElementRef<HTMLButtonElement>;
+  @ViewChild('editUserModal') editUserModel?: ElementRef<HTMLDialogElement>;
+  @ViewChild('editUserBtn') editUserBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('editModalBtnClose') editModalBtnClose?: ElementRef<HTMLButtonElement>;
+  @ViewChild('RemoveUserBtn') removeUserBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('sidenav') sidenav?: MatSidenav;
+  @ViewChild('searchBtn') searchBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('btnCloseSdv') btnCloseSdv?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private userService: UserService,
     private messageService: MessageService,
     private roleService: RoleService,
-    private render2: Renderer2,
+    private render2: Renderer2
   ) {
-    this.defaultRole = "ROLE_USER";
+    this.defaultRole = 'ROLE_USER';
     this.initAddForm = false;
     this.isSelectedRow = false;
 
@@ -64,7 +82,6 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-
     this.checkTableRow();
 
     if (this.editUserBtn?.nativeElement && this.editUserForm) {
@@ -74,7 +91,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     }
 
     if (this.editModalBtnClose?.nativeElement) {
-      this.render2.listen(this.editModalBtnClose.nativeElement, 'click', () =>{
+      this.render2.listen(this.editModalBtnClose.nativeElement, 'click', () => {
         this.closeEditUserModel();
       });
     }
@@ -107,19 +124,22 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         this.initAddForm = true;
 
         if (this.addUserBtn?.nativeElement && this.addUserForm) {
-
           this.render2.listen(this.addUserBtn.nativeElement, 'click', () => {
             this.openAddUserModal();
           });
 
           if (this.addModelBtnClose?.nativeElement) {
-            this.render2.listen(this.addModelBtnClose.nativeElement, 'click', () => {
-              this.closeAddUserModal();
-            });
+            this.render2.listen(
+              this.addModelBtnClose.nativeElement,
+              'click',
+              () => {
+                this.closeAddUserModal();
+              }
+            );
           }
         }
       }
-    })
+    });
   }
 
   private initDisplayBlock(): void {
@@ -150,25 +170,33 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
               this.userId = Number.parseInt(r.dataset['userId'] as string);
 
-              this.displayContent()!.forEach((user:IUser): void => {
+              this.displayContent()!.forEach((user: IUser): void => {
                 if (user.id === (this.userId as number)) {
                   this.selectUser = user;
                   return;
                 }
-              })
+              });
 
               if (this.selectUser) {
                 this.createEditUserForm();
 
                 if (this.removeUserBtn?.nativeElement) {
-                  this.render2.listen(this.removeUserBtn.nativeElement, 'click', () => {
-                    if (this.selectUser?.id) {
-                      this.deleteUser(this.selectUser?.id);
-                      this.selectUser = undefined;
-                      this.isSelectedRow = false;
-                      this.render2.setProperty(this.usersBlock!.nativeElement, 'checked', false);
+                  this.render2.listen(
+                    this.removeUserBtn.nativeElement,
+                    'click',
+                    () => {
+                      if (this.selectUser?.id) {
+                        this.deleteUser(this.selectUser?.id);
+                        this.selectUser = undefined;
+                        this.isSelectedRow = false;
+                        this.render2.setProperty(
+                          this.usersBlock!.nativeElement,
+                          'checked',
+                          false
+                        );
+                      }
                     }
-                  });
+                  );
                 }
               }
             }
@@ -193,14 +221,23 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   private createEditUserForm(): void {
     this.editUserForm = new FormGroup({
       id: new FormControl(this.selectUser?.id),
-      username: new FormControl({value: this.selectUser?.username, disabled: true}, Validators.required, ),
+      username: new FormControl(
+        {value: this.selectUser?.username, disabled: true},
+        Validators.required
+      ),
       password: new FormControl(''),
-      firstName: new FormControl(this.selectUser?.firstName, Validators.required),
+      firstName: new FormControl(
+        this.selectUser?.firstName,
+        Validators.required
+      ),
       lastName: new FormControl(this.selectUser?.lastName, Validators.required),
-      email: new FormControl(this.selectUser?.email, [Validators.required, Validators.email]),
+      email: new FormControl(this.selectUser?.email, [
+        Validators.required,
+        Validators.email,
+      ]),
       birthday: new FormControl(this.selectUser?.birthday),
       active: new FormControl(this.selectUser?.active),
-      roles: this.createCheckedRole()
+      roles: this.createCheckedRole(),
     });
   }
 
@@ -218,7 +255,9 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
   private createCheckedRole(): FormGroup {
     const formGroup = new FormGroup({});
-    const userRolesSet = new Set(this.selectUser?.roles.map(role => role.name));
+    const userRolesSet = new Set(
+      this.selectUser?.roles.map((role) => role.name)
+    );
 
     if (this.userRoles) {
       this.userRoles().forEach((role) => {
@@ -231,15 +270,15 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
   private createAddUserForm(): void {
     this.addUserForm = new FormGroup({
-      username: new FormControl("", Validators.required),
-      password: new FormControl("", Validators.required),
-      firstName: new FormControl("", Validators.required),
-      lastName: new FormControl("", Validators.required),
-      email: new FormControl("", Validators.required),
-      birthday: new FormControl(""),
-      active: new  FormControl(""),
-      roles: this.createEmptyRole()
-    })
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required),
+      firstName: new FormControl('', Validators.required),
+      lastName: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+      birthday: new FormControl(''),
+      active: new FormControl(''),
+      roles: this.createEmptyRole(),
+    });
   }
 
   private createEmptyRole(): FormGroup {
@@ -247,7 +286,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     this.userRoles().forEach((role) => {
       const isDf: boolean = role.name.toUpperCase() === this.defaultRole;
       formGroup.addControl(role.name, new FormControl(isDf));
-    })
+    });
 
     return formGroup;
   }
@@ -262,11 +301,12 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
     const formValue = this.editUserForm?.value;
     if (formValue) {
-      const userRoles:IRole[]= Object.entries(formValue.roles)
+      const userRoles: IRole[] = Object.entries(formValue.roles)
         .filter(([_, checked]) => checked)
         .map(([name]) =>
           this.store.rolesEntities().find((role) => role.name === name)
-        ).filter((role: IRole | undefined): role is IRole => this.isRole(role));
+        )
+        .filter((role: IRole | undefined): role is IRole => this.isRole(role));
 
       const user: IUser = {
         id: formValue.id,
@@ -281,29 +321,30 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
       };
 
       this.userService.updateUser(user).subscribe({
-        next:(item: boolean): void => {
+        next: (item: boolean): void => {
           if (item) {
             this.userService.loadingUserById(user.id).subscribe({
-              next:(updateUser: IUser | null): void => {
+              next: (updateUser: IUser | null): void => {
                 if (updateUser !== null) {
                   this.displayContent.update((u) => {
                     if (u) {
-                      const index = u.findIndex((user: IUser) => user.id === updateUser.id);
+                      const index = u.findIndex(
+                        (user: IUser) => user.id === updateUser.id
+                      );
                       console.log(index);
                       if (index !== -1) {
                         u[index] = updateUser;
                       }
                     }
                     return u;
-                  })
+                  });
                 }
-              }
-            })
+              },
+            });
           }
-        }
-      })
+        },
+      });
     }
-
   }
 
   addingUser(): void {
@@ -319,8 +360,10 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     if (formValue) {
       const _roles: IRole[] = Object.entries(formValue.roles)
         .filter(([_, checked]) => checked)
-        .map(([name]) => this.store.rolesEntities().find((role)=> role.name === name))
-        .filter((role: IRole | undefined): role is IRole => this.isRole(role))
+        .map(([name]) =>
+          this.store.rolesEntities().find((role) => role.name === name)
+        )
+        .filter((role: IRole | undefined): role is IRole => this.isRole(role));
 
       const newUser: INewUser = {
         username: formValue.username,
@@ -330,24 +373,24 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         email: formValue.email,
         birthday: formValue.birthday,
         active: formValue.active,
-        roles: _roles
-      }
+        roles: _roles,
+      };
 
       this.userService.addUserByAdmin(newUser).subscribe({
-          next: (item: IUser | null): void => {
-            if (item !== null) {
-              const tmpArr: IUser[] = this.displayContent() || [];
-              tmpArr.push(item);
-              this.displayContent.set(tmpArr);
-            }
+        next: (item: IUser | null): void => {
+          if (item !== null) {
+            const tmpArr: IUser[] = this.displayContent() || [];
+            tmpArr.push(item);
+            this.displayContent.set(tmpArr);
           }
+        },
       });
     }
   }
 
   private deleteUser(id: number): void {
     this.userService.deleteUserById(id).subscribe({
-      next:(item: boolean): void => {
+      next: (item: boolean): void => {
         if (item) {
           if (this.displayContent() !== null) {
             const tmpArr: IUser[] = this.displayContent()!;
@@ -360,7 +403,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
             }
           }
         }
-      }
+      },
     });
   }
 
@@ -370,9 +413,9 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
   private createSearchForm(): void {
     this.searchDataForm = new FormGroup({
-      search_username: new FormControl(""),
-      search_email: new FormControl(""),
-    })
+      search_username: new FormControl(''),
+      search_email: new FormControl(''),
+    });
   }
 
   searchUser(): void {
@@ -381,10 +424,14 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     if (formValue) {
       this.searchList = this.userList().filter((user: IUser) => {
         return (
-          (formValue.search_username ? user.username.includes(formValue.search_username) : true) &&
-          (formValue.search_email ? user.email.includes(formValue.search_email) : true)
+          (formValue.search_username
+            ? user.username.includes(formValue.search_username)
+            : true) &&
+          (formValue.search_email
+            ? user.email.includes(formValue.search_email)
+            : true)
         );
-      })
+      });
 
       if (this.searchList && this.searchList.length > 0) {
         this.displayContent.set(this.searchList);

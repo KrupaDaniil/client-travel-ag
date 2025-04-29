@@ -4,27 +4,11 @@
   transition: background-color 0.3s;
 }
 
-.custom-dialog {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 1px 1px 10px #343434;
-}
-
-.closeBtnContainer {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding: 0 1rem;
-}
-
-::backdrop {
-  background-color: rgba(157, 157, 157, 0.7);
-}
-
 .checked-flag:checked {
   background-color: rgba(49, 190, 154, 0.85);
   border-color: rgba(49, 190, 154, 0.85);
 }
+
 :is(.selected-flag, .checked-flag):disabled {
   opacity: 1;
 }
@@ -43,8 +27,3 @@ input:focus {
   box-shadow: none;
   border-color: #e4e7ea;
 }
-
-.searchBlock {
-  min-height: 20dvh;
-}
-

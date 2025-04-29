@@ -1,10 +1,10 @@
-import { IBlobImageEntity } from './i-blob-image.entity';
-import { ICityEntity } from './i-city.entity';
-import { IClimateEntity } from './i-climate.entity';
-import { ILanguageEntity } from './i-language.entity';
+import {IBlobImageEntity} from './i-blob-image.entity';
+import {ICityEntity} from './i-city.entity';
+import {IClimateEntity} from './i-climate.entity';
+import {ILanguageEntity} from './i-language.entity';
 
 export interface ICountryEntity {
-  id: string;
+  id: number;
   name: string;
   currency: string;
   phoneCode: string;

@@ -1,1 +1,150 @@
-<p>country-management works!</p>
+<div class="row my-3">
+  <div class="col">
+    <div class="d-flex align-items-center justify-content">
+      <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #searchBtn>Search</button>
+    </div>
+
+  </div>
+  <div class="col">
+    <div class="d-flex align-items-center justify-content-end">
+      <button mat-stroked-button class="me-2" (click)="openAddCountryModal()">Add country</button>
+      <button mat-stroked-button class="me-2">Edit country</button>
+      <button mat-stroked-button class="me-2">Remove country</button>
+    </div>
+  </div>
+</div>
+
+<mat-sidenav-container class="bg-body searchBlock">
+  <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
+  <mat-sidenav-content>
+    <div class="my-3">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col">Flag</th>
+          <th scope="col">Capital city</th>
+          <th scope="col">Description</th>
+          <th scope="col">Languages</th>
+          <th scope="col">Climate</th>
+          <th scope="col">Currency</th>
+          <th scope="col">Phone code</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider" #countryBlock>
+          @if (displayCountryList() && displayCountryList()!.length > 0) {
+            @for (country of displayCountryList(); track country.id; let i = $index) {
+              <tr [attr.data-country-id]="country.id">
+                <th scope="row">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="country" disabled/>
+                    <div class="ms-2">{{ i + 1 }}</div>
+                  </div>
+                </th>
+                <td>{{ country.name }}</td>
+                <td>
+                  <img [ngSrc]="country.flagImage.blobUrl" alt="{{country.flagImage.blobFileName}}" width="30"
+                       height="20">
+                </td>
+                <td>{{ country.capitalCity.name }}</td>
+                <td>
+                  <button mat-stroked-button aria-label="Show description button"
+                          [attr.data-ds-country-id]="country.id" (click)="setDescription($event)">Show
+                  </button>
+                </td>
+                <td>
+                  @for (language of country.languages; track language.id) {
+                    {{ language.name }}
+                  }
+                </td>
+                <td>{{ country.climate.name }}</td>
+                <td>{{ country.currency }}</td>
+                <td>{{ country.phoneCode }}</td>
+              </tr>
+            }
+
+          } @else {
+            <tr>
+              <td colspan="9">
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                  @if (!this.loadingFailed()) {
+                    <div class="spinner-border text-secondary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  } @else {
+                    <span class="fs-4">List of countries is empty</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<dialog class="custom-dialog" id="addingCountyDialog" #addingCountryDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeAddCountryModal()"></button>
+  </div>
+
+  @if (addCountryForm) {
+    <form method="dialog" [formGroup]="addCountryForm">
+      <div class="row row-cols-3">
+        <div class="col mb-3 input-group input-group-sm">
+          <span class="input-group-text">Name</span>
+          <input type="text" class="form-control" formControlName="name" aria-label="Name">
+        </div>
+
+        <div class="col mb-3 input-group input-group-sm">
+          <span class="input-group-text">Capital city</span>
+          <input type="text" class="form-control" formControlName="capitalCity" aria-label="Capital city">
+        </div>
+
+        <div class="col mb-3">
+          <mat-form-field>
+            <mat-label>Languages</mat-label>
+            <mat-select formControlName="languages" multiple>
+              @for (language of languageList(); track language.id) {
+                <mat-option [value]="language">{{ language.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col mb-3">
+          <mat-form-field>
+            <mat-select formControlName="climate">
+              @for (climate of climateList(); track climate.id) {
+                <mat-option [value]="climate">{{ climate.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col mb-3 input-group input-group-sm">
+          <span class="input-group-text">Currency</span>
+          <input type="text" class="form-control" formControlName="currency" aria-label="Currency">
+        </div>
+
+        <div class="col mb-3 input-group input-group-sm">
+          <span class="input-group-text">Phone code</span>
+          <input type="text" class="form-control" formControlName="phoneCode" aria-label="Phone code">
+        </div>
+      </div>
+
+      <div class="mb-3 input-group input-group-sm">
+        <span class="input-group-text">Select flag image</span>
+        <input type="file" (change)="onSelectedFile($event)" class="form-control" aria-label="Select flag image">
+      </div>
+
+      <textarea class="form-control mb-3 not-resize" formControlName="description"
+                placeholder="Country description"></textarea>
+      <div class="d-flex align-items-center justify-content-end mb-3">
+        <button type="submit" class="test" mat-stroked-button>Add</button>
+      </div>
+    </form>
+  }
+</dialog>
