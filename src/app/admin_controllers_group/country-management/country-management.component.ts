@@ -25,14 +25,14 @@ import {ValidationService} from '../../../services/validation.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
 import {NgOptimizedImage} from '@angular/common';
-import {MatButton, MatButtonModule} from '@angular/material/button';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatOption, MatSelect} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {ICountryRequestEntity} from '../../../interfaces/country-block/i-country-request.entity';
 
 @Component({
   selector: 'app-country-management',
   imports: [ReactiveFormsModule, MatSidenavContainer, MatSidenav, MatSidenavContent,
-    NgOptimizedImage, MatButtonModule, MatFormField, MatSelect, MatOption, MatLabel],
+    NgOptimizedImage, MatButtonModule, NgSelectModule],
   providers: [CountryService, ClimateService, LanguageService, MessageService],
   templateUrl: './country-management.component.html',
   styleUrl: './country-management.component.css',
@@ -68,7 +68,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   private flagImg: File | undefined;
 
   @ViewChild("addingCountryDialog") addingCountryDialog?: ElementRef<HTMLDialogElement>;
-  @ViewChild("closeAddCountryBtn") closeCountryBtn?: MatButton;
+  @ViewChild("createCountyBtn") createCountryBtn?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private countryService: CountryService,
@@ -101,6 +101,11 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
+    if (this.createCountryBtn?.nativeElement) {
+      this.render.listen(this.createCountryBtn.nativeElement, 'click', () => {
+        this.createCountry();
+      });
+    }
   }
 
   private setContent(): void {
@@ -129,10 +134,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         Validators.required
       ),
       capitalCity: new FormControl('', Validators.required),
-      languages: new FormControl<ILanguageEntity[]>(
-        [],
-        this.check.validationLanguage
-      ),
+      languages: new FormControl([], Validators.required),
     });
   }
 
@@ -143,6 +145,25 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     } else {
       this.flagImg = undefined;
     }
+  }
+
+  private createCountry(): void {
+    const formResult = this.addCountryForm?.value;
+    if (formResult) {
+      const newCountry: ICountryRequestEntity = {
+        name: formResult.name,
+        currency: formResult.currency,
+        phoneCode: formResult.phoneCode,
+        flagImage: this.flagImg,
+        description: formResult.description,
+        climate: formResult.climate,
+        capitalCity: formResult.capitalCity,
+        languages: formResult.languages
+      }
+
+      console.log(newCountry);
+    }
+
   }
 
   setDescription(event: Event): void {
@@ -183,6 +204,4 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
       this.addingCountryDialog?.nativeElement.close();
     }
   }
-
-  protected readonly console = console;
 }

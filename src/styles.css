@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import "@ng-select/ng-select/themes/default.theme.css";
+/*@import "@ng-select/ng-select/themes/ant.design.theme.css";*/
+
 html, body {
   height: 100%;
 }
@@ -42,4 +45,47 @@ body {
 
 .not-resize {
   resize: none;
+}
+
+.ng-select-ngCs.ng-select-container {
+  border-color: #dfe3e7 !important;
+  max-width: 30dvw !important;
+}
+
+.ng-select-ngCs.ng-select-opened > .ng-select-container {
+  border-color: #86aed3 !important;
+}
+
+.ng-dropdown-panel.ng-select-bottom {
+  border-bottom-color: #86aed3 !important;
+  border-left-color: #86aed3 !important;
+  border-right-color: #86aed3 !important;
+  border-top-color: rgba(91, 115, 138, 0.8) !important;
+}
+
+.ng-select-ngCs.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+  box-shadow: none !important;
+  border-color: #86aed3 !important;
+}
+
+.admin-input-group {
+  border-radius: 4px !important;
+  height: 36px !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+  background-color: rgba(201, 217, 236, 0.73) !important;
+  text-decoration: underline orangered 1px !important;
+}
+
+.ng-option:hover {
+  background-color: rgba(201, 217, 236, 0.73) !important;
+}
+
+.admin-input {
+  box-shadow: none !important;
+}
+
+.admin-input:active {
+  border-color: #86aed3 !important;
 }

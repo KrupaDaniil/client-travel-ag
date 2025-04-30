@@ -1,15 +1,16 @@
 <div class="row my-3">
   <div class="col">
     <div class="d-flex align-items-center justify-content">
-      <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #searchBtn>Search</button>
+      <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3" #searchBtn>Search</button>
     </div>
 
   </div>
   <div class="col">
     <div class="d-flex align-items-center justify-content-end">
-      <button mat-stroked-button class="me-2" (click)="openAddCountryModal()">Add country</button>
-      <button mat-stroked-button class="me-2">Edit country</button>
-      <button mat-stroked-button class="me-2">Remove country</button>
+      <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-3" (click)="openAddCountryModal()">Add country
+      </button>
+      <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-3">Edit country</button>
+      <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-3">Remove country</button>
     </div>
   </div>
 </div>
@@ -85,65 +86,59 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<dialog class="custom-dialog" id="addingCountyDialog" #addingCountryDialog>
+<dialog class="container custom-dialog" id="addingCountyDialog" #addingCountryDialog>
   <div class="closeBtnContainer my-3">
     <button class="btn-close" (click)="closeAddCountryModal()"></button>
   </div>
 
   @if (addCountryForm) {
-    <form method="dialog" [formGroup]="addCountryForm">
+    <form method="dialog" [formGroup]="addCountryForm" enctype="multipart/form-data">
       <div class="row row-cols-3">
-        <div class="col mb-3 input-group input-group-sm">
-          <span class="input-group-text">Name</span>
-          <input type="text" class="form-control" formControlName="name" aria-label="Name">
-        </div>
-
-        <div class="col mb-3 input-group input-group-sm">
-          <span class="input-group-text">Capital city</span>
-          <input type="text" class="form-control" formControlName="capitalCity" aria-label="Capital city">
-        </div>
-
         <div class="col mb-3">
-          <mat-form-field>
-            <mat-label>Languages</mat-label>
-            <mat-select formControlName="languages" multiple>
-              @for (language of languageList(); track language.id) {
-                <mat-option [value]="language">{{ language.name }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Name</span>
+            <input type="text" class="form-control admin-input" formControlName="name" aria-label="Name">
+          </div>
         </div>
-
         <div class="col mb-3">
-          <mat-form-field>
-            <mat-select formControlName="climate">
-              @for (climate of climateList(); track climate.id) {
-                <mat-option [value]="climate">{{ climate.name }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Capital city</span>
+            <input type="text" class="form-control admin-input" formControlName="capitalCity" aria-label="Capital city">
+          </div>
         </div>
-
-        <div class="col mb-3 input-group input-group-sm">
-          <span class="input-group-text">Currency</span>
-          <input type="text" class="form-control" formControlName="currency" aria-label="Currency">
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="languageList()" bindLabel="name" [multiple]="true"
+                     formControlName="languages" placeholder="Selected counry language"></ng-select>
         </div>
-
-        <div class="col mb-3 input-group input-group-sm">
-          <span class="input-group-text">Phone code</span>
-          <input type="text" class="form-control" formControlName="phoneCode" aria-label="Phone code">
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="climateList()" bindLabel="name"
+                     formControlName="climate" placeholder="Selected counry climate"></ng-select>
+        </div>
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Currency</span>
+            <input type="text" class="form-control admin-input" formControlName="currency" aria-label="Currency">
+          </div>
+        </div>
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text admin-input">Phone code</span>
+            <input type="text" class="form-control" formControlName="phoneCode" aria-label="Phone code">
+          </div>
         </div>
       </div>
 
-      <div class="mb-3 input-group input-group-sm">
+      <div class="mb-3 input-group input-group-sm admin-input-group">
+        <input type="file" (change)="onSelectedFile($event)" class="form-control admin-input"
+               aria-label="Select flag image">
         <span class="input-group-text">Select flag image</span>
-        <input type="file" (change)="onSelectedFile($event)" class="form-control" aria-label="Select flag image">
       </div>
 
-      <textarea class="form-control mb-3 not-resize" formControlName="description"
+      <textarea class="form-control mb-3 not-resize admin-input" formControlName="description"
                 placeholder="Country description"></textarea>
       <div class="d-flex align-items-center justify-content-end mb-3">
-        <button type="submit" class="test" mat-stroked-button>Add</button>
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" #createCountyBtn>Add</button>
+        <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
       </div>
     </form>
   }
