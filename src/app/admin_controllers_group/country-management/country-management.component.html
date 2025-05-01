@@ -45,12 +45,12 @@
                 </th>
                 <td>{{ country.name }}</td>
                 <td>
-                  <img [ngSrc]="country.flagImage.blobUrl" alt="{{country.flagImage.blobFileName}}" width="30"
+                  <img [ngSrc]="country.flagImage.blobUrl" alt="country image" width="30"
                        height="20">
                 </td>
-                <td>{{ country.capitalCityName.name }}</td>
+                <td>{{ country.capitalCityName }}</td>
                 <td>
-                  <button mat-stroked-button aria-label="Show description button"
+                  <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
                           [attr.data-ds-country-id]="country.id" (click)="setDescription($event)">Show
                   </button>
                 </td>
@@ -138,7 +138,7 @@
       <textarea class="form-control mb-3 not-resize admin-input" formControlName="description"
                 placeholder="Country description"></textarea>
       <div class="d-flex align-items-center justify-content-end mb-3">
-        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" #createCountyBtn>Add</button>
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" (click)="requestCountry()">Add</button>
         <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
       </div>
     </form>

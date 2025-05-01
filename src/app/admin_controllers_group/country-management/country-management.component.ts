@@ -43,7 +43,6 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   private snackBar: MatSnackBar = inject(MatSnackBar);
 
   private isSelectedRow: boolean;
-  private isCreateCountryListen: boolean;
   loadingFailed: WritableSignal<boolean>;
   private selectedCountry: ICountryEntity | undefined;
 
@@ -72,7 +71,6 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   private readonly nameProperties: string[];
 
   @ViewChild("addingCountryDialog") addingCountryDialog?: ElementRef<HTMLDialogElement>;
-  @ViewChild("createCountyBtn") createCountryBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild("descriptionDialog") descriptionDialog?: ElementRef<HTMLDialogElement>;
 
   constructor(
@@ -84,7 +82,6 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     private render: Renderer2
   ) {
     this.isSelectedRow = false;
-    this.isCreateCountryListen = false;
     this.displayCountryList = signal<ICountryEntity[] | null>(null);
     this.loadingFailed = signal<boolean>(false);
     this.displayDescriptionCountry = signal<string | null>(null);
@@ -109,7 +106,6 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.saveNewCountry();
   }
 
   private setContent(): void {
@@ -187,7 +183,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private requestCountry(): void {
+  protected requestCountry(): void {
     const country: ICountryRequestEntity | null = this.createCountry();
     if (country !== null) {
       this.requestData = new FormData();
@@ -232,6 +228,9 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
 
     if (country) {
       this.displayDescriptionCountry.set(country.description);
+      if (this.descriptionDialog?.nativeElement) {
+        this.descriptionDialog?.nativeElement.showModal();
+      }
     }
   }
 
@@ -244,15 +243,6 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         });
       }
     });
-  }
-
-  private saveNewCountry(): void {
-    if (this.createCountryBtn?.nativeElement && !this.isCreateCountryListen) {
-      this.render.listen(this.createCountryBtn.nativeElement, 'click', () => {
-        this.requestCountry();
-      });
-      this.isCreateCountryListen = true;
-    }
   }
 
   openAddCountryModal(): void {
