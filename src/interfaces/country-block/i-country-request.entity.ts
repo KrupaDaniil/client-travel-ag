@@ -1,5 +1,4 @@
 import {IClimateEntity} from './i-climate.entity';
-import {ICityEntity} from './i-city.entity';
 import {ILanguageEntity} from './i-language.entity';
 
 export interface ICountryRequestEntity {
@@ -9,6 +8,6 @@ export interface ICountryRequestEntity {
   flagImage: File | undefined;
   description: string;
   climate: IClimateEntity;
-  capitalCity: ICityEntity;
+  capitalCityName: string;
   languages: ILanguageEntity[];
 }

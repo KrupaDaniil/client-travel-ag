@@ -28,6 +28,7 @@ import {NgOptimizedImage} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {ICountryRequestEntity} from '../../../interfaces/country-block/i-country-request.entity';
+import {IBlobImageEntity} from '../../../interfaces/country-block/i-blob-image.entity';
 
 @Component({
   selector: 'app-country-management',
@@ -42,6 +43,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   private snackBar: MatSnackBar = inject(MatSnackBar);
 
   private isSelectedRow: boolean;
+  private isCreateCountryListen: boolean;
   loadingFailed: WritableSignal<boolean>;
   private selectedCountry: ICountryEntity | undefined;
 
@@ -66,9 +68,12 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   addCountryForm: FormGroup | undefined;
   editCountryForm: FormGroup | undefined;
   private flagImg: File | undefined;
+  private requestData: FormData | undefined;
+  private readonly nameProperties: string[];
 
   @ViewChild("addingCountryDialog") addingCountryDialog?: ElementRef<HTMLDialogElement>;
   @ViewChild("createCountyBtn") createCountryBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild("descriptionDialog") descriptionDialog?: ElementRef<HTMLDialogElement>;
 
   constructor(
     private countryService: CountryService,
@@ -79,11 +84,14 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     private render: Renderer2
   ) {
     this.isSelectedRow = false;
+    this.isCreateCountryListen = false;
     this.displayCountryList = signal<ICountryEntity[] | null>(null);
     this.loadingFailed = signal<boolean>(false);
     this.displayDescriptionCountry = signal<string | null>(null);
     this.setContent();
     this.showMessage();
+    this.nameProperties = ["id", "name", "currency", "phoneCode", "flagImage", "description", "climate",
+      "capitalCityName", "languages"];
   }
 
   ngOnInit(): void {
@@ -101,11 +109,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    if (this.createCountryBtn?.nativeElement) {
-      this.render.listen(this.createCountryBtn.nativeElement, 'click', () => {
-        this.createCountry();
-      });
-    }
+    this.saveNewCountry();
   }
 
   private setContent(): void {
@@ -133,9 +137,27 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         null,
         Validators.required
       ),
-      capitalCity: new FormControl('', Validators.required),
+      capitalCityName: new FormControl('', Validators.required),
       languages: new FormControl([], Validators.required),
     });
+  }
+
+  private creatingEditForm(): void {
+    if (this.selectedCountry) {
+      this.editCountryForm = new FormGroup({
+        id: new FormControl(this.selectedCountry.id),
+        name: new FormControl(this.selectedCountry.name),
+        currency: new FormControl(this.selectedCountry.currency),
+        phoneCode: new FormControl(this.selectedCountry.phoneCode),
+        flagImage: new FormControl<IBlobImageEntity | null>(this.selectedCountry.flagImage),
+        description: new FormControl(this.selectedCountry.description),
+        climate: new FormControl<IClimateEntity | null>(
+          this.selectedCountry.climate, Validators.required
+        ),
+        capitalCityName: new FormControl(this.selectedCountry.capitalCityName),
+        languages: new FormControl(this.selectedCountry.languages, Validators.required),
+      })
+    }
   }
 
   onSelectedFile(event: Event): void {
@@ -147,23 +169,54 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private createCountry(): void {
+  private createCountry(): ICountryRequestEntity | null {
     const formResult = this.addCountryForm?.value;
     if (formResult) {
-      const newCountry: ICountryRequestEntity = {
+      return {
         name: formResult.name,
         currency: formResult.currency,
         phoneCode: formResult.phoneCode,
         flagImage: this.flagImg,
         description: formResult.description,
         climate: formResult.climate,
-        capitalCity: formResult.capitalCity,
+        capitalCityName: formResult.capitalCityName,
         languages: formResult.languages
-      }
-
-      console.log(newCountry);
+      } as ICountryRequestEntity;
+    } else {
+      return null;
     }
+  }
 
+  private requestCountry(): void {
+    const country: ICountryRequestEntity | null = this.createCountry();
+    if (country !== null) {
+      this.requestData = new FormData();
+      this.requestData?.append(this.nameProperties[1], country.name)
+      this.requestData?.append(this.nameProperties[2], country.currency)
+      this.requestData?.append(this.nameProperties[3], country.phoneCode)
+      if (this.flagImg) {
+        this.requestData?.append(this.nameProperties[4], country.flagImage!, country.flagImage?.name)
+      }
+      this.requestData?.append(this.nameProperties[5], country.description)
+      this.requestData?.append(this.nameProperties[6], new Blob([JSON.stringify(country.climate)], {type: 'application/json'}))
+      this.requestData?.append(this.nameProperties[7], country.capitalCityName)
+      this.requestData?.append(this.nameProperties[8], new Blob([JSON.stringify(country.languages)], {type: 'application/json'}))
+
+      this.countryService.addingCountry(this.requestData).then((result: boolean): void => {
+        if (result) {
+          this.displayCountryList.set(this.countryList());
+
+          this.messages.setMessage("Country created");
+          this.showMessage();
+        } else {
+          this.messages.setMessage("Country not created");
+          this.showMessage();
+        }
+      })
+    } else {
+      this.messages.setMessage("Missing data to send");
+      this.showMessage();
+    }
   }
 
   setDescription(event: Event): void {
@@ -193,6 +246,15 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     });
   }
 
+  private saveNewCountry(): void {
+    if (this.createCountryBtn?.nativeElement && !this.isCreateCountryListen) {
+      this.render.listen(this.createCountryBtn.nativeElement, 'click', () => {
+        this.requestCountry();
+      });
+      this.isCreateCountryListen = true;
+    }
+  }
+
   openAddCountryModal(): void {
     if (this.addingCountryDialog?.nativeElement) {
       this.addingCountryDialog?.nativeElement.showModal();
@@ -202,6 +264,12 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
   closeAddCountryModal(): void {
     if (this.addingCountryDialog?.nativeElement) {
       this.addingCountryDialog?.nativeElement.close();
+    }
+  }
+
+  closeDescriptionModal(): void {
+    if (this.descriptionDialog?.nativeElement) {
+      this.descriptionDialog?.nativeElement.close();
     }
   }
 }

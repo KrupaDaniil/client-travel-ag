@@ -48,7 +48,7 @@
                   <img [ngSrc]="country.flagImage.blobUrl" alt="{{country.flagImage.blobFileName}}" width="30"
                        height="20">
                 </td>
-                <td>{{ country.capitalCity.name }}</td>
+                <td>{{ country.capitalCityName.name }}</td>
                 <td>
                   <button mat-stroked-button aria-label="Show description button"
                           [attr.data-ds-country-id]="country.id" (click)="setDescription($event)">Show
@@ -69,12 +69,12 @@
             <tr>
               <td colspan="9">
                 <div class="d-flex align-items-center justify-content-center mt-3">
-                  @if (!this.loadingFailed()) {
+                  @if (this.loadingFailed()) {
+                    <span class="fs-4">List of countries is empty</span>
+                  } @else {
                     <div class="spinner-border text-secondary" role="status">
                       <span class="visually-hidden">Loading...</span>
                     </div>
-                  } @else {
-                    <span class="fs-4">List of countries is empty</span>
                   }
                 </div>
               </td>
@@ -103,7 +103,8 @@
         <div class="col mb-3">
           <div class="input-group input-group-sm admin-input-group">
             <span class="input-group-text">Capital city</span>
-            <input type="text" class="form-control admin-input" formControlName="capitalCity" aria-label="Capital city">
+            <input type="text" class="form-control admin-input" formControlName="capitalCityName"
+                   aria-label="Capital city">
           </div>
         </div>
         <div class="col mb-3">
@@ -141,5 +142,17 @@
         <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
       </div>
     </form>
+  }
+</dialog>
+
+<dialog class="container custom-dialog" id="descriptionDialog" #descriptionDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeDescriptionModal()"></button>
+  </div>
+
+  @if (displayDescriptionCountry() !== null) {
+    <textarea class="form-control admin-input" readonly [textContent]="displayDescriptionCountry()"></textarea>
+  } @else {
+    <textarea class="form-control admin-input" readonly>The description is missing or temporarily unavailable</textarea>
   }
 </dialog>

@@ -11,6 +11,6 @@ export interface ICountryEntity {
   flagImage: IBlobImageEntity;
   description: string;
   climate: IClimateEntity;
-  capitalCity: ICityEntity;
+  capitalCityName: ICityEntity;
   languages: ILanguageEntity[];
 }

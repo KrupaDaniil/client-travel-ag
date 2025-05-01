@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
-import { EntityStorage } from '../storage/entity.storage';
-import { HttpService } from './http.service';
-import { MessageService } from './message.service';
-import { ValidationService } from './validation.service';
-import { ICountryEntity } from '../interfaces/country-block/i-country.entity';
-import { firstValueFrom, map } from 'rxjs';
-import { IError } from '../interfaces/i-error';
+import {inject, Injectable} from '@angular/core';
+import {EntityStorage} from '../storage/entity.storage';
+import {HttpService} from './http.service';
+import {MessageService} from './message.service';
+import {ValidationService} from './validation.service';
+import {ICountryEntity} from '../interfaces/country-block/i-country.entity';
+import {firstValueFrom, map} from 'rxjs';
+import {IError} from '../interfaces/i-error';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,8 @@ export class CountryService {
     private http_s: HttpService,
     private message: MessageService,
     private check: ValidationService
-  ) {}
+  ) {
+  }
 
   setAllCountry(): void {
     this.http_s.loadingAllCountry().subscribe({
@@ -32,20 +33,20 @@ export class CountryService {
     });
   }
 
-  async addingCountry(country: FormData): Promise<ICountryEntity | null> {
+  async addingCountry(country: FormData): Promise<boolean> {
     return await firstValueFrom(
       this.http_s.addCountry(country).pipe(
         map(
           async (
             res: ICountryEntity | IError
-          ): Promise<ICountryEntity | null> => {
+          ): Promise<boolean> => {
             if (this.check.isError(res)) {
               this.message.setMessage((res as IError).message);
-              return null;
+              return false;
             } else {
               this.message.setMessage(null);
               this.store.setCountry(res as ICountryEntity);
-              return res as ICountryEntity;
+              return true;
             }
           }
         )
