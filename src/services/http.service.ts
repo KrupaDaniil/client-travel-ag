@@ -210,9 +210,9 @@ export class HttpService {
       );
   }
 
-  loadingAllCountry(): Observable<ICountryEntity[] | IError> {
+  loadingAllCountryByAdmin(): Observable<ICountryEntity[] | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/api/countries`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/api/countries/admin`, {observe: 'response'})
       .pipe(
         map((response: HttpResponse<Object>): ICountryEntity[] | IError => {
           if (response.status === 200) {
@@ -403,10 +403,7 @@ export class HttpService {
           if (response.status === 200) {
             return response.body as ICountryEntity;
           } else {
-            return new ErrorMessage(
-              HttpStatusCode.BadRequest,
-              'Failed to update country data'
-            );
+            return response.body as IError;
           }
         }),
         catchError((error: HttpErrorResponse) =>

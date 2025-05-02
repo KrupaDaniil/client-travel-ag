@@ -37,3 +37,7 @@
   }
 
 }
+
+.txt-min-h {
+  min-height: 15rem !important;
+}

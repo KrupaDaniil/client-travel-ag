@@ -21,7 +21,7 @@ export class CountryService {
   }
 
   setAllCountry(): void {
-    this.http_s.loadingAllCountry().subscribe({
+    this.http_s.loadingAllCountryByAdmin().subscribe({
       next: (item: ICountryEntity[] | IError) => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
@@ -54,20 +54,20 @@ export class CountryService {
     );
   }
 
-  async updateCountry(country: FormData): Promise<ICountryEntity | null> {
+  async updateCountry(country: FormData): Promise<boolean> {
     return await firstValueFrom(
       this.http_s.updateCountry(country).pipe(
         map(
           async (
             res: ICountryEntity | IError
-          ): Promise<ICountryEntity | null> => {
+          ): Promise<boolean> => {
             if (this.check.isError(res)) {
               this.message.setMessage((res as IError).message);
-              return null;
+              return false;
             } else {
               this.message.setMessage(null);
               this.store.setCountry(res as ICountryEntity);
-              return res as ICountryEntity;
+              return true;
             }
           }
         )

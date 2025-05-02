@@ -1,16 +1,15 @@
-import {IBlobImageEntity} from './i-blob-image.entity';
-import {ICountryCityEntity} from './i-country-city.entity';
 import {IClimateEntity} from './i-climate.entity';
 import {ILanguageEntity} from './i-language.entity';
+import {ICountryCityEntity} from './i-country-city.entity';
 
-export interface ICountryEntity {
+export interface ICountryRequestUpdateEntity {
   id: number;
   name: string;
   currency: string;
   phoneCode: string;
-  flagImage: IBlobImageEntity;
+  flagImage: File | undefined;
   description: string;
   climate: IClimateEntity;
-  capitalCity: ICountryCityEntity;
+  capitalCityName: ICountryCityEntity;
   languages: ILanguageEntity[];
 }

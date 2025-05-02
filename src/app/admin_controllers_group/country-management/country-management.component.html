@@ -9,8 +9,10 @@
     <div class="d-flex align-items-center justify-content-end">
       <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-3" (click)="openAddCountryModal()">Add country
       </button>
-      <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-3">Edit country</button>
-      <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-3">Remove country</button>
+      <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-3" (click)="openUpdateCountryModal()">Edit
+        country
+      </button>
+      <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-3" #removeCountryBtn>Remove country</button>
     </div>
   </div>
 </div>
@@ -45,10 +47,9 @@
                 </th>
                 <td>{{ country.name }}</td>
                 <td>
-                  <img [ngSrc]="country.flagImage.blobUrl" alt="country image" width="30"
-                       height="20">
+                  <img [ngSrc]="country.flagImage.blobUrl" alt="country image" width="60" height="40">
                 </td>
-                <td>{{ country.capitalCityName }}</td>
+                <td>{{ country.capitalCity.name }}</td>
                 <td>
                   <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
                           [attr.data-ds-country-id]="country.id" (click)="setDescription($event)">Show
@@ -124,7 +125,7 @@
         <div class="col mb-3">
           <div class="input-group input-group-sm admin-input-group">
             <span class="input-group-text admin-input">Phone code</span>
-            <input type="text" class="form-control" formControlName="phoneCode" aria-label="Phone code">
+            <input type="text" class="form-control admin-input" formControlName="phoneCode" aria-label="Phone code">
           </div>
         </div>
       </div>
@@ -135,10 +136,13 @@
         <span class="input-group-text">Select flag image</span>
       </div>
 
-      <textarea class="form-control mb-3 not-resize admin-input" formControlName="description"
+      <textarea class="form-control mb-3 not-resize admin-input txt-min-h" formControlName="description"
                 placeholder="Country description"></textarea>
+
       <div class="d-flex align-items-center justify-content-end mb-3">
-        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" (click)="requestCountry()">Add</button>
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" (click)="requestCountry()">
+          Add
+        </button>
         <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
       </div>
     </form>
@@ -146,13 +150,84 @@
 </dialog>
 
 <dialog class="container custom-dialog" id="descriptionDialog" #descriptionDialog>
-  <div class="closeBtnContainer my-3">
-    <button class="btn-close" (click)="closeDescriptionModal()"></button>
+  <div class="row my-3">
+    <div class="col">
+      <span class="fw-semibold fs-5 ms-3">Country description</span>
+    </div>
+    <div class="col">
+      <div class="closeBtnContainer">
+        <button class="btn-close" (click)="closeDescriptionModal()"></button>
+      </div>
+    </div>
   </div>
 
   @if (displayDescriptionCountry() !== null) {
-    <textarea class="form-control admin-input" readonly [textContent]="displayDescriptionCountry()"></textarea>
+    <textarea class="form-control admin-input not-resize txt-min-h" readonly
+              [textContent]="displayDescriptionCountry()"></textarea>
   } @else {
     <textarea class="form-control admin-input" readonly>The description is missing or temporarily unavailable</textarea>
+  }
+</dialog>
+
+<dialog class="container custom-dialog" id="addingCountyDialog" #updateCountryDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeUpdateCountryModal()"></button>
+  </div>
+
+  @if (editCountryForm) {
+    <form method="dialog" [formGroup]="editCountryForm" enctype="multipart/form-data">
+      <input type="hidden" formControlName="id">
+      <div class="row row-cols-3">
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Name</span>
+            <input type="text" class="form-control admin-input" formControlName="name" aria-label="Name">
+          </div>
+        </div>
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Capital city</span>
+            <input type="text" class="form-control admin-input" formControlName="capitalCity"
+                   aria-label="Capital city">
+          </div>
+        </div>
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="languageList()" bindLabel="name" [multiple]="true"
+                     formControlName="languages" placeholder="Selected counry language"></ng-select>
+        </div>
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="climateList()" bindLabel="name"
+                     formControlName="climate" placeholder="Selected counry climate"></ng-select>
+        </div>
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Currency</span>
+            <input type="text" class="form-control admin-input" formControlName="currency" aria-label="Currency">
+          </div>
+        </div>
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text admin-input">Phone code</span>
+            <input type="text" class="form-control admin-input" formControlName="phoneCode" aria-label="Phone code">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 input-group input-group-sm admin-input-group">
+        <input type="file" (change)="onSelectedFile($event)" class="form-control admin-input"
+               aria-label="Select flag image">
+        <span class="input-group-text">Select flag image</span>
+      </div>
+
+      <textarea class="form-control mb-3 not-resize admin-input txt-min-h" formControlName="description"
+                placeholder="Country description"></textarea>
+
+      <div class="d-flex align-items-center justify-content-end mb-3">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" (click)="updateCountry()">
+          Save
+        </button>
+        <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
+      </div>
+    </form>
   }
 </dialog>
