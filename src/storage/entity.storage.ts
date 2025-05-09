@@ -24,6 +24,9 @@ import { AuthService } from '../services/auth.service';
 import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
 import { ILanguageEntity } from '../interfaces/country-block/i-language.entity';
 import { ICountryEntity } from '../interfaces/country-block/i-country.entity';
+import { ICityEntity } from '../interfaces/country-block/i-city.entity';
+import { IMainCountryForCityEntity } from '../interfaces/country-block/i-main-country-for-city.entity';
+import {IBlobImageEntity} from '../interfaces/country-block/i-blob-image.entity';
 
 function loadUserStartData(): () => IUserStartData {
   return () => {
@@ -67,6 +70,12 @@ const countryConfig = entityConfig({
   selectId: (country) => country.id,
 });
 
+const cityConfig = entityConfig({
+  entity: type<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>>(),
+  collection: 'admin_cities',
+  selectId: (admin_city) => admin_city.id,
+});
+
 export const EntityStorage = signalStore(
   { providedIn: 'root' },
 
@@ -76,6 +85,7 @@ export const EntityStorage = signalStore(
   withEntities(climateConfig),
   withEntities(languageConfig),
   withEntities(countryConfig),
+  withEntities(cityConfig),
   withMethods((store) => ({
     addUserStartData(startData: IUserStartData): void {
       patchState(store, startData);
@@ -102,6 +112,9 @@ export const EntityStorage = signalStore(
     setCountry(country: ICountryEntity): void {
       patchState(store, setEntity(country, countryConfig));
     },
+    setAdminCity(city: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>): void {
+      patchState(store, setEntity(city, cityConfig));
+    },
 
     setAllUsers(users: IUser[]): void {
       patchState(store, setAllEntities(users, userConfig));
@@ -118,6 +131,10 @@ export const EntityStorage = signalStore(
     setAllCountries(countries: ICountryEntity[]): void {
       patchState(store, setAllEntities(countries, countryConfig));
     },
+    setAllAdminCities(cities: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[]): void {
+      patchState(store, setAllEntities(cities, cityConfig));
+    },
+
     updateUserStartData(userStartData: Partial<IUserStartData>): void {
       if (Object.keys(userStartData).length > 0) {
         patchState(store, (state) => ({
@@ -147,6 +164,9 @@ export const EntityStorage = signalStore(
     },
     removeCountry(id: number): void {
       patchState(store, removeEntity(id, countryConfig));
+    },
+    removeCity(id: number): void {
+      patchState(store, removeEntity(id, cityConfig));
     },
   }))
 );

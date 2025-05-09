@@ -1,22 +1,30 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpResponse, HttpStatusCode,} from '@angular/common/http';
-import {IUserReg} from '../interfaces/user-auth/i-user-reg';
-import {catchError, map, Observable, of} from 'rxjs';
-import {IUserLogin} from '../interfaces/user-auth/i-user-login';
-import {IError} from '../interfaces/i-error';
-import {AuthService} from './auth.service';
-import {JWTResponse} from '../interfaces/user-auth/jwtresponse';
-import {ITokenData} from '../interfaces/user-auth/i-token-data';
-import {IUserStartData} from '../interfaces/user-auth/i-user-start-data';
-import {IUser} from '../interfaces/i-user';
-import {IRole} from '../interfaces/i-role';
-import {INewUser} from '../interfaces/i-new-user';
-import {INewRole} from '../interfaces/i-new-role';
-import {IUserInfo} from '../interfaces/user-auth/i-user-info';
-import {IClimateEntity} from '../interfaces/country-block/i-climate.entity';
-import {ErrorMessage} from '../models/error-message';
-import {ILanguageEntity} from '../interfaces/country-block/i-language.entity';
-import {ICountryEntity} from '../interfaces/country-block/i-country.entity';
+import { Injectable } from '@angular/core';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpResponse,
+  HttpStatusCode,
+} from '@angular/common/http';
+import { IUserReg } from '../interfaces/user-auth/i-user-reg';
+import { catchError, map, Observable, of } from 'rxjs';
+import { IUserLogin } from '../interfaces/user-auth/i-user-login';
+import { IError } from '../interfaces/i-error';
+import { AuthService } from './auth.service';
+import { JWTResponse } from '../interfaces/user-auth/jwtresponse';
+import { ITokenData } from '../interfaces/user-auth/i-token-data';
+import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
+import { IUser } from '../interfaces/i-user';
+import { IRole } from '../interfaces/i-role';
+import { INewUser } from '../interfaces/i-new-user';
+import { INewRole } from '../interfaces/i-new-role';
+import { IUserInfo } from '../interfaces/user-auth/i-user-info';
+import { IClimateEntity } from '../interfaces/country-block/i-climate.entity';
+import { ErrorMessage } from '../models/error-message';
+import { ILanguageEntity } from '../interfaces/country-block/i-language.entity';
+import { ICountryEntity } from '../interfaces/country-block/i-country.entity';
+import { IMainCountryForCityEntity } from '../interfaces/country-block/i-main-country-for-city.entity';
+import { ICityEntity } from '../interfaces/country-block/i-city.entity';
+import { IBlobImageEntity } from '../interfaces/country-block/i-blob-image.entity';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +45,7 @@ export class HttpService {
 
   registrationUser(user: IUserReg): Observable<boolean | IError> {
     return this.http
-      .post(`${this.baseUrl}/registration`, user, {observe: 'response'})
+      .post(`${this.baseUrl}/registration`, user, { observe: 'response' })
       .pipe(
         map((response) => {
           return response.status === 200;
@@ -55,7 +63,7 @@ export class HttpService {
 
   loginUser(user: IUserLogin): Observable<IUserStartData | IError | null> {
     return this.http
-      .post<any>(this.baseUrl + '/login', user, {observe: 'response'})
+      .post<any>(this.baseUrl + '/login', user, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<any>): IUserStartData | IError | null => {
           if (response.status === 200) {
@@ -84,7 +92,7 @@ export class HttpService {
   // loading block // ------------------------------------------------------------
   loadingAllUsers(): Observable<IUser[] | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/all-users`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/all-users`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IUser[] | IError => {
           if (response.status === 200) {
@@ -101,7 +109,7 @@ export class HttpService {
 
   loadingAllRoles(): Observable<IRole[] | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/all-roles`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/all-roles`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IRole[] | IError => {
           if (response.status === 200) {
@@ -118,7 +126,7 @@ export class HttpService {
 
   loadingAllClimate(): Observable<IClimateEntity[] | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/api/climates`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/api/climates`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IClimateEntity[] | IError => {
           if (response.status === 200) {
@@ -138,7 +146,7 @@ export class HttpService {
 
   loadingAllLanguage(): Observable<ILanguageEntity[] | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/api/languages`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/api/languages`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): ILanguageEntity[] | IError => {
           if (response.status === 200) {
@@ -158,7 +166,7 @@ export class HttpService {
 
   loadingUserById(id: number): Observable<IUser | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/user-get-id/${id}`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/user-get-id/${id}`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IUser | IError => {
           if (response.status === 200) {
@@ -175,7 +183,7 @@ export class HttpService {
 
   loadingClimateById(id: number): Observable<IClimateEntity | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/api/climate/${id}`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/api/climate/${id}`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IClimateEntity | IError => {
           if (response.status === 200) {
@@ -212,7 +220,9 @@ export class HttpService {
 
   loadingAllCountryByAdmin(): Observable<ICountryEntity[] | IError> {
     return this.http
-      .get<Object>(`${this.baseUrl}/api/countries/admin`, {observe: 'response'})
+      .get<Object>(`${this.baseUrl}/api/countries/admin`, {
+        observe: 'response',
+      })
       .pipe(
         map((response: HttpResponse<Object>): ICountryEntity[] | IError => {
           if (response.status === 200) {
@@ -257,10 +267,70 @@ export class HttpService {
       );
   }
 
+  loadingAllAdminCities(): Observable<
+    ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError
+  > {
+    return this.http
+      .get<Object>(`${this.baseUrl}/api/cities`, { observe: 'response' })
+      .pipe(
+        map(
+          (
+            response: HttpResponse<Object>
+          ):
+            | ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[]
+            | IError => {
+            if (response.status === HttpStatusCode.Ok) {
+              return response.body as ICityEntity<
+                IMainCountryForCityEntity,
+                IBlobImageEntity
+              >[];
+            } else {
+              return response.body as IError;
+            }
+          }
+        ),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, 'Data loading error'))
+        )
+      );
+  }
+
+  loadingAdminCities(
+    id: number
+  ): Observable<
+    ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
+  > {
+    return this.http
+      .get<Object>(`${this.baseUrl}/api/cities/${id}`, { observe: 'response' })
+      .pipe(
+        map(
+          (
+            response: HttpResponse<Object>
+          ):
+            | ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>
+            | IError => {
+            if (response.status === HttpStatusCode.Ok) {
+              return response.body as ICityEntity<
+                IMainCountryForCityEntity,
+                IBlobImageEntity
+              >;
+            } else {
+              return response.body as IError;
+            }
+          }
+        ),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, 'Failed to load entity'))
+        )
+      );
+  }
+
   // block adding // ------------------------------------------------------------
   addUser(user: INewUser): Observable<IUser | IError> {
     return this.http
-      .post(`${this.baseUrl}/add-user`, user, {observe: 'response'})
+      .post(`${this.baseUrl}/add-user`, user, { observe: 'response' })
       .pipe(
         map((resp: HttpResponse<object>): IUser | IError => {
           if (resp.status === 200) {
@@ -278,7 +348,7 @@ export class HttpService {
 
   addRole(role: INewRole): Observable<IRole | IError> {
     return this.http
-      .post(`${this.baseUrl}/add-role`, role, {observe: 'response'})
+      .post(`${this.baseUrl}/add-role`, role, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): IRole | IError => {
           if (response.status === 200) {
@@ -356,10 +426,29 @@ export class HttpService {
       );
   }
 
+  addCity(city: FormData): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError> {
+    return this.http
+      .post(`${this.baseUrl}/api/countries/create`, city, {observe: 'response',}).pipe(
+        map(
+          (response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError => {
+            if (response.status === HttpStatusCode.Created) {
+              return response.body as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>;
+            } else {
+              return response.body as IError;
+            }
+          }
+        ),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+        )
+      );
+  }
+
   // block update // ------------------------------------------------------------
   updateUser(user: IUser): Observable<boolean | IError> {
     return this.http
-      .post(`${this.baseUrl}/update-user`, user, {observe: 'response'})
+      .post(`${this.baseUrl}/update-user`, user, { observe: 'response' })
       .pipe(
         map((resp: HttpResponse<object>): boolean | IError => {
           if (resp.status === 200) {
@@ -377,7 +466,7 @@ export class HttpService {
 
   updateUserInfo(user: IUserInfo): Observable<IUserInfo | IError> {
     return this.http
-      .post(`${this.baseUrl}/update-user-info`, user, {observe: 'response'})
+      .post(`${this.baseUrl}/update-user-info`, user, { observe: 'response' })
       .pipe(
         map((resp: HttpResponse<object>): IUserInfo | IError => {
           if (resp.status === 200) {
@@ -412,10 +501,27 @@ export class HttpService {
       );
   }
 
+  updateCity(city: FormData): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError> {
+    return this.http.put(`${this.baseUrl}/api/cities/update`, city, { observe: 'response' }).pipe(
+        map((response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError => {
+            if (response.status === HttpStatusCode.Ok) {
+              return response.body as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>;
+            } else {
+              return response.body as IError;
+            }
+          }
+        ),
+        catchError(
+          (error: HttpErrorResponse): Observable<IError> =>
+            of(this.getErrorMessage(error, this.errorDefaultMessage[1]))
+        )
+      );
+  }
+
   //delete block // ------------------------------------------------------------
   deleteUser(id: number): Observable<boolean | IError> {
     return this.http
-      .delete(`${this.baseUrl}/delete-user/${id}`, {observe: 'response'})
+      .delete(`${this.baseUrl}/delete-user/${id}`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): boolean | IError => {
           if (response.status === 200) {
@@ -433,7 +539,7 @@ export class HttpService {
 
   deleteRole(id: number): Observable<boolean | IError> {
     return this.http
-      .delete(`${this.baseUrl}/delete-role/${id}`, {observe: 'response'})
+      .delete(`${this.baseUrl}/delete-role/${id}`, { observe: 'response' })
       .pipe(
         map((response: HttpResponse<Object>): boolean | IError => {
           if (response.status === 200) {
@@ -503,6 +609,24 @@ export class HttpService {
       .pipe(
         map((response: HttpResponse<Object>) => {
           if (response.status === 200) {
+            return true;
+          } else {
+            return new ErrorMessage(
+              HttpStatusCode.BadRequest,
+              this.errorDefaultMessage[3]
+            );
+          }
+        }),
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+        )
+      );
+  }
+
+  deleteCity(id: number): Observable<boolean | IError> {
+    return this.http.delete(`${this.baseUrl}/api/cities/remove/${id}`, {observe: 'response',}).pipe(
+        map((response: HttpResponse<Object>): boolean | IError => {
+          if (response.status === HttpStatusCode.NoContent) {
             return true;
           } else {
             return new ErrorMessage(

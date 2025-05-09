@@ -1,1 +1,199 @@
-<p>city-management works!</p>
+<div class="row my-3">
+  <div class="col">
+    <div class="d-flex align-items-center justify-content">
+      <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3" #searchBtn>Search</button>
+    </div>
+
+  </div>
+  <div class="col">
+    <div class="d-flex align-items-center justify-content-end">
+      <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-3" (click)="openAddCityModal()">Add city</button>
+      <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-3" (click)="openUpdateCityModal()">Edit city</button>
+      <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-3" #removeCityBtn>Remove city</button>
+    </div>
+  </div>
+</div>
+
+<mat-sidenav-container class="bg-body searchBlock">
+  <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
+  <mat-sidenav-content>
+    <div class="my-3">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col">City Image</th>
+          <th scope="col">Country</th>
+          <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider" #countryBlock>
+          @if (displayCityList() && displayCityList()!.length > 0) {
+            @for (city of displayCityList(); track city.id; let i = $index) {
+              <tr [attr.data-country-id]="city.id">
+                <th scope="row">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="selectedCity" disabled/>
+                    <div class="ms-2">{{ i + 1 }}</div>
+                  </div>
+                </th>
+                <td>{{ city.name }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary rounder-5 px-3" [attr.data-img-country-id]="city.id"
+                          aria-label="Show image button" (click)="setImage($event)">Show image</button>
+                </td>
+                <td>{{ city.country.name }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
+                          [attr.data-ds-country-id]="city.id" (click)="setDescription($event)">Show
+                  </button>
+                </td>
+              </tr>
+            }
+
+          } @else {
+            <tr>
+              <td colspan="9">
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                  @if (this.loadingFailed()) {
+                    <span class="fs-4">List of cities is empty</span>
+                  } @else {
+                    <div class="spinner-border text-secondary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<dialog class="container custom-dialog" id="addingCountyDialog" #addingCityDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeAddCityModal()"></button>
+  </div>
+
+  @if (addCityForm) {
+    <form method="dialog" [formGroup]="addCityForm" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Name</span>
+            <input type="text" class="form-control admin-input" formControlName="name" aria-label="Name">
+          </div>
+        </div>
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="countryList()" bindLabel="name"
+                     formControlName="climate" placeholder="Selected country"></ng-select>
+        </div>
+      </div>
+
+      <div class="mb-3 input-group input-group-sm admin-input-group">
+        <input type="file" (change)="onSelectedFile($event)" class="form-control admin-input"
+               aria-label="Select city image">
+        <span class="input-group-text">Select city image</span>
+      </div>
+
+      <textarea class="form-control mb-3 not-resize admin-input txt-min-h" formControlName="description"
+                placeholder="City description"></textarea>
+
+      <div class="d-flex align-items-center justify-content-end mb-3">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" (click)="requestCity()">
+          Add
+        </button>
+        <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
+      </div>
+    </form>
+  }
+</dialog>
+
+<dialog class="container custom-dialog" id="descriptionDialog" #descriptionDialog>
+  <div class="row my-3">
+    <div class="col">
+      <span class="fw-semibold fs-5 ms-3">City description</span>
+    </div>
+    <div class="col">
+      <div class="closeBtnContainer">
+        <button class="btn-close" (click)="closeDescriptionModal()"></button>
+      </div>
+    </div>
+  </div>
+
+  @if (descriptionCity()!== null) {
+    <textarea class="form-control admin-input not-resize txt-min-h" readonly
+              [textContent]="descriptionCity()"></textarea>
+  } @else {
+    <textarea class="form-control admin-input" readonly>The description is missing or temporarily unavailable</textarea>
+  }
+</dialog>
+
+<dialog class="container custom-dialog" id="descriptionDialog" #imageDialog>
+  <div class="row my-3">
+    <div class="col">
+      <span class="fw-semibold fs-5 ms-3">Image of the city</span>
+    </div>
+    <div class="col">
+      <div class="closeBtnContainer">
+        <button class="btn-close" (click)="closeImageModal()"></button>
+      </div>
+    </div>
+  </div>
+
+  @if (imageCityUrl()!== null) {
+    <div class="d-flex align-items-center justify-content-center">
+      <img ngSrc="{{imageCityUrl()}}" alt="Image of the city" width="25dvw" height="auto">
+    </div>
+  } @else {
+    <div class="d-flex align-items-center justify-content-center my-5 fw-semibold fs-4">
+      The image is absent or inaccessible
+    </div>
+  }
+</dialog>
+
+<dialog class="container custom-dialog" id="addingCountyDialog" #updateCityDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeUpdateCityModal()"></button>
+  </div>
+
+  @if (editCityForm) {
+    <form method="dialog" [formGroup]="editCityForm" enctype="multipart/form-data">
+      <input type="hidden" formControlName="id">
+      <div class="row row-cols-3">
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Name</span>
+            <input type="text" class="form-control admin-input" formControlName="name" aria-label="Name">
+          </div>
+        </div>
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Country</span>
+            <input type="text" class="form-control admin-input" formControlName="country" aria-label="Country"
+                   [disabled]="true">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 input-group input-group-sm admin-input-group">
+        <input type="file" (change)="onSelectedFile($event)" class="form-control admin-input"
+               aria-label="Select city image">
+        <span class="input-group-text">Select city image</span>
+      </div>
+
+      <textarea class="form-control mb-3 not-resize admin-input txt-min-h" formControlName="description"
+                placeholder="City description"></textarea>
+
+      <div class="d-flex align-items-center justify-content-end mb-3">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-5 px-4 me-2" (click)="updateCity()">
+          Save
+        </button>
+        <button type="reset" class="btn btn-sm btn-outline-danger rounded-5 px-4 me-2">Clear</button>
+      </div>
+    </form>
+  }
+</dialog>
