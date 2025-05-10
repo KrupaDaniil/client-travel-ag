@@ -1,13 +1,13 @@
-import {computed, inject, Injectable, Renderer2, signal, Signal, WritableSignal} from '@angular/core';
-import { HttpService } from './http.service';
-import { MessageService } from './message.service';
-import { ValidationService } from './validation.service';
-import { EntityStorage } from '../storage/entity.storage';
-import { firstValueFrom, map } from 'rxjs';
-import { ICityEntity } from '../interfaces/country-block/i-city.entity';
-import { IMainCountryForCityEntity } from '../interfaces/country-block/i-main-country-for-city.entity';
-import { IBlobImageEntity } from '../interfaces/country-block/i-blob-image.entity';
-import { IError } from '../interfaces/i-error';
+import {inject, Injectable} from '@angular/core';
+import {HttpService} from './http.service';
+import {MessageService} from './message.service';
+import {ValidationService} from './validation.service';
+import {EntityStorage} from '../storage/entity.storage';
+import {firstValueFrom, map} from 'rxjs';
+import {ICityEntity} from '../interfaces/country-block/i-city.entity';
+import {IMainCountryForCityEntity} from '../interfaces/country-block/i-main-country-for-city.entity';
+import {IBlobImageEntity} from '../interfaces/country-block/i-blob-image.entity';
+import {IError} from '../interfaces/i-error';
 
 @Injectable({
   providedIn: 'root',
@@ -20,23 +20,22 @@ export class CityService {
     private http_s: HttpService,
     private messages: MessageService,
     private check: ValidationService
-  ) {}
+  ) {
+  }
 
   setAllAdminCities(): void {
-    this.http_s.loadingAllAdminCities().pipe(
-      map((cities: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError): void => {
+    this.http_s.loadingAllAdminCities().subscribe(
+      {
+        next: (cities: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError): void => {
           if (this.check.isError(cities)) {
             this.messages.setMessage((cities as IError).message);
           } else {
             this.messages.setMessage(null);
-
-            this.store.setAllAdminCities(
-              cities as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[]
-            );
+            this.store.setAllAdminCities(cities as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[]);
           }
         }
-      )
-    );
+      }
+    )
   }
 
   async addCityEntity(newCity: FormData): Promise<boolean> {
@@ -56,16 +55,16 @@ export class CityService {
 
   async deleteCityEntity(id: number): Promise<boolean> {
     return await firstValueFrom(this.http_s.deleteCity(id).pipe(
-        map((entity: boolean | IError): boolean => {
-          if (this.check.isError(entity)) {
-            this.messages.setMessage((entity as IError).message);
-            return false;
-          } else {
-            this.messages.setMessage(null);
-            this.store.removeCity(id);
-            return true;
-          }
-        })
+      map((entity: boolean | IError): boolean => {
+        if (this.check.isError(entity)) {
+          this.messages.setMessage((entity as IError).message);
+          return false;
+        } else {
+          this.messages.setMessage(null);
+          this.store.removeCity(id);
+          return true;
+        }
+      })
     ))
   }
 
