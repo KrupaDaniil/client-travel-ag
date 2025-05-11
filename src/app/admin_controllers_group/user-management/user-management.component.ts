@@ -76,7 +76,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     this.defaultRole = 'ROLE_USER';
     this.initAddForm = false;
     this.isSelectedRow = false;
-
+    this.roleService.setAllRoles();
     this.initRolesBlock();
     this.initDisplayBlock();
   }
@@ -110,7 +110,6 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
-    this.roleService.setAllRoles();
     this.userService.loadingAllUsers();
     this.createSearchForm();
   }
@@ -121,6 +120,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
       if (roles && roles.length > 0 && !this.initAddForm) {
         this.createAddUserForm();
+
         this.initAddForm = true;
 
         if (this.addUserBtn?.nativeElement && this.addUserForm) {

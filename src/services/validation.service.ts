@@ -36,8 +36,10 @@ export class ValidationService {
     return (
       item !== null &&
       typeof item === 'object' &&
-      'timestamp' in item &&
-      item.timestamp instanceof Date
+      typeof item.status === 'number' &&
+      typeof item.message === 'string' &&
+      typeof item.timestamp === 'string' &&
+      !isNaN(Date.parse(item.timestamp))
     );
   }
 }

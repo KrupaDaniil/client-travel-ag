@@ -32,7 +32,7 @@
         <tbody class="table-group-divider" #cityBlock>
           @if (displayCityList() && displayCityList()!.length > 0) {
             @for (city of displayCityList(); track city.id; let i = $index) {
-              <tr [attr.data-city-id]="city.id">
+              <tr *ngIf="city" [attr.data-city-id]="city.id">
                 <th scope="row">
                   <div class="d-flex align-items-center justify-content-center">
                     <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="selectedCity" disabled/>
@@ -41,11 +41,11 @@
                 </th>
                 <td>{{ city.name }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-secondary rounder-5 px-3" [attr.data-img-city-id]="city.id"
+                  <button class="btn btn-sm btn-outline-secondary px-3 rounded-5" [attr.data-img-city-id]="city.id"
                           aria-label="Show image button" (click)="setImage($event)">Show image
                   </button>
                 </td>
-                <td>{{ city.country.name }}</td>
+                <td *ngIf="city.country">{{ city.country.name }}</td>
                 <td>
                   <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
                           [attr.data-ds-city-id]="city.id" (click)="setDescription($event)">Show
@@ -147,8 +147,8 @@
   </div>
 
   @if (imageCityUrl() !== null) {
-    <div class="d-flex align-items-center justify-content-center">
-      <img ngSrc="{{imageCityUrl()}}" alt="Image of the city" width="25dvw" height="auto">
+    <div class="d-flex align-items-center justify-content-center my-5">
+      <img ngSrc="{{imageCityUrl()}}" alt="Image of the city" height="500" width="500" class="rounded-2">
     </div>
   } @else {
     <div class="d-flex align-items-center justify-content-center my-5 fw-semibold fs-4">
@@ -175,8 +175,7 @@
         <div class="col mb-3">
           <div class="input-group input-group-sm admin-input-group">
             <span class="input-group-text">Country</span>
-            <input type="text" class="form-control admin-input" formControlName="country" aria-label="Country"
-                   [disabled]="true">
+            <input type="text" class="form-control admin-input" formControlName="country" aria-label="Country">
           </div>
         </div>
       </div>

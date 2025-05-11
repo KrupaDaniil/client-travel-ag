@@ -89,3 +89,7 @@ body {
 .admin-input:active {
   border-color: #86aed3 !important;
 }
+
+.txt-min-h {
+  min-height: 15rem !important;
+}

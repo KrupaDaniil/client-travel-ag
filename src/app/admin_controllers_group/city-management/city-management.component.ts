@@ -17,7 +17,7 @@ import {CityService} from '../../../services/city.service';
 import {MessageService} from '../../../services/message.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
-import {NgOptimizedImage} from '@angular/common';
+import {NgIf, NgOptimizedImage} from '@angular/common';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {ICityEntity} from '../../../interfaces/country-block/i-city.entity';
 import {IMainCountryForCityEntity} from '../../../interfaces/country-block/i-main-country-for-city.entity';
@@ -35,11 +35,13 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     MatSidenavContent,
     NgSelectComponent,
     ReactiveFormsModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    NgIf
   ],
   providers: [CityService, MessageService],
   templateUrl: './city-management.component.html',
-  styleUrl: './city-management.component.css'
+  styleUrl: './city-management.component.css',
+  standalone: true
 })
 export class CityManagementComponent implements OnInit, AfterViewChecked {
   private readonly store = inject(EntityStorage);
