@@ -3,13 +3,21 @@
 @import "@ng-select/ng-select/themes/default.theme.css";
 /*@import "@ng-select/ng-select/themes/ant.design.theme.css";*/
 
+@font-face {
+  font-family: "Futura";
+  src: url("/fonts/futura/FuturaWindows.woff2") format("woff2"),
+      url("/fonts/futura/FuturaWindows.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 html, body {
   height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Futura, sans-serif !important;
 }
 
 .hide-block {
@@ -93,3 +101,6 @@ body {
 .txt-min-h {
   min-height: 15rem !important;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
