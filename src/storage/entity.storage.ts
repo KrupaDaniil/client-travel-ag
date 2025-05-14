@@ -22,6 +22,7 @@ import { ICityEntity } from "../interfaces/country-block/i-city.entity";
 import { IMainCountryForCityEntity } from "../interfaces/country-block/i-main-country-for-city.entity";
 import { IBlobImageEntity } from "../interfaces/country-block/i-blob-image.entity";
 import { IFromToEntity } from "../interfaces/filters-block/i-from-to.entity";
+import { IFromCountryEntity } from "../interfaces/filters-block/i-from-country.entity";
 
 function loadUserStartData(): () => IUserStartData {
 	return () => {
@@ -77,6 +78,12 @@ const fromToConfig = entityConfig({
 	selectId: formToEntities => formToEntities.id
 });
 
+const fromToCountryConfig = entityConfig({
+	entity: type<IFromCountryEntity>(),
+	collection: "fromToCountries",
+	selectId: fromToCountries => fromToCountries.id
+});
+
 export const EntityStorage = signalStore(
 	{ providedIn: "root" },
 
@@ -88,6 +95,7 @@ export const EntityStorage = signalStore(
 	withEntities(countryConfig),
 	withEntities(cityConfig),
 	withEntities(fromToConfig),
+	withEntities(fromToCountryConfig),
 	withMethods(store => ({
 		addUserStartData(startData: IUserStartData): void {
 			patchState(store, startData);
@@ -120,6 +128,9 @@ export const EntityStorage = signalStore(
 		setFromToEntity(fromTo: IFromToEntity): void {
 			patchState(store, setEntity(fromTo, fromToConfig));
 		},
+		setFromToCountry(fromToCountry: IFromCountryEntity): void {
+			patchState(store, setEntity(fromToCountry, fromToCountryConfig));
+		},
 
 		setAllUsers(users: IUser[]): void {
 			patchState(store, setAllEntities(users, userConfig));
@@ -141,6 +152,9 @@ export const EntityStorage = signalStore(
 		},
 		setAllFromToEntities(fromToEntities: IFromToEntity[]): void {
 			patchState(store, setAllEntities(fromToEntities, fromToConfig));
+		},
+		setAllFromToCountries(fromToCountries: IFromCountryEntity[]): void {
+			patchState(store, setAllEntities(fromToCountries, fromToCountryConfig));
 		},
 
 		updateUserStartData(userStartData: Partial<IUserStartData>): void {
@@ -176,8 +190,11 @@ export const EntityStorage = signalStore(
 		removeCity(id: number): void {
 			patchState(store, removeEntity(id, cityConfig));
 		},
-		removeEntity(id: number): void {
+		removeFromToEntity(id: number): void {
 			patchState(store, removeEntity(id, fromToConfig));
+		},
+		removeFromToCountry(id: number): void {
+			patchState(store, removeEntity(id, fromToCountryConfig));
 		}
 	}))
 );

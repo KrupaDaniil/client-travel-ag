@@ -21,6 +21,7 @@ import { IMainCountryForCityEntity } from "../interfaces/country-block/i-main-co
 import { ICityEntity } from "../interfaces/country-block/i-city.entity";
 import { IBlobImageEntity } from "../interfaces/country-block/i-blob-image.entity";
 import { IFromToEntity } from "../interfaces/filters-block/i-from-to.entity";
+import { IFromCountryEntity } from "../interfaces/filters-block/i-from-country.entity";
 
 @Injectable({
 	providedIn: "root"
@@ -226,11 +227,11 @@ export class HttpService {
 		);
 	}
 
-	loadingAllFromToEntities(): Observable<IFromToEntity | IError> {
+	loadingAllFromToEntities(): Observable<IFromToEntity[] | IError> {
 		return this.http.get<Object>(`${this.baseUrl}/from-to/all`, { observe: "response" }).pipe(
-			map((response: HttpResponse<Object>): IFromToEntity | IError => {
-				if (response.status === 200) {
-					return response.body as IFromToEntity;
+			map((response: HttpResponse<Object>): IFromToEntity[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IFromToEntity[];
 				} else {
 					return response.body as IError;
 				}
@@ -238,6 +239,21 @@ export class HttpService {
 			catchError((error: HttpErrorResponse): Observable<IError> => {
 				return of(this.getErrorMessage(error, "Data loading error"));
 			})
+		);
+	}
+
+	loadingAllFomToCountries(): Observable<IFromCountryEntity[] | IError> {
+		return this.http.get<Object>(`${this.baseUrl}/api/countries/from-to`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IFromCountryEntity[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IFromCountryEntity[];
+				} else {
+					return response.body as IError;
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
+			)
 		);
 	}
 
