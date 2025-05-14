@@ -421,6 +421,21 @@ export class HttpService {
 		);
 	}
 
+	updateFromToEntity(fromTo: IFromToEntity): Observable<IFromToEntity | IError> {
+		return this.http.put(`${this.baseUrl}/from-to/edit`, fromTo, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IFromToEntity | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IFromToEntity;
+				} else {
+					return response.body as IError;
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[1]))
+			)
+		);
+	}
+
 	//delete block // ------------------------------------------------------------
 	deleteUser(id: number): Observable<boolean | IError> {
 		return this.http.delete(`${this.baseUrl}/delete-user/${id}`, { observe: "response" }).pipe(
@@ -517,6 +532,21 @@ export class HttpService {
 				}
 			}),
 			catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, this.errorDefaultMessage[2])))
+		);
+	}
+
+	deleteFormToEntity(id: number): Observable<boolean | IError> {
+		return this.http.delete(`${this.baseUrl}/from-to/remove/${id}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): boolean | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return true;
+				} else {
+					return response.body as IError;
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+			)
 		);
 	}
 
