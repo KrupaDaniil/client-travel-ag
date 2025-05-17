@@ -278,6 +278,7 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
 		}
 	}
 
+	// Необходимо исправить баг с моделью. Нет картинки. Проверить ДТО на сервере и сервис запросов.
 	setImage(event: Event): void {
 		const currentCity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | undefined = this.getCurrentCity(
 			event,
@@ -285,7 +286,7 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
 		);
 
 		if (currentCity) {
-			if (currentCity.cityImage !== null) {
+			if (currentCity.cityImage) {
 				this.imageCityUrl.set(currentCity.cityImage.blobUrl);
 
 				if (this.imageDialog?.nativeElement) {
@@ -364,10 +365,13 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
 
 	onSelectedFile(event: Event): void {
 		const element = event.target as HTMLInputElement;
+
 		if (element && element.files && element.files.length > 0) {
 			this.cityImg = element.files[0];
 		} else {
 			this.cityImg = undefined;
 		}
+
+		console.log(this.cityImg);
 	}
 }

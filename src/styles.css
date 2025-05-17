@@ -102,5 +102,44 @@ body {
   min-height: 15rem !important;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.bootstrap-like-select {
+  width: 20dvw;
+  height: 1dvh;
+
+  .mat-form-field-wrapper {
+    padding: 0;
+  }
+
+  .mat-form-field-flex {
+    height: 0.1rem;
+    align-items: center;
+  }
+
+  .mat-select {
+    font-size: 0.1rem;
+    padding: 0;
+    min-height: unset;
+    line-height: 1.2;
+  }
+
+  .mat-select-trigger {
+    padding: 0;
+    min-height: unset;
+  }
+
+  .mat-select-value {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+
+  .mat-select-value-text {
+    font-size: 0.1rem;
+    padding: 0;
+    background-color: #e9ecef;
+    border-radius: 0.2rem;
+  }
+
+}
+

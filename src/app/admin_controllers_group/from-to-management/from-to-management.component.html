@@ -1,1 +1,133 @@
-<p>from-to-management works!</p>
+<div class="row my-3">
+    <div class="col">
+      <div class="d-flex align-items-center justify-content">
+        <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3" #searchBtn>Search</button>
+      </div>
+  
+    </div>
+    <div class="col">
+      <div class="d-flex align-items-center justify-content-end">
+        <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-3" (click)="openAddFrTEntityModal()">Add</button>
+        <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-3" (click)="openUpdateFrTEntityModal()">Edit</button>
+        <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-3" #removeFrTEntityBtn>Remove</button>
+      </div>
+    </div>
+  </div>
+  
+  <mat-sidenav-container class="bg-body searchBlock">
+    <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
+    <mat-sidenav-content>
+      <div class="my-3">
+        <table class="table table-hover align-middle">
+          <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Country from</th>
+            <th scope="col">CityFrom</th>
+            <th scope="col">Country(ies) to</th>
+            <th scope="col">City(ies)</th>
+          </tr>
+          </thead>
+          <tbody class="table-group-divider" #countryBlock>
+            @if (displayList() && displayList()!.length > 0) {
+              @for (entity of displayList(); track entity.id; let i = $index) {
+                <tr [attr.data-country-id]="entity.id">
+                  <th scope="row">
+                    <div class="d-flex align-items-center justify-content-center">
+                      <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="ftrEntity" disabled/>
+                      <div class="ms-2">{{ i + 1 }}</div>
+                    </div>
+                  </th>
+
+                  <td>{{ entity.cityFrom.country.name }}</td>
+                  <td>{{ entity.cityFrom.name}}</td>
+
+                  @for (frt of entity.citiesTo; track frt.id) {
+                    <td>{{frt.country.name}}</td>
+                    <td>{{frt.name}}</td>
+                  }
+                </tr>
+              }
+  
+            } @else {
+              <tr>
+                <td colspan="9">
+                  <div class="d-flex align-items-center justify-content-center mt-3">
+                    @if (this.loadingFailed()) {
+                      <span class="fs-4">List is empty</span>
+                    } @else {
+                      <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
+  <dialog class="container custom-dialog" id="addingCountyDialog" #addingFrTEntityDialog>
+    <div class="closeBtnContainer my-3">
+      <button class="btn-close" (click)="closeAddFrTEntityModal()"></button>
+    </div>
+  
+    @if (additionForm) {
+      <form method="dialog" [formGroup]="additionForm">
+        <div class="row">
+          <div class="col mb-3">
+            <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name"
+                       formControlName="country" placeholder="Selected country"></ng-select>
+          </div>
+          <div class="col mb-3">
+            <ng-select class="ng-select-ngCs" [items]="" bindLabel="name"
+                       formControlName="city" placeholder="Selected city"></ng-select>
+          </div>
+
+          <div class="col mb-3">
+            <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
+                       formControlName="countries" placeholder="Selected countries"></ng-select>
+          </div>
+          <div class="col mb-3">
+            <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
+                       formControlName="cities" placeholder="Selected cities"></ng-select>
+          </div>
+        </div>
+      </form>
+    }
+  </dialog>
+  
+  <dialog class="container custom-dialog" id="addingCountyDialog" #updateCountryDialog>
+    <div class="closeBtnContainer my-3">
+      <button class="btn-close" (click)="closeUpdateFrTEntityModal()"></button>
+    </div>
+  
+    @if (updateForm) {
+      <form method="dialog" [formGroup]="updateForm" enctype="multipart/form-data">
+        <input type="hidden" formControlName="id">
+
+        <div class="row">
+            <div class="col mb-3">
+              <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
+                         formControlName="" placeholder="Selected country"></ng-select>
+            </div>
+            <div class="col mb-3">
+              <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
+                         formControlName="" placeholder="Selected city"></ng-select>
+            </div>
+  
+            <div class="col mb-3">
+              <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
+                         formControlName="" placeholder="Selected countries"></ng-select>
+            </div>
+            <div class="col mb-3">
+              <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
+                         formControlName="" placeholder="Selected cities"></ng-select>
+            </div>
+          </div>
+      </form>
+    }
+  </dialog>
