@@ -278,12 +278,13 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
 		}
 	}
 
-	// Необходимо исправить баг с моделью. Нет картинки. Проверить ДТО на сервере и сервис запросов.
 	setImage(event: Event): void {
 		const currentCity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | undefined = this.getCurrentCity(
 			event,
 			"imgCityId"
 		);
+
+		console.log(currentCity);
 
 		if (currentCity) {
 			if (currentCity.cityImage) {

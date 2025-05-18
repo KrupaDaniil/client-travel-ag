@@ -41,13 +41,13 @@
                 </th>
                 <td>{{ city.name }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-secondary px-3 rounded-5" [attr.data-img-city-id]="city.id"
+                  <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-5" [attr.data-img-city-id]="city.id"
                           aria-label="Show image button" (click)="setImage($event)">Show image
                   </button>
                 </td>
                 <td *ngIf="city.country">{{ city.country.name }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
                           [attr.data-ds-city-id]="city.id" (click)="setDescription($event)">Show
                   </button>
                 </td>
