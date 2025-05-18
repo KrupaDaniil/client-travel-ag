@@ -1,13 +1,14 @@
 import {
-	AfterViewChecked,
 	Component,
 	computed,
 	effect,
+	ElementRef,
 	inject,
 	OnInit,
 	Renderer2,
 	signal,
 	Signal,
+	viewChild,
 	WritableSignal
 } from "@angular/core";
 import { EntityStorage } from "../../../storage/entity.storage";
@@ -30,7 +31,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 	templateUrl: "./from-to-management.component.html",
 	styleUrl: "./from-to-management.component.css"
 })
-export class FromToManagementComponent implements OnInit, AfterViewChecked {
+export class FromToManagementComponent implements OnInit {
 	private readonly store = inject(EntityStorage);
 
 	private listFromToEntity: Signal<IFromToEntity[]> = computed(() => this.store.fromToEntitiesEntities());
@@ -47,6 +48,18 @@ export class FromToManagementComponent implements OnInit, AfterViewChecked {
 	additionForm: FormGroup | undefined;
 	updateForm: FormGroup | undefined;
 
+	private readonly searchBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
+		viewChild<ElementRef<HTMLButtonElement>>("searchBtn");
+	private readonly removeBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
+		viewChild<ElementRef<HTMLButtonElement>>("removeFrTEntityBtn");
+
+	private readonly countryBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
+		viewChild<ElementRef<HTMLTableSectionElement>>("countryBlock");
+	private readonly modalAdd: Signal<ElementRef<HTMLDialogElement> | undefined> =
+		viewChild<ElementRef<HTMLDialogElement>>("addingFrTEntityDialog");
+	private readonly modalUpdate: Signal<ElementRef<HTMLDialogElement> | undefined> =
+		viewChild<ElementRef<HTMLDialogElement>>("updateFrTEntityDialog");
+
 	constructor(private fromToService: FromToService, private message: MessageService, private render: Renderer2) {
 		this.displayList = signal<IFromToEntity[] | null>(null);
 		this.fromCityList = signal<ICountryCityEntity[] | null>(null);
@@ -59,9 +72,9 @@ export class FromToManagementComponent implements OnInit, AfterViewChecked {
 	ngOnInit(): void {
 		this.fromToService.setAllFromToEntities();
 		this.fromToService.setAllFromToCountries();
-	}
 
-	ngAfterViewChecked(): void {}
+		this.creatingAddingForm();
+	}
 
 	private setContent(): void {
 		effect(() => {
@@ -84,11 +97,27 @@ export class FromToManagementComponent implements OnInit, AfterViewChecked {
 
 	private creatingAddingForm(): void {
 		this.additionForm = new FormGroup({
-			country: new FormControl("", Validators.required),
-			city: new FormControl("", Validators.required),
-			countries: new FormControl("", Validators.required),
-			cities: new FormControl("", Validators.required)
+			country: new FormControl<IFromCountryEntity | null>(null, Validators.required),
+			city: new FormControl<ICountryCityEntity | null>(null, Validators.required),
+			countries: new FormControl<IFromCountryEntity[] | null>(null, Validators.required),
+			cities: new FormControl<ICountryCityEntity[] | null>(null, Validators.required)
 		});
+	}
+
+	protected onAdd(country: IFromCountryEntity): void {
+		if (this.fromCityList() && this.fromCityList.length > 0) {
+			this.fromCityList.set(null);
+		}
+
+		this.fromCityList.set(country.cities);
+	}
+
+	protected onChange(countries: IFromCountryEntity[]): void {
+		if (this.toCityList() && this.fromCityList.length > 0) {
+			this.toCityList.set(null);
+		}
+
+		this.toCityList.set(countries);
 	}
 
 	private creatingUpdateFrom(): void {
