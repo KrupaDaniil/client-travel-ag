@@ -108,6 +108,43 @@ export class FromToManagementComponent implements OnInit {
 		this.linearActivation();
 	}
 
+	protected onSave(): void {
+		const values = this.additionForm?.value;
+
+		if (values) {
+			const countries = values.countries as IFromCountryEntity[];
+			const cities = values.cities as ICountryCityEntity[];
+
+			const map = new Map<number, IMainCountryForCityEntity>();
+
+			for (const country of countries) {
+				for (const city of cities) {
+					map.set(city.id, { id: country.id, name: country.name } as IMainCountryForCityEntity);
+				}
+			}
+
+			const toRes: IFTCityEntity[] = cities.map((city: ICountryCityEntity) => {
+				const entity: IFTCityEntity = {
+					id: city.id,
+					name: city.name,
+					country: map.get(city.id)!
+				};
+
+				return entity;
+			});
+
+			const fromToEntity: IFromToEntity = {
+				id: 0,
+				cityFrom: {
+					id: values.city.id,
+					name: values.city.name,
+					country: { id: values.country.id, name: values.country.name } as IMainCountryForCityEntity
+				} as IFTCityEntity,
+				citiesTo: toRes
+			};
+		}
+	}
+
 	protected onAdd(country: IFromCountryEntity): void {
 		if (this.fromCityList() && this.fromCityList.length > 0) {
 			this.fromCityList.set(null);

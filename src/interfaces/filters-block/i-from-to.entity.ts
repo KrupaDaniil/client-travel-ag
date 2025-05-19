@@ -1,7 +1,7 @@
 import { IFTCityEntity } from "./i-f-t-city.entity";
 
 export interface IFromToEntity {
-	id: string;
+	id: number;
 	cityFrom: IFTCityEntity;
 	citiesTo: IFTCityEntity[];
 }
