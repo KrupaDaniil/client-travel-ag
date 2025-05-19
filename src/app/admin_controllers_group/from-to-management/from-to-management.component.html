@@ -80,19 +80,20 @@
         <div class="row">
           <div class="col mb-3">
             <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name"
-                       formControlName="country" placeholder="Selected country"></ng-select>
+                       formControlName="country" placeholder="Selected country"(add)="onAdd($event)" ></ng-select>
           </div>
           <div class="col mb-3">
-            <ng-select class="ng-select-ngCs" [items]="" bindLabel="name"
+            <ng-select class="ng-select-ngCs" [items]="fromCityList()" bindLabel="name"
                        formControlName="city" placeholder="Selected city"></ng-select>
           </div>
 
           <div class="col mb-3">
             <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
-                       formControlName="countries" placeholder="Selected countries"></ng-select>
+                       formControlName="countries" placeholder="Selected countries" 
+                       (change)="onChange($event)" (remove)="onRemoveCountry($event)"></ng-select>
           </div>
           <div class="col mb-3">
-            <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
+            <ng-select class="ng-select-ngCs" [items]="toCityList()" bindLabel="name" [multiple]="true"
                        formControlName="cities" placeholder="Selected cities"></ng-select>
           </div>
         </div>
