@@ -7,9 +7,9 @@
     </div>
     <div class="col">
       <div class="d-flex align-items-center justify-content-end">
-        <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-3" (click)="openAddFrTEntityModal()">Add</button>
-        <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-3" (click)="openUpdateFrTEntityModal()">Edit</button>
-        <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-3" #removeFrTEntityBtn>Remove</button>
+        <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddFrTEntityModal()">Add</button>
+        <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-4" (click)="openUpdateFrTEntityModal()">Edit</button>
+        <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-4" #removeFrTEntityBtn>Remove</button>
       </div>
     </div>
   </div>
@@ -77,25 +77,28 @@
   
     @if (additionForm) {
       <form method="dialog" [formGroup]="additionForm">
-        <div class="row">
-          <div class="col mb-3">
-            <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name"
-                       formControlName="country" placeholder="Selected country"(add)="onAdd($event)" ></ng-select>
+        <div class="row my-3 py-3">
+          <div class="col">
+            <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" (change)="onAdd($event)"
+                       formControlName="country" placeholder="Selected country"></ng-select>
           </div>
-          <div class="col mb-3">
+          <div class="col">
             <ng-select class="ng-select-ngCs" [items]="fromCityList()" bindLabel="name"
                        formControlName="city" placeholder="Selected city"></ng-select>
           </div>
 
-          <div class="col mb-3">
+          <div class="col">
             <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
                        formControlName="countries" placeholder="Selected countries" 
                        (change)="onChange($event)" (remove)="onRemoveCountry($event)"></ng-select>
           </div>
-          <div class="col mb-3">
-            <ng-select class="ng-select-ngCs" [items]="toCityList()" bindLabel="name" [multiple]="true"
+          <div class="col">
+            <ng-select #addCitiesSlc class="ng-select-ngCs" [items]="toCityList()" bindLabel="name" [multiple]="true"
                        formControlName="cities" placeholder="Selected cities"></ng-select>
           </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end my-4">
+          <button type="submit" class="btn btn-sm btn-outline-success px-3 rounded-5" (click)="onSave()">Add item</button>
         </div>
       </form>
     }

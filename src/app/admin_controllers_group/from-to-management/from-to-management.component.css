@@ -11,3 +11,7 @@
     box-shadow: 0 0 5px #8c8c8c;
     border-color: #e4e7ea;
   }
+
+  dialog {
+    min-height: 15rem;
+  }
