@@ -1,137 +1,149 @@
 <div class="row my-3">
-    <div class="col">
-      <div class="d-flex align-items-center justify-content">
-        <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3" #searchBtn>Search</button>
-      </div>
-  
+  <div class="col">
+    <div class="d-flex align-items-center justify-content">
+      <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3" #searchBtn>Search</button>
     </div>
-    <div class="col">
-      <div class="d-flex align-items-center justify-content-end">
-        <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddFrTEntityModal()">Add</button>
-        <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-4" (click)="openUpdateFrTEntityModal()">Edit</button>
-        <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-4" #removeFrTEntityBtn>Remove</button>
-      </div>
+
+  </div>
+  <div class="col">
+    <div class="d-flex align-items-center justify-content-end">
+      <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddFrTEntityModal()">Add</button>
+      <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-4" (click)="openUpdateFrTEntityModal()">Edit
+      </button>
+      <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-4" #removeFrTEntityBtn>Remove</button>
     </div>
   </div>
-  
-  <mat-sidenav-container class="bg-body searchBlock">
-    <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
-    <mat-sidenav-content>
-      <div class="my-3">
-        <table class="table table-hover align-middle">
-          <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Country from</th>
-            <th scope="col">CityFrom</th>
-            <th scope="col">Country(ies) to</th>
-            <th scope="col">City(ies)</th>
-          </tr>
-          </thead>
-          <tbody class="table-group-divider" #countryBlock>
-            @if (displayList() && displayList()!.length > 0) {
-              @for (entity of displayList(); track entity.id; let i = $index) {
-                <tr [attr.data-country-id]="entity.id">
-                  <th scope="row">
-                    <div class="d-flex align-items-center justify-content-center">
-                      <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="ftrEntity" disabled/>
-                      <div class="ms-2">{{ i + 1 }}</div>
-                    </div>
-                  </th>
+</div>
 
-                  <td>{{ entity.cityFrom.country.name }}</td>
-                  <td>{{ entity.cityFrom.name}}</td>
+<mat-sidenav-container class="bg-body searchBlock">
+  <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
+  <mat-sidenav-content>
+    <div class="my-3">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Country from</th>
+          <th scope="col">CityFrom</th>
+          <th scope="col">Country(ies) to</th>
+          <th scope="col">City(ies)</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider" #countryBlock>
+          @if (displayList() && displayList()!.length > 0) {
+            @for (entity of displayList(); track entity.id; let i = $index) {
+              <tr [attr.data-country-id]="entity.id">
+                <th scope="row">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="ftrEntity" disabled/>
+                    <div class="ms-2">{{ i + 1 }}</div>
+                  </div>
+                </th>
 
-                  @for (frt of entity.citiesTo; track frt.id) {
-                    <td>{{frt.country.name}}</td>
-                    <td>{{frt.name}}</td>
+                <td>{{ entity.cityFrom.country.name }}</td>
+                <td>{{ entity.cityFrom.name }}</td>
+
+                @for (frt_cnt of entity.citiesTo; track frt_cnt.id) {
+                  @if (cntCount === 0) {
+                    <td>{{ frt_cnt.country.name }}</td>
+                    {{ upCount() }}
                   }
-                </tr>
-              }
-  
-            } @else {
-              <tr>
-                <td colspan="9">
-                  <div class="d-flex align-items-center justify-content-center mt-3">
-                    @if (this.loadingFailed()) {
-                      <span class="fs-4">List is empty</span>
-                    } @else {
-                      <div class="spinner-border text-secondary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
+                }
+                {{ resetCount() }}
+
+                <td>
+                  <div class="d-flex align-items-center flex-wrap toCityBlock">
+                    @for (frt_ct of entity.citiesTo; track frt_ct.id) {
+                      <span class="me-2">{{ frt_ct.name }}</span>
                     }
                   </div>
                 </td>
               </tr>
             }
-          </tbody>
-        </table>
+
+          } @else {
+            <tr>
+              <td colspan="9">
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                  @if (this.loadingFailed()) {
+                    <span class="fs-4">List is empty</span>
+                  } @else {
+                    <div class="spinner-border text-secondary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<dialog class="container custom-dialog" id="addingCountyDialog" #addingFrTEntityDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeAddFrTEntityModal()"></button>
+  </div>
+
+  @if (additionForm) {
+    <form method="dialog" [formGroup]="additionForm">
+      <div class="row my-3 py-3">
+        <div class="col">
+          <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" (change)="onAdd($event)"
+                     formControlName="country" placeholder="Selected country"></ng-select>
+        </div>
+        <div class="col">
+          <ng-select class="ng-select-ngCs" [items]="fromCityList()" bindLabel="name"
+                     formControlName="city" placeholder="Selected city"></ng-select>
+        </div>
+
+        <div class="col">
+          <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
+                     formControlName="countries" placeholder="Selected countries"
+                     (change)="onChange($event)" (remove)="onRemoveCountry($event)"></ng-select>
+        </div>
+        <div class="col">
+          <ng-select #addCitiesSlc class="ng-select-ngCs" [items]="toCityList()" bindLabel="name" [multiple]="true"
+                     formControlName="cities" placeholder="Selected cities"></ng-select>
+        </div>
       </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-  
-  <dialog class="container custom-dialog" id="addingCountyDialog" #addingFrTEntityDialog>
-    <div class="closeBtnContainer my-3">
-      <button class="btn-close" (click)="closeAddFrTEntityModal()"></button>
-    </div>
-  
-    @if (additionForm) {
-      <form method="dialog" [formGroup]="additionForm">
-        <div class="row my-3 py-3">
-          <div class="col">
-            <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" (change)="onAdd($event)"
-                       formControlName="country" placeholder="Selected country"></ng-select>
-          </div>
-          <div class="col">
-            <ng-select class="ng-select-ngCs" [items]="fromCityList()" bindLabel="name"
-                       formControlName="city" placeholder="Selected city"></ng-select>
-          </div>
+      <div class="d-flex align-items-center justify-content-end my-4">
+        <button type="submit" class="btn btn-sm btn-outline-success px-3 rounded-5" (click)="onSave()">Add item</button>
+      </div>
+    </form>
+  }
+</dialog>
 
-          <div class="col">
-            <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
-                       formControlName="countries" placeholder="Selected countries" 
-                       (change)="onChange($event)" (remove)="onRemoveCountry($event)"></ng-select>
-          </div>
-          <div class="col">
-            <ng-select #addCitiesSlc class="ng-select-ngCs" [items]="toCityList()" bindLabel="name" [multiple]="true"
-                       formControlName="cities" placeholder="Selected cities"></ng-select>
-          </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-end my-4">
-          <button type="submit" class="btn btn-sm btn-outline-success px-3 rounded-5" (click)="onSave()">Add item</button>
-        </div>
-      </form>
-    }
-  </dialog>
-  
-  <dialog class="container custom-dialog" id="addingCountyDialog" #updateFrTEntityDialog>
-    <div class="closeBtnContainer my-3">
-      <button class="btn-close" (click)="closeUpdateFrTEntityModal()"></button>
-    </div>
-  
-    @if (updateForm) {
-      <form method="dialog" [formGroup]="updateForm" enctype="multipart/form-data">
-        <input type="hidden" formControlName="id">
+<dialog class="container custom-dialog" id="addingCountyDialog" #updateFrTEntityDialog>
+  <div class="closeBtnContainer my-3">
+    <button class="btn-close" (click)="closeUpdateFrTEntityModal()"></button>
+  </div>
 
-        <div class="row">
-            <div class="col mb-3">
-              <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
-                         formControlName="" placeholder="Selected country"></ng-select>
-            </div>
-            <div class="col mb-3">
-              <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
-                         formControlName="" placeholder="Selected city"></ng-select>
-            </div>
-  
-            <div class="col mb-3">
-              <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
-                         formControlName="" placeholder="Selected countries"></ng-select>
-            </div>
-            <div class="col mb-3">
-              <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
-                         formControlName="" placeholder="Selected cities"></ng-select>
-            </div>
-          </div>
-      </form>
-    }
-  </dialog>
+  @if (updateForm) {
+    <form method="dialog" [formGroup]="updateForm" enctype="multipart/form-data">
+      <input type="hidden" formControlName="id">
+
+      <div class="row">
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
+                     formControlName="" placeholder="Selected country"></ng-select>
+        </div>
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
+                     formControlName="" placeholder="Selected city"></ng-select>
+        </div>
+
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
+                     formControlName="" placeholder="Selected countries"></ng-select>
+        </div>
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
+                     formControlName="" placeholder="Selected cities"></ng-select>
+        </div>
+      </div>
+    </form>
+  }
+</dialog>

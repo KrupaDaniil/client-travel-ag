@@ -44,6 +44,7 @@ export class FromToManagementComponent implements OnInit {
   toCityList: WritableSignal<ICountryCityEntity[] | null>;
   loadingFailed: WritableSignal<boolean>;
   private readonly localCountry: WritableSignal<IFromCountryEntity[] | null>;
+  protected cntCount: number = 0;
 
   selectedFromToEntity: IFromToEntity | undefined;
 
@@ -265,5 +266,13 @@ export class FromToManagementComponent implements OnInit {
         this.additionForm?.get(this.names[3])?.disable();
       }
     });
+  }
+
+  protected upCount(): void {
+    this.cntCount++;
+  }
+
+  protected resetCount(): void {
+    this.cntCount = 0;
   }
 }
