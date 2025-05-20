@@ -1,278 +1,338 @@
 import {
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  inject,
-  OnInit,
-  Renderer2,
-  signal,
-  Signal,
-  viewChild,
-  WritableSignal
+	Component,
+	computed,
+	effect,
+	ElementRef,
+	inject,
+	OnInit,
+	Renderer2,
+	signal,
+	Signal,
+	viewChild,
+	WritableSignal
 } from "@angular/core";
-import {EntityStorage} from "../../../storage/entity.storage";
-import {FromToService} from "../../../services/from-to.service";
-import {MessageService} from "../../../services/message.service";
-import {IFromToEntity} from "../../../interfaces/filters-block/i-from-to.entity";
-import {IFromCountryEntity} from "../../../interfaces/filters-block/i-from-country.entity";
-import {IFTCityEntity} from "../../../interfaces/filters-block/i-f-t-city.entity";
-import {ICountryCityEntity} from "../../../interfaces/country-block/i-country-city.entity";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CountryCityEntity} from "../../../models/country-city.entity";
-import {IMainCountryForCityEntity} from "../../../interfaces/country-block/i-main-country-for-city.entity";
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
-import {NgSelectComponent, NgSelectModule} from "@ng-select/ng-select";
+import { EntityStorage } from "../../../storage/entity.storage";
+import { FromToService } from "../../../services/from-to.service";
+import { MessageService } from "../../../services/message.service";
+import { IFromToEntity } from "../../../interfaces/filters-block/i-from-to.entity";
+import { IFromCountryEntity } from "../../../interfaces/filters-block/i-from-country.entity";
+import { IFTCityEntity } from "../../../interfaces/filters-block/i-f-t-city.entity";
+import { ICountryCityEntity } from "../../../interfaces/country-block/i-country-city.entity";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { CountryCityEntity } from "../../../models/country-city.entity";
+import { IMainCountryForCityEntity } from "../../../interfaces/country-block/i-main-country-for-city.entity";
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from "@angular/material/sidenav";
+import { NgSelectComponent, NgSelectModule } from "@ng-select/ng-select";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
-  selector: "app-from-to-management",
-  imports: [MatSidenav, MatSidenavContainer, MatSidenavContent, NgSelectModule, ReactiveFormsModule],
-  providers: [FromToService, MessageService],
-  templateUrl: "./from-to-management.component.html",
-  styleUrl: "./from-to-management.component.css",
-  standalone: true
+	selector: "app-from-to-management",
+	imports: [MatSidenav, MatSidenavContainer, MatSidenavContent, NgSelectModule, ReactiveFormsModule],
+	providers: [FromToService, MessageService],
+	templateUrl: "./from-to-management.component.html",
+	styleUrl: "./from-to-management.component.css",
+	standalone: true
 })
 export class FromToManagementComponent implements OnInit {
-  private readonly store = inject(EntityStorage);
+	private readonly store = inject(EntityStorage);
+	private readonly snackBar: MatSnackBar = inject(MatSnackBar);
 
-  private listFromToEntity: Signal<IFromToEntity[]> = computed(() => this.store.fromToEntitiesEntities());
-  displayList: WritableSignal<IFromToEntity[] | null>;
-  listFromToCountry: Signal<IFromCountryEntity[]> = computed(() => this.store.fromToCountriesEntities()); // use in ng-selects
-  infoMessages: Signal<string | null> = computed(() => this.message.message());
+	private listFromToEntity: Signal<IFromToEntity[]> = computed(() => this.store.fromToEntitiesEntities());
+	displayList: WritableSignal<IFromToEntity[] | null>;
+	listFromToCountry: Signal<IFromCountryEntity[]> = computed(() => this.store.fromToCountriesEntities()); // use in ng-selects
+	infoMessages: Signal<string | null> = computed(() => this.message.message());
 
-  fromCityList: WritableSignal<ICountryCityEntity[] | null>;
-  toCityList: WritableSignal<ICountryCityEntity[] | null>;
-  loadingFailed: WritableSignal<boolean>;
-  private readonly localCountry: WritableSignal<IFromCountryEntity[] | null>;
-  protected cntCount: number = 0;
+	fromCityList: WritableSignal<ICountryCityEntity[] | null>;
+	toCityList: WritableSignal<ICountryCityEntity[] | null>;
+	loadingFailed: WritableSignal<boolean>;
+	private readonly localCountry: WritableSignal<IFromCountryEntity[] | null>;
+	protected cntCount: number = 0;
 
-  selectedFromToEntity: IFromToEntity | undefined;
+	selectedFromToEntity: IFromToEntity | undefined;
 
-  additionForm: FormGroup | undefined;
-  updateForm: FormGroup | undefined;
-  private names: string[];
+	additionForm: FormGroup | undefined;
+	updateForm: FormGroup | undefined;
+	private names: string[];
+	private isSelectedRow: boolean;
 
-  private readonly searchBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
-    viewChild<ElementRef<HTMLButtonElement>>("searchBtn");
-  private readonly removeBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
-    viewChild<ElementRef<HTMLButtonElement>>("removeFrTEntityBtn");
+	private readonly searchBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
+		viewChild<ElementRef<HTMLButtonElement>>("searchBtn");
+	private readonly removeBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
+		viewChild<ElementRef<HTMLButtonElement>>("removeFrTEntityBtn");
 
-  private readonly countryBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
-    viewChild<ElementRef<HTMLTableSectionElement>>("countryBlock");
-  private readonly modalAdd: Signal<ElementRef<HTMLDialogElement> | undefined> =
-    viewChild<ElementRef<HTMLDialogElement>>("addingFrTEntityDialog");
-  private readonly modalUpdate: Signal<ElementRef<HTMLDialogElement> | undefined> =
-    viewChild<ElementRef<HTMLDialogElement>>("updateFrTEntityDialog");
-  private readonly addCitiesSelect: Signal<ElementRef<NgSelectComponent> | undefined> =
-    viewChild<ElementRef<NgSelectComponent>>("addCitiesSlc");
+	private readonly fromToBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
+		viewChild<ElementRef<HTMLTableSectionElement>>("fromToBlock");
+	private readonly modalAdd: Signal<ElementRef<HTMLDialogElement> | undefined> =
+		viewChild<ElementRef<HTMLDialogElement>>("addingFrTEntityDialog");
+	private readonly modalUpdate: Signal<ElementRef<HTMLDialogElement> | undefined> =
+		viewChild<ElementRef<HTMLDialogElement>>("updateFrTEntityDialog");
+	private readonly addCitiesSelect: Signal<ElementRef<NgSelectComponent> | undefined> =
+		viewChild<ElementRef<NgSelectComponent>>("addCitiesSlc");
 
-  constructor(private fromToService: FromToService, private message: MessageService, private render: Renderer2) {
-    this.displayList = signal<IFromToEntity[] | null>(null);
-    this.fromCityList = signal<ICountryCityEntity[] | null>(null);
-    this.toCityList = signal<ICountryCityEntity[] | null>(null);
-    this.loadingFailed = signal<boolean>(false);
-    this.localCountry = signal<IFromCountryEntity[] | null>(null);
-    this.names = ["country", "city", "countries", "cities"];
-    this.setContent();
-  }
+	constructor(private fromToService: FromToService, private message: MessageService, private render: Renderer2) {
+		this.displayList = signal<IFromToEntity[] | null>(null);
+		this.fromCityList = signal<ICountryCityEntity[] | null>(null);
+		this.toCityList = signal<ICountryCityEntity[] | null>(null);
+		this.loadingFailed = signal<boolean>(false);
+		this.localCountry = signal<IFromCountryEntity[] | null>(null);
+		this.names = ["country", "city", "countries", "cities"];
+		this.isSelectedRow = false;
+		this.setContent();
+		this.showMessage();
+	}
 
-  ngOnInit(): void {
-    this.fromToService.setAllFromToEntities();
-    this.fromToService.setAllFromToCountries();
+	ngOnInit(): void {
+		this.fromToService.setAllFromToEntities();
+		this.fromToService.setAllFromToCountries();
 
-    this.creatingAddingForm();
-  }
+		this.creatingAddingForm();
+		this.onSelectedRow();
+	}
 
-  private setContent(): void {
-    effect(() => {
-      const entities: IFromToEntity[] = this.listFromToEntity();
+	private setContent(): void {
+		effect(() => {
+			const entities: IFromToEntity[] = this.listFromToEntity();
 
-      if (this.displayList() === null) {
-        if (entities && entities.length > 0) {
-          this.displayList.set(entities);
-          this.loadingFailed.set(false);
-        } else {
-          setInterval(() => {
-            this.loadingFailed.set(true);
-          }, 60000);
-        }
-      }
-    });
-  }
+			if (entities && entities.length > 0) {
+				this.displayList.set(entities);
+				this.loadingFailed.set(false);
+			} else {
+				setInterval(() => {
+					this.loadingFailed.set(true);
+				}, 60000);
+			}
+		});
+	}
 
-  private onSelectedRow(): void {
-  }
+	showMessage(): void {
+		effect(() => {
+			if (this.message.message() !== null) {
+				this.snackBar.open(this.message.message() as string, "close", {
+					verticalPosition: "bottom",
+					horizontalPosition: "center"
+				});
+			}
+		});
+	}
 
-  private creatingAddingForm(): void {
-    this.additionForm = new FormGroup({
-      country: new FormControl<IFromCountryEntity | null>(null, Validators.required),
-      city: new FormControl<ICountryCityEntity | null>({value: null, disabled: true}, Validators.required),
-      countries: new FormControl<IFromCountryEntity[] | null>({value: null, disabled: true}, Validators.required),
-      cities: new FormControl<ICountryCityEntity[] | null>({value: null, disabled: true}, Validators.required)
-    });
+	private onSelectedRow(): void {
+		if (this.fromToBlock()?.nativeElement && !this.isSelectedRow) {
+			this.render.listen(this.fromToBlock()!.nativeElement, "click", (e: Event) => {
+				const t = e.target as HTMLElement;
+				if (t.tagName.toLowerCase() === "td") {
+					const r = t.closest("tr") as HTMLTableRowElement;
+					if (r) {
+						const radio = r.querySelector('input[type="radio"]') as HTMLInputElement;
+						if (radio) {
+							this.render.setProperty(radio, "checked", true);
+						}
 
-    this.linearActivation();
-  }
+						const countryId: number = Number.parseInt(r.dataset["fromToId"] as string);
 
-  protected onSave(): void {
-    const values = this.additionForm?.value;
+						this.displayList()!.forEach((fromToEntity: IFromToEntity): void => {
+							if (fromToEntity.id === countryId) {
+								this.selectedFromToEntity = fromToEntity;
+								return;
+							}
+						});
 
-    if (values) {
-      const countries = values.countries as IFromCountryEntity[];
-      const cities = values.cities as ICountryCityEntity[];
+						if (this.selectedFromToEntity) {
+							this.creatingUpdateFrom();
 
-      const map = new Map<number, IMainCountryForCityEntity>();
+							if (this.removeBtn()?.nativeElement) {
+								this.render.listen(this.removeBtn()!.nativeElement, "click", () => {
+									if (this.selectedFromToEntity?.id) {
+										this.onDelete(this.selectedFromToEntity?.id);
+										this.selectedFromToEntity = undefined;
+										this.isSelectedRow = false;
+										this.render.setProperty(this.fromToBlock()!.nativeElement, "checked", false);
+									}
+								});
+							}
+						}
+					}
+				}
+			});
+		}
+	}
 
-      for (const country of countries) {
-        for (const city of cities) {
-          map.set(city.id, {id: country.id, name: country.name} as IMainCountryForCityEntity);
-        }
-      }
+	private creatingAddingForm(): void {
+		this.additionForm = new FormGroup({
+			country: new FormControl<IFromCountryEntity | null>(null, Validators.required),
+			city: new FormControl<ICountryCityEntity | null>({ value: null, disabled: true }, Validators.required),
+			countries: new FormControl<IFromCountryEntity[] | null>({ value: null, disabled: true }, Validators.required),
+			cities: new FormControl<ICountryCityEntity[] | null>({ value: null, disabled: true }, Validators.required)
+		});
 
-      const toRes: IFTCityEntity[] = cities.map((city: ICountryCityEntity) => {
-        const entity: IFTCityEntity = {
-          id: city.id,
-          name: city.name,
-          country: map.get(city.id)!
-        };
+		this.linearActivation();
+	}
 
-        return entity;
-      });
+	protected onSave(): void {
+		const values = this.additionForm?.value;
 
-      const fromToEntity: IFromToEntity = {
-        id: 0,
-        cityFrom: {
-          id: values.city.id,
-          name: values.city.name,
-          country: {id: values.country.id, name: values.country.name} as IMainCountryForCityEntity
-        } as IFTCityEntity,
-        citiesTo: toRes
-      };
+		if (values) {
+			const countries = values.countries as IFromCountryEntity[];
+			const cities = values.cities as ICountryCityEntity[];
 
-      console.log(fromToEntity);
+			const map = new Map<number, IMainCountryForCityEntity>();
 
-      this.fromToService.setFromToEntity(fromToEntity);
-    }
-  }
+			for (const country of countries) {
+				for (const city of cities) {
+					map.set(city.id, { id: country.id, name: country.name } as IMainCountryForCityEntity);
+				}
+			}
 
-  protected onAdd(country: IFromCountryEntity): void {
-    if (this.fromCityList() && this.fromCityList.length > 0) {
-      this.fromCityList.set(null);
-    }
+			const toRes: IFTCityEntity[] = cities.map((city: ICountryCityEntity) => {
+				const entity: IFTCityEntity = {
+					id: city.id,
+					name: city.name,
+					country: map.get(city.id)!
+				};
 
-    this.fromCityList.set(country.cities);
-  }
+				return entity;
+			});
 
-  protected onChange(countries: IFromCountryEntity[]): void {
-    if (this.toCityList() && this.fromCityList.length > 0) {
-      this.toCityList.set(null);
-    }
+			const fromToEntity: IFromToEntity = {
+				id: 0,
+				cityFrom: {
+					id: values.city.id,
+					name: values.city.name,
+					country: { id: values.country.id, name: values.country.name } as IMainCountryForCityEntity
+				} as IFTCityEntity,
+				citiesTo: toRes
+			};
 
-    this.localCountry.set(countries);
+			this.fromToService.setFromToEntity(fromToEntity);
+		}
+	}
 
-    this.setToCityList();
-  }
+	protected onUpdate(): void {}
 
-  protected onRemoveCountry(country: IFromCountryEntity): void {
-    this.additionForm?.get(this.names[3])?.reset();
-  }
+	private onDelete(id: number): void {
+		this.fromToService.removeFromToEntity(id);
+	}
 
-  private creatingUpdateFrom(): void {
-    if (this.selectedFromToEntity) {
-      const city: ICountryCityEntity = {
-        id: this.selectedFromToEntity.cityFrom.id,
-        name: this.selectedFromToEntity.cityFrom.name
-      };
+	protected onAdd(country: IFromCountryEntity): void {
+		if (this.fromCityList() && this.fromCityList.length > 0) {
+			this.fromCityList.set(null);
+		}
 
-      const cityList: ICountryCityEntity[] = this.selectedFromToEntity.citiesTo.map(
-        ct => new CountryCityEntity(ct.id, ct.name)
-      );
+		this.fromCityList.set(country.cities);
+	}
 
-      const countries: IMainCountryForCityEntity[] = this.selectedFromToEntity.citiesTo.map(ct => ct.country);
+	protected onChange(countries: IFromCountryEntity[]): void {
+		if (this.toCityList() && this.fromCityList.length > 0) {
+			this.toCityList.set(null);
+		}
 
-      this.updateForm = new FormGroup({
-        country: new FormControl({value: this.selectedFromToEntity.cityFrom.country, disabled: true}),
-        city: new FormControl({value: city, disabled: true}),
-        countries: new FormControl(countries, Validators.required),
-        cities: new FormControl(cityList, Validators.required)
-      });
-    }
-  }
+		this.localCountry.set(countries);
 
-  protected openAddFrTEntityModal(): void {
-    if (this.modalAdd()?.nativeElement) {
-      this.modalAdd()!.nativeElement.showModal();
-    }
-  }
+		this.setToCityList();
+	}
 
-  protected openUpdateFrTEntityModal(): void {
-    if (this.modalUpdate()?.nativeElement) {
-      this.modalUpdate()!.nativeElement.showModal();
-    }
-  }
+	protected onRemoveCountry(country: IFromCountryEntity): void {
+		this.additionForm?.get(this.names[3])?.reset();
+	}
 
-  protected closeAddFrTEntityModal(): void {
-    if (this.modalAdd()?.nativeElement && this.modalAdd()!.nativeElement.open) {
-      this.modalAdd()!.nativeElement.close();
-    }
-  }
+	private creatingUpdateFrom(): void {
+		if (this.selectedFromToEntity) {
+			const city: ICountryCityEntity = {
+				id: this.selectedFromToEntity.cityFrom.id,
+				name: this.selectedFromToEntity.cityFrom.name
+			};
 
-  protected closeUpdateFrTEntityModal(): void {
-    if (this.modalUpdate()?.nativeElement && this.modalUpdate()!.nativeElement.open) {
-      this.modalUpdate()!.nativeElement.close();
-    }
-  }
+			const cityList: ICountryCityEntity[] = this.selectedFromToEntity.citiesTo.map(
+				ct => new CountryCityEntity(ct.id, ct.name)
+			);
 
-  private setToCityList(): void {
-    if (this.localCountry() && this.localCountry()!.length > 0) {
-      const cities: ICountryCityEntity[] = [];
+			this.toCityList.set(null);
+			this.toCityList.set(cityList);
 
-      this.localCountry()!.forEach(country => country.cities.forEach(city => cities.push(city)));
+			const countries: IMainCountryForCityEntity[] = this.selectedFromToEntity.citiesTo.map(ct => ct.country);
 
-      this.toCityList.set(cities);
-    }
-  }
+			this.updateForm = new FormGroup({
+				country: new FormControl({ value: this.selectedFromToEntity.cityFrom.country, disabled: true }),
+				city: new FormControl({ value: city, disabled: true }),
+				countries: new FormControl(countries, Validators.required),
+				cities: new FormControl(cityList, Validators.required)
+			});
+		}
+	}
 
-  private linearActivation(): void {
-    this.additionForm?.get(this.names[0])?.valueChanges.subscribe((vl: IFromCountryEntity) => {
-      if (vl) {
-        this.additionForm?.get(this.names[1])?.enable();
-      } else {
-        this.additionForm?.get(this.names[1])?.reset();
-        this.additionForm?.get(this.names[1])?.disable();
-        this.additionForm?.get(this.names[2])?.reset();
-        this.additionForm?.get(this.names[2])?.disable();
-        this.additionForm?.get(this.names[3])?.reset();
-        this.additionForm?.get(this.names[3])?.disable();
-      }
-    });
+	protected openAddFrTEntityModal(): void {
+		if (this.modalAdd()?.nativeElement) {
+			this.modalAdd()!.nativeElement.showModal();
+		}
+	}
 
-    this.additionForm?.get(this.names[1])?.valueChanges.subscribe((vl: ICountryCityEntity) => {
-      if (vl) {
-        this.additionForm?.get(this.names[2])?.enable();
-      } else {
-        this.additionForm?.get(this.names[2])?.reset();
-        this.additionForm?.get(this.names[2])?.disable();
-        this.additionForm?.get(this.names[3])?.reset();
-        this.additionForm?.get(this.names[3])?.disable();
-      }
-    });
+	protected openUpdateFrTEntityModal(): void {
+		if (this.modalUpdate()?.nativeElement) {
+			this.modalUpdate()!.nativeElement.showModal();
+		}
+	}
 
-    this.additionForm?.get(this.names[2])?.valueChanges.subscribe((vl: IFromCountryEntity[]) => {
-      if (vl && vl.length > 0) {
-        this.additionForm?.get(this.names[3])?.enable();
-      } else {
-        this.additionForm?.get(this.names[3])?.reset();
-        this.additionForm?.get(this.names[3])?.disable();
-      }
-    });
-  }
+	protected closeAddFrTEntityModal(): void {
+		if (this.modalAdd()?.nativeElement && this.modalAdd()!.nativeElement.open) {
+			this.modalAdd()!.nativeElement.close();
+		}
+	}
 
-  protected upCount(): void {
-    this.cntCount++;
-  }
+	protected closeUpdateFrTEntityModal(): void {
+		if (this.modalUpdate()?.nativeElement && this.modalUpdate()!.nativeElement.open) {
+			this.modalUpdate()!.nativeElement.close();
+		}
+	}
 
-  protected resetCount(): void {
-    this.cntCount = 0;
-  }
+	private setToCityList(): void {
+		if (this.localCountry() && this.localCountry()!.length > 0) {
+			const cities: ICountryCityEntity[] = [];
+
+			this.localCountry()!.forEach(country => country.cities.forEach(city => cities.push(city)));
+
+			this.toCityList.set(cities);
+		}
+	}
+
+	private linearActivation(): void {
+		this.additionForm?.get(this.names[0])?.valueChanges.subscribe((vl: IFromCountryEntity) => {
+			if (vl) {
+				this.additionForm?.get(this.names[1])?.enable();
+			} else {
+				this.additionForm?.get(this.names[1])?.reset();
+				this.additionForm?.get(this.names[1])?.disable();
+				this.additionForm?.get(this.names[2])?.reset();
+				this.additionForm?.get(this.names[2])?.disable();
+				this.additionForm?.get(this.names[3])?.reset();
+				this.additionForm?.get(this.names[3])?.disable();
+			}
+		});
+
+		this.additionForm?.get(this.names[1])?.valueChanges.subscribe((vl: ICountryCityEntity) => {
+			if (vl) {
+				this.additionForm?.get(this.names[2])?.enable();
+			} else {
+				this.additionForm?.get(this.names[2])?.reset();
+				this.additionForm?.get(this.names[2])?.disable();
+				this.additionForm?.get(this.names[3])?.reset();
+				this.additionForm?.get(this.names[3])?.disable();
+			}
+		});
+
+		this.additionForm?.get(this.names[2])?.valueChanges.subscribe((vl: IFromCountryEntity[]) => {
+			if (vl && vl.length > 0) {
+				this.additionForm?.get(this.names[3])?.enable();
+			} else {
+				this.additionForm?.get(this.names[3])?.reset();
+				this.additionForm?.get(this.names[3])?.disable();
+			}
+		});
+	}
+
+	protected upCount(): void {
+		this.cntCount++;
+	}
+
+	protected resetCount(): void {
+		this.cntCount = 0;
+	}
 }

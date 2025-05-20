@@ -29,10 +29,10 @@
           <th scope="col">City(ies)</th>
         </tr>
         </thead>
-        <tbody class="table-group-divider" #countryBlock>
+        <tbody class="table-group-divider" #fromToBlock>
           @if (displayList() && displayList()!.length > 0) {
             @for (entity of displayList(); track entity.id; let i = $index) {
-              <tr [attr.data-country-id]="entity.id">
+              <tr [attr.data-from-to-id]="entity.id">
                 <th scope="row">
                   <div class="d-flex align-items-center justify-content-center">
                     <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="ftrEntity" disabled/>
@@ -122,26 +122,27 @@
   </div>
 
   @if (updateForm) {
-    <form method="dialog" [formGroup]="updateForm" enctype="multipart/form-data">
+    <form method="dialog" [formGroup]="updateForm">
       <input type="hidden" formControlName="id">
 
       <div class="row">
         <div class="col mb-3">
-          <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
-                     formControlName="" placeholder="Selected country"></ng-select>
+          <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name"
+                     formControlName="country" placeholder="Selected country"></ng-select>
         </div>
         <div class="col mb-3">
-          <ng-select class="ng-select-ngCs" [items]="" bindLabel=""
-                     formControlName="" placeholder="Selected city"></ng-select>
+          <ng-select class="ng-select-ngCs" [items]="fromCityList()" bindLabel="name"
+                     formControlName="city" placeholder="Selected city"></ng-select>
         </div>
 
         <div class="col mb-3">
-          <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
-                     formControlName="" placeholder="Selected countries"></ng-select>
+          <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
+                     formControlName="countries" placeholder="Selected countries" 
+                     (change)="onChange($event)"></ng-select>
         </div>
         <div class="col mb-3">
-          <ng-select class="ng-select-ngCs" [items]="" bindLabel="" [multiple]="true"
-                     formControlName="" placeholder="Selected cities"></ng-select>
+          <ng-select class="ng-select-ngCs" [items]="toCityList()" bindLabel="name" [multiple]="true"
+                     formControlName="cities" placeholder="Selected cities"></ng-select>
         </div>
       </div>
     </form>
