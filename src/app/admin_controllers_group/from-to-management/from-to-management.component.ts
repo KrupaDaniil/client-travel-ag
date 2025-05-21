@@ -174,23 +174,7 @@ export class FromToManagementComponent implements OnInit {
 			const countries = values.countries as IFromCountryEntity[];
 			const cities = values.cities as ICountryCityEntity[];
 
-			const map = new Map<number, IMainCountryForCityEntity>();
-
-			for (const country of countries) {
-				for (const city of cities) {
-					map.set(city.id, { id: country.id, name: country.name } as IMainCountryForCityEntity);
-				}
-			}
-
-			const toRes: IFTCityEntity[] = cities.map((city: ICountryCityEntity) => {
-				const entity: IFTCityEntity = {
-					id: city.id,
-					name: city.name,
-					country: map.get(city.id)!
-				};
-
-				return entity;
-			});
+			const toRes: IFTCityEntity[] = this.getArrFTCity(countries, cities);
 
 			const fromToEntity: IFromToEntity = {
 				id: 0,
@@ -205,8 +189,6 @@ export class FromToManagementComponent implements OnInit {
 			this.fromToService.setFromToEntity(fromToEntity);
 		}
 	}
-
-	protected onUpdate(): void {}
 
 	private onDelete(id: number): void {
 		this.fromToService.removeFromToEntity(id);
@@ -251,11 +233,35 @@ export class FromToManagementComponent implements OnInit {
 			const countries: IMainCountryForCityEntity[] = this.selectedFromToEntity.citiesTo.map(ct => ct.country);
 
 			this.updateForm = new FormGroup({
+				id: new FormControl(this.selectedFromToEntity.id, Validators.required),
 				country: new FormControl({ value: this.selectedFromToEntity.cityFrom.country, disabled: true }),
 				city: new FormControl({ value: city, disabled: true }),
 				countries: new FormControl(countries, Validators.required),
 				cities: new FormControl(cityList, Validators.required)
 			});
+		}
+	}
+
+	protected onUpdate(): void {
+		const values = this.updateForm?.value;
+
+		if (values) {
+			const countries = values.country as IFromCountryEntity[];
+			const cities = values.cities as ICountryCityEntity[];
+
+			const entities: IFTCityEntity[] = this.getArrFTCity(countries, cities);
+
+			const FTEntity: IFromToEntity = {
+				id: values.id,
+				cityFrom: {
+					id: values.city.id,
+					name: values.city.name,
+					country: { id: values.country.id, name: values.country.name } as IMainCountryForCityEntity
+				} as IFTCityEntity,
+				citiesTo: entities
+			};
+
+			this.fromToService.editFomToEntity(FTEntity);
 		}
 	}
 
@@ -334,5 +340,27 @@ export class FromToManagementComponent implements OnInit {
 
 	protected resetCount(): void {
 		this.cntCount = 0;
+	}
+
+	private getArrFTCity(countries: IFromCountryEntity[], cities: ICountryCityEntity[]): IFTCityEntity[] {
+		const map = new Map<number, IMainCountryForCityEntity>();
+
+		for (const country of countries) {
+			for (const city of cities) {
+				map.set(city.id, { id: country.id, name: country.name } as IMainCountryForCityEntity);
+			}
+		}
+
+		const toRes: IFTCityEntity[] = cities.map((city: ICountryCityEntity) => {
+			const entity: IFTCityEntity = {
+				id: city.id,
+				name: city.name,
+				country: map.get(city.id)!
+			};
+
+			return entity;
+		});
+
+		return toRes;
 	}
 }
