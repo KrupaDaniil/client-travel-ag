@@ -9,12 +9,12 @@ import {
   Signal,
   ViewChild,
 } from '@angular/core';
-import { EntityStorage } from '../../../storage/entity.storage';
-import { IRole } from '../../../interfaces/i-role';
-import { MessageService } from '../../../services/message.service';
-import { RoleService } from '../../../services/role.service';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { INewRole } from '../../../interfaces/i-new-role';
+import {EntityStorage} from '../../../storage/entity.storage';
+import {IRole} from '../../../interfaces/i-role';
+import {MessageService} from '../../../services/message.service';
+import {RoleService} from '../../../services/role.service';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {INewRole} from '../../../interfaces/i-new-role';
 
 @Component({
   selector: 'app-role-management',
@@ -52,11 +52,7 @@ export class RoleManagementComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked(): void {
     this.selectTableRow();
 
-    if (
-      this.addRoleBtn?.nativeElement &&
-      this.addRoleBlock?.nativeElement &&
-      this.buttonsGroup?.nativeElement
-    ) {
+    if (this.addRoleBtn?.nativeElement && this.addRoleBlock?.nativeElement && this.buttonsGroup?.nativeElement) {
       this.render_2.listen(this.addRoleBtn.nativeElement, 'click', () => {
         this.render_2.addClass(this.buttonsGroup?.nativeElement, 'hide-block');
         this.render_2.addClass(this.addRoleBlock?.nativeElement, 'show-block');
@@ -122,7 +118,7 @@ export class RoleManagementComponent implements OnInit, AfterViewChecked {
 
   createRole(): void {
     if (this.roleName.value) {
-      this.roleService.addUserRole({ name: this.roleName.value } as INewRole);
+      this.roleService.addUserRole({name: this.roleName.value} as INewRole);
       this.roleName.reset();
     }
   }

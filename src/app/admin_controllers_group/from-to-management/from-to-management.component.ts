@@ -127,7 +127,7 @@ export class FromToManagementComponent implements OnInit {
 							this.render.setProperty(radio, "checked", true);
 						}
 
-						const countryId: number = Number.parseInt(r.dataset["fromToId"] as string);
+						const countryId: string = r.dataset["fromToId"] as string;
 
 						this.displayList()!.forEach((fromToEntity: IFromToEntity): void => {
 							if (fromToEntity.id === countryId) {
@@ -177,7 +177,7 @@ export class FromToManagementComponent implements OnInit {
 			const toRes: IFTCityEntity[] = this.getArrFTCity(countries, cities);
 
 			const fromToEntity: IFromToEntity = {
-				id: 0,
+				id: "",
 				cityFrom: {
 					id: values.city.id,
 					name: values.city.name,
@@ -190,7 +190,7 @@ export class FromToManagementComponent implements OnInit {
 		}
 	}
 
-	private onDelete(id: number): void {
+	private onDelete(id: string): void {
 		this.fromToService.removeFromToEntity(id);
 	}
 

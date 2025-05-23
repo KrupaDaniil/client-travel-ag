@@ -46,7 +46,7 @@ export class FromToService {
 		});
 	}
 
-	removeFromToEntity(id: number): void {
+	removeFromToEntity(id: string): void {
 		this.http_s.deleteFormToEntity(id).subscribe({
 			next: (entity: boolean | IError): void => {
 				if (this.check.isError(entity)) {

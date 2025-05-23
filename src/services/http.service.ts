@@ -551,7 +551,7 @@ export class HttpService {
 		);
 	}
 
-	deleteFormToEntity(id: number): Observable<boolean | IError> {
+	deleteFormToEntity(id: string): Observable<boolean | IError> {
 		return this.http.delete(`${this.baseUrl}/from-to/remove/${id}`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): boolean | IError => {
 				if (response.status === HttpStatusCode.Ok) {

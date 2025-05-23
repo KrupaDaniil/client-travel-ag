@@ -43,14 +43,11 @@
                 <td>{{ entity.cityFrom.country.name }}</td>
                 <td>{{ entity.cityFrom.name }}</td>
 
-                @for (frt_cnt of entity.citiesTo; track frt_cnt.id) {
-                  @if (cntCount === 0) {
+                @for (frt_cnt of entity.citiesTo; track frt_cnt.id; let i = $index; ) {
+                  @if (i === 0) {
                     <td>{{ frt_cnt.country.name }}</td>
-                    {{ upCount() }}
                   }
                 }
-                {{ resetCount() }}
-
                 <td>
                   <div class="d-flex align-items-center flex-wrap toCityBlock">
                     @for (frt_ct of entity.citiesTo; track frt_ct.id) {
@@ -137,7 +134,7 @@
 
         <div class="col mb-3">
           <ng-select class="ng-select-ngCs" [items]="listFromToCountry()" bindLabel="name" [multiple]="true"
-                     formControlName="countries" placeholder="Selected countries" 
+                     formControlName="countries" placeholder="Selected countries"
                      (change)="onChange($event)"></ng-select>
         </div>
         <div class="col mb-3">
@@ -147,7 +144,8 @@
       </div>
 
       <div class="d-flex align-items-center justify-content-end my-4">
-        <button type="submit" class="btn btn-sm btn-outline-success px-3 rounded-5" (click)="onUpdate()">Save item</button>
+        <button type="submit" class="btn btn-sm btn-outline-success px-3 rounded-5" (click)="onUpdate()">Save item
+        </button>
       </div>
     </form>
   }
