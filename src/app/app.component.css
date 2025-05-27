@@ -1,6 +1,7 @@
 .menu-button {
   background: transparent !important;
   box-shadow: none !important;
+  margin-left: 115px;
 }
 
 .user-menu {
@@ -13,18 +14,56 @@
 menu-button:hover {
   background: rgba(238, 238, 238, 0.5) !important;
 }
-.user-d-item>.dropdown-item {
+
+.user-d-item > .dropdown-item {
   margin: 0 !important;
   padding: 0.7rem 1rem 0.7rem 1rem !important;
 }
-.user-d-item>.dropdown-divider {
+
+.user-d-item > .dropdown-divider {
   margin: 0 !important;
   padding: 0 !important;
 }
-.user-d-item>:hover {
+
+.user-d-item > :hover {
   background: rgb(143, 151, 159, 0.2) !important;
 }
 
-.user-d-item>.dropdown-item:active{
+.user-d-item > .dropdown-item:active {
   color: rgba(255, 106, 0, 0.8);
+}
+
+.navStyle {
+  background: #8DBECD;
+  width: 100%;
+  height: 80px;
+  position: sticky;
+  padding: 0 !important;
+}
+
+.loginUserBtn {
+  margin-right: 115px;
+  border-radius: 50%;
+}
+
+.loginUserBtn:hover {
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+
+.loginUserBtn:active {
+  transform: scale(0.90);
+}
+
+.containerLogo {
+  all: unset;
+}
+
+.containerLogo > img {
+  padding-top: 5px;
+}
+
+.container-fluid {
+  max-height: 80px !important;
+  width: 100% !important;
+  padding: 0 !important;
 }

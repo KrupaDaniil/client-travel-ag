@@ -1,34 +1,41 @@
 <div class="container">
-  <nav class="navbar bg-body-secondary w-100 rounded-bottom-2">
+  <nav class="navbar navStyle">
     <div class="container-fluid align-items-center justify-content-between">
       <div class="d-flex align-items-center justify-content-start">
-        <button mat-mini-fab class="menu-button mx-4" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation" >
-          <img ngSrc="icons/menu_24dp.svg" height="30" width="30" alt="menu">
+        <button mat-mini-fab class="menu-button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+          <img ngSrc="icons/menu_24dp.svg" height="35" width="35" alt="menu">
         </button>
-        <a class="navbar-brand" routerLink="/" >Travel agency</a>
       </div>
 
-      <div class="d-flex align-items-center justify-content-center px-3">
-        <!--For links section-->
+      <div class="d-flex align-items-center justify-content-center">
+        <a routerLink="/" class="containerLogo">
+          <img ngSrc="icons/logo_icon.svg" alt="logo" width="98" height="76" priority>
+        </a>
       </div>
 
-      <div class="d-flex align-items-center justify-content-end px-4">
+      <div class="d-flex align-items-center justify-content-end">
         @if (isLogin()) {
           <div class="dropdown">
-            <button type="button" class="btn fw-semibold me-3 border-0" data-bs-toggle="dropdown" aria-expanded="false">{{username()}}</button>
+            <button type="button" class="btn fw-semibold me-3 border-0" data-bs-toggle="dropdown"
+                    aria-expanded="false">{{ username() }}
+            </button>
             <ul class="dropdown-menu user-menu">
               <li class="user-d-item">
                 <a class="dropdown-item" routerLink="booked-tours">Booked tours</a>
               </li>
 
-              <li class="user-d-item"><hr class="dropdown-divider"></li>
+              <li class="user-d-item">
+                <hr class="dropdown-divider">
+              </li>
 
               <li class="user-d-item">
                 <a class="dropdown-item" routerLink="user-tours">Completed tours</a>
               </li>
 
-              <li class="user-d-item"><hr class="dropdown-divider"></li>
+              <li class="user-d-item">
+                <hr class="dropdown-divider">
+              </li>
 
               <li class="user-d-item">
                 <a class="dropdown-item" routerLink="user-information">User information</a>
@@ -37,8 +44,9 @@
           </div>
           <button mat-stroked-button class="link-button" (click)="onLogout()">Logout</button>
         } @else {
-          <a class="btn btn-outline-secondary rounded-5 px-4 me-2" routerLink="/login">SingIn</a>
-          <a class="btn btn-outline-secondary rounded-5 px-4" routerLink="/registration">SingUp</a>
+          <a class="loginUserBtn">
+            <img ngSrc="icons/login_user_icon.svg" height="45" width="45" alt="Login_User">
+          </a>
         }
       </div>
 
@@ -56,7 +64,8 @@
               <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                 aria-expanded="false">
                 Dropdown
               </a>
               <ul class="dropdown-menu">
@@ -79,7 +88,7 @@
   </nav>
   <main>
     <div class="main-container">
-      <router-outlet />
+      <router-outlet/>
     </div>
   </main>
 </div>

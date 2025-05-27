@@ -1,20 +1,21 @@
-import { inject, Injectable } from '@angular/core';
-import { EntityStorage } from '../storage/entity.storage';
-import { IUserStartData } from '../interfaces/user-auth/i-user-start-data';
-import { IUserLogin } from '../interfaces/user-auth/i-user-login';
-import { HttpService } from './http.service';
-import { IError } from '../interfaces/i-error';
-import { MessageService } from './message.service';
-import { IUserReg } from '../interfaces/user-auth/i-user-reg';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AuthService } from './auth.service';
-import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
-import { ITokenData } from '../interfaces/user-auth/i-token-data';
-import { UserStartData } from '../models/user-start-data';
-import { IUser } from '../interfaces/i-user';
-import { INewUser } from '../interfaces/i-new-user';
-import { IUserInfo } from '../interfaces/user-auth/i-user-info';
-import { ValidationService } from './validation.service';
+import {inject, Injectable} from '@angular/core';
+import {EntityStorage} from '../storage/entity.storage';
+import {IUserStartData} from '../interfaces/user-auth/i-user-start-data';
+import {IUserLogin} from '../interfaces/user-auth/i-user-login';
+import {HttpService} from './http.service';
+import {IError} from '../interfaces/i-error';
+import {MessageService} from './message.service';
+import {IUserReg} from '../interfaces/user-auth/i-user-reg';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {AuthService} from './auth.service';
+import {firstValueFrom, map, Observable, of, switchMap} from 'rxjs';
+import {ITokenData} from '../interfaces/user-auth/i-token-data';
+import {UserStartData} from '../models/user-start-data';
+import {IUser} from '../interfaces/i-user';
+import {INewUser} from '../interfaces/i-new-user';
+import {IUserInfo} from '../interfaces/user-auth/i-user-info';
+import {ValidationService} from './validation.service';
+import {ILoginError} from '../interfaces/i-login-error';
 
 @Injectable({
   providedIn: 'root',
@@ -29,33 +30,24 @@ export class UserService {
     private router: Router,
     private authService: AuthService,
     private check: ValidationService
-  ) {}
+  ) {
+  }
 
-  singIn(user: IUserLogin): Observable<boolean> {
+  singIn(user: IUserLogin): Observable<void | ILoginError | IError> {
     return this.http.loginUser(user).pipe(
-      switchMap((item: IUserStartData | IError | null): Observable<boolean> => {
-        if (item !== null) {
-          if (this.isUser(item)) {
-            this.store.addUserStartData(item as IUserStartData);
-            this.router.navigate(['/']).then();
-            return of(true);
-          } else if (this.check.isError(item)) {
-            return this.http.checkUsername(user.username).pipe(
-              map((res: boolean): boolean => {
-                res
-                  ? this.messageService.setMessage('Incorrect password entered')
-                  : this.messageService.setMessage(
-                      'Such a user does not exist'
-                    );
-                return false;
-              })
-            );
-          } else {
-            this.messageService.setMessage(null);
-            return of(false);
-          }
+      switchMap((item: IUserStartData | ILoginError | IError): Observable<void | ILoginError | IError> => {
+        if (this.check.isUser(item)) {
+          this.store.addUserStartData(item as IUserStartData);
+          this.router.navigate(['/']).then();
         }
-        return of(false);
+        if (this.check.isLoginError(item)) {
+          return of(item as ILoginError);
+        }
+        if (this.check.isError(item)) {
+          return of(item as IError);
+        }
+
+        return of(void 0);
       })
     );
   }
@@ -223,9 +215,5 @@ export class UserService {
         }
       })
     );
-  }
-
-  private isUser(item: any): boolean {
-    return 'roles' in item && Array.isArray(item.roles);
   }
 }

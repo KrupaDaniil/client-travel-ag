@@ -28,3 +28,12 @@ mat-card-header, mat-card-actions {
 .singInButton:hover {
   background: rgba(238, 238, 238, 0.5) !important;
 }
+
+.errorTextContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-left: 15px;
+  color: red;
+  font-size: 10pt;
+}

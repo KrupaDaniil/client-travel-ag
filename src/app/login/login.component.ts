@@ -1,25 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { IUserLogin } from '../../interfaces/user-auth/i-user-login';
-import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardHeader,
-  MatCardTitle,
-} from '@angular/material/card';
-import { MatButton, MatFabButton } from '@angular/material/button';
-import { AuthService } from '../../services/auth.service';
-import { MessageService } from '../../services/message.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgOptimizedImage } from '@angular/common';
+import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {UserService} from '../../services/user.service';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {IUserLogin} from '../../interfaces/user-auth/i-user-login';
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle,} from '@angular/material/card';
+import {MatButton, MatFabButton} from '@angular/material/button';
+import {AuthService} from '../../services/auth.service';
+import {MessageService} from '../../services/message.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {NgOptimizedImage} from '@angular/common';
+import {ILoginError} from '../../interfaces/i-login-error';
+import {IError} from '../../interfaces/i-error';
+import {ValidationService} from '../../services/validation.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +26,7 @@ import { NgOptimizedImage } from '@angular/common';
     NgOptimizedImage,
     MatFabButton,
   ],
-  providers: [UserService, AuthService],
+  providers: [UserService, AuthService, MessageService, ValidationService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -45,12 +36,16 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup | undefined;
   readonly errorMessage: string[];
   readonly singInOAuth2: string;
-  constructor(
-    private userService: UserService,
-    private messageService: MessageService
-  ) {
-    this.errorMessage = ['Required field', 'Cannot be empty'];
+  protected invalidUsername: WritableSignal<string | null>;
+  protected invalidPassword: WritableSignal<string | null>;
+
+
+  constructor(private userService: UserService, private messageService: MessageService,
+              private check: ValidationService) {
+    this.errorMessage = ['Required field;', 'Cannot be empty;'];
     this.singInOAuth2 = 'http://localhost:8080/oauth2/authorization/';
+    this.invalidUsername = signal<string | null>(null);
+    this.invalidPassword = signal<string | null>(null);
   }
 
   ngOnInit() {
@@ -69,6 +64,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
+
   onSubmit(): void {
     if (this.loginForm && this.loginForm.valid) {
       const _login: string = this.loginForm.get('login')?.value;
@@ -80,9 +76,32 @@ export class LoginComponent implements OnInit {
       };
 
       this.userService.singIn(loginData).subscribe({
-        next: (res: boolean): void => {
-          if (!res) {
+        next: (res: void | ILoginError | IError): void => {
+          if (this.check.isError(res)) {
+            this.messageService.setMessage((res as IError).message);
             this.showErrorMessage();
+          }
+
+          if (this.check.isLoginError(res)) {
+            const loginError: ILoginError = res as ILoginError;
+
+            if (loginError.usernameError) {
+              this.invalidUsername.set(loginError.usernameError + ";");
+              setTimeout(() => {
+                this.invalidUsername.set(null);
+              }, 5000)
+            } else {
+              this.invalidUsername.set(null);
+            }
+
+            if (loginError.passwordError) {
+              this.invalidPassword.set(loginError.passwordError + ";");
+              setTimeout(() => {
+                this.invalidPassword.set(null);
+              }, 5000)
+            } else {
+              this.invalidPassword.set(null);
+            }
           }
         },
       });
@@ -105,4 +124,6 @@ export class LoginComponent implements OnInit {
       });
     }
   }
+
+  protected readonly setTimeout = setTimeout;
 }
