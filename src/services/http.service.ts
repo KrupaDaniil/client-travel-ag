@@ -37,14 +37,15 @@ export class HttpService {
       "An unexpected error occurred while adding",
       "An unexpected error occurred during the update",
       "An unexpected error occurred during deletion",
-      "Delete failed"
+      "Delete failed",
+      "The list is empty"
     ];
   }
 
   registrationUser(user: IUserReg): Observable<boolean | IError> {
     return this.http.post(`${this.baseUrl}/registration`, user, {observe: "response"}).pipe(
       map(response => {
-        return response.status === 200;
+        return response.status === HttpStatusCode.Ok;
       }),
       catchError((error: HttpErrorResponse) =>
         of(this.getErrorMessage(error, "User with that name or email already exists"))
@@ -89,10 +90,10 @@ export class HttpService {
   loadingAllUsers(): Observable<IUser[] | IError> {
     return this.http.get<Object>(`${this.baseUrl}/all-users`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IUser[] | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as IUser[];
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, error.message)))
@@ -102,10 +103,10 @@ export class HttpService {
   loadingAllRoles(): Observable<IRole[] | IError> {
     return this.http.get<Object>(`${this.baseUrl}/all-roles`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IRole[] | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as IRole[];
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, error.message)))
@@ -115,10 +116,10 @@ export class HttpService {
   loadingAllClimate(): Observable<IClimateEntity[] | IError> {
     return this.http.get<Object>(`${this.baseUrl}/api/climates`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IClimateEntity[] | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as IClimateEntity[];
         } else {
-          return new ErrorMessage(HttpStatusCode.NoContent, "The list is empty");
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, error.message)))
@@ -128,10 +129,10 @@ export class HttpService {
   loadingAllLanguage(): Observable<ILanguageEntity[] | IError> {
     return this.http.get<Object>(`${this.baseUrl}/api/languages`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): ILanguageEntity[] | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as ILanguageEntity[];
         } else {
-          return new ErrorMessage(HttpStatusCode.NoContent, "The list is empty");
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError((error: HttpErrorResponse) => {
@@ -143,10 +144,10 @@ export class HttpService {
   loadingUserById(id: number): Observable<IUser | IError> {
     return this.http.get<Object>(`${this.baseUrl}/user-get-id/${id}`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IUser | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as IUser;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.NotFound, "User not found");
         }
       }),
       catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, error.message)))
@@ -156,10 +157,10 @@ export class HttpService {
   loadingClimateById(id: number): Observable<IClimateEntity | IError> {
     return this.http.get<Object>(`${this.baseUrl}/api/climate/${id}`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IClimateEntity | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as IClimateEntity;
         } else {
-          return new ErrorMessage(HttpStatusCode.NotFound, "User not found");
+          return new ErrorMessage(HttpStatusCode.NotFound, "Climate not found");
         }
       }),
       catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, "Error loading climate")))
@@ -167,16 +168,13 @@ export class HttpService {
   }
 
   loadingUserByUsername(username: string): Observable<IUserInfo | IError> {
-    return this.http
-      .get<Object>(`${this.baseUrl}/user-get-username/${username}`, {
-        observe: "response"
-      })
+    return this.http.get<Object>(`${this.baseUrl}/user-get-username/${username}`, {observe: "response"})
       .pipe(
         map((response: HttpResponse<Object>): IUserInfo | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return response.body as IUserInfo;
           } else {
-            return response.body as IError;
+            return new ErrorMessage(HttpStatusCode.NotFound, "User not found");
           }
         }),
         catchError(
@@ -193,13 +191,14 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): ICountryEntity[] | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return response.body as ICountryEntity[];
           } else {
             return new ErrorMessage(HttpStatusCode.NoContent, "Data is temporarily unavailable");
           }
         }),
-        catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, "Error loading countries data")))
+        catchError((error: HttpErrorResponse) =>
+          of(this.getErrorMessage(error, "Error loading countries data")))
       );
   }
 
@@ -210,7 +209,7 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): ICountryEntity | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return response.body as ICountryEntity;
           } else {
             return new ErrorMessage(response.status, `Unable to load country with ID ${id}`);
@@ -225,10 +224,10 @@ export class HttpService {
   loadingAllAdminCities(): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
     return this.http.get<Object>(`${this.baseUrl}/admin-cities`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[];
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError((error: HttpErrorResponse): Observable<IError> => {
@@ -243,7 +242,7 @@ export class HttpService {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as IFromToEntity[];
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError((error: HttpErrorResponse): Observable<IError> => {
@@ -258,7 +257,7 @@ export class HttpService {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as IFromCountryEntity[];
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError(
@@ -271,10 +270,10 @@ export class HttpService {
   addUser(user: INewUser): Observable<IUser | IError> {
     return this.http.post(`${this.baseUrl}/add-user`, user, {observe: "response"}).pipe(
       map((resp: HttpResponse<object>): IUser | IError => {
-        if (resp.status === 200) {
+        if (resp.status === HttpStatusCode.Ok) {
           return resp.body as IUser;
         } else {
-          return resp.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "User creation error");
         }
       }),
       catchError(
@@ -286,10 +285,10 @@ export class HttpService {
   addRole(role: INewRole): Observable<IRole | IError> {
     return this.http.post(`${this.baseUrl}/add-role`, role, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IRole | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return response.body as IRole;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Role creation error");
         }
       }),
       catchError(
@@ -360,7 +359,7 @@ export class HttpService {
         if (response.status === HttpStatusCode.Created) {
           return response.body as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "City creation error");
         }
       }),
       catchError(
@@ -375,7 +374,7 @@ export class HttpService {
         if (response.status === HttpStatusCode.Created) {
           return response.body as IFromToEntity;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "From-to entity creation error");
         }
       }),
       catchError(
@@ -388,10 +387,10 @@ export class HttpService {
   updateUser(user: IUser): Observable<boolean | IError> {
     return this.http.post(`${this.baseUrl}/update-user`, user, {observe: "response"}).pipe(
       map((resp: HttpResponse<object>): boolean | IError => {
-        if (resp.status === 200) {
+        if (resp.status === HttpStatusCode.Ok) {
           return true;
         } else {
-          return resp.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "User update error");
         }
       }),
       catchError(
@@ -403,10 +402,10 @@ export class HttpService {
   updateUserInfo(user: IUserInfo): Observable<IUserInfo | IError> {
     return this.http.post(`${this.baseUrl}/update-user-info`, user, {observe: "response"}).pipe(
       map((resp: HttpResponse<object>): IUserInfo | IError => {
-        if (resp.status === 200) {
+        if (resp.status === HttpStatusCode.Ok) {
           return resp.body as IUserInfo;
         } else {
-          return resp.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Error updating user data");
         }
       }),
       catchError(
@@ -422,10 +421,10 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): ICountryEntity | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return response.body as ICountryEntity;
           } else {
-            return response.body as IError;
+            return new ErrorMessage(HttpStatusCode.BadRequest, "Error updating country data");
           }
         }),
         catchError((error: HttpErrorResponse) => of(this.getErrorMessage(error, this.errorDefaultMessage[1])))
@@ -438,7 +437,7 @@ export class HttpService {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Error updating city data");
         }
       }),
       catchError(
@@ -453,7 +452,7 @@ export class HttpService {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as IFromToEntity;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Error updating from-to entity data");
         }
       }),
       catchError(
@@ -466,10 +465,10 @@ export class HttpService {
   deleteUser(id: number): Observable<boolean | IError> {
     return this.http.delete(`${this.baseUrl}/delete-user/${id}`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): boolean | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return true;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
         }
       }),
       catchError(
@@ -481,10 +480,10 @@ export class HttpService {
   deleteRole(id: number): Observable<boolean | IError> {
     return this.http.delete(`${this.baseUrl}/delete-role/${id}`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): boolean | IError => {
-        if (response.status === 200) {
+        if (response.status === HttpStatusCode.Ok) {
           return true;
         } else {
-          return response.body as IError;
+          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
         }
       }),
       catchError(
@@ -500,7 +499,7 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): boolean | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return true;
           } else {
             return new ErrorMessage(HttpStatusCode.NotFound, this.errorDefaultMessage[3]);
@@ -519,7 +518,7 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>): boolean | IError => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return true;
           } else {
             return new ErrorMessage(HttpStatusCode.NotFound, this.errorDefaultMessage[3]);
@@ -538,7 +537,7 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<Object>) => {
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             return true;
           } else {
             return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
@@ -584,14 +583,28 @@ export class HttpService {
       })
       .pipe(
         map((response: HttpResponse<object>): boolean => {
-          return response.status === 200;
+          return response.status === HttpStatusCode.Ok;
         })
       );
   }
 
-  private getErrorMessage(error: HttpErrorResponse, message: string): IError {
-    const errorBody = error.error?.body;
+  private checkError(item: any): boolean {
+    return (
+      item !== null &&
+      typeof item === "object" &&
+      typeof item.status === "number" &&
+      typeof item.message === "string" &&
+      typeof item.timestamp === "string" &&
+      !isNaN(Date.parse(item.timestamp))
+    )
+  }
 
-    return new ErrorMessage(errorBody?.status || error.status, errorBody?.message || message);
+  private getErrorMessage(error: HttpErrorResponse, message: string): IError {
+    if (this.checkError(error.error)) {
+      const errorBody = error.error as IError;
+      return new ErrorMessage(errorBody.status, errorBody.message);
+    } else {
+      return new ErrorMessage(error.status, message);
+    }
   }
 }
