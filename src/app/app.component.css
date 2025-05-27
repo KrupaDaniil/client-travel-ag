@@ -1,7 +1,18 @@
 .menu-button {
-  background: transparent !important;
-  box-shadow: none !important;
-  margin-left: 115px;
+  background: transparent;
+  margin-left: 7.224dvw;
+  border: none;
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+}
+
+.menu-button:hover {
+  box-shadow: 0 0 7px rgb(234, 234, 234);
+}
+
+.menu-button:active {
+  transform: scale(0.90);
 }
 
 .user-menu {
@@ -9,10 +20,6 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4) !important;
   padding: 0 !important;
   margin-top: 1.2rem;
-}
-
-menu-button:hover {
-  background: rgba(238, 238, 238, 0.5) !important;
 }
 
 .user-d-item > .dropdown-item {
@@ -39,15 +46,16 @@ menu-button:hover {
   height: 80px;
   position: sticky;
   padding: 0 !important;
+  border-radius: 0 0 10px 10px;
 }
 
 .loginUserBtn {
-  margin-right: 115px;
+  margin-right: 7.224dvw;
   border-radius: 50%;
 }
 
 .loginUserBtn:hover {
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 7px rgba(234, 234, 234, 0.7);
 }
 
 .loginUserBtn:active {
@@ -56,14 +64,56 @@ menu-button:hover {
 
 .containerLogo {
   all: unset;
+  background: #e8f5e9;
+  border-radius: 50%;
 }
 
-.containerLogo > img {
-  padding-top: 5px;
+.containerLogo:hover {
+  box-shadow: 0 0 7px rgba(234, 234, 234, 0.7);
 }
 
 .container-fluid {
   max-height: 80px !important;
   width: 100% !important;
   padding: 0 !important;
+}
+
+@media (max-width: 550px) {
+  .menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+  }
+
+  .menu-button > img {
+    width: 31px;
+    height: 31px;
+  }
+
+  .loginUserBtn > img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .containerLogo > img {
+    width: 49px;
+    height: 49px;
+  }
+
+}
+
+@media (max-width: 402px) {
+
+  .menu-button > img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .loginUserBtn > img {
+    width: 28px;
+    height: 28px;
+  }
+
 }

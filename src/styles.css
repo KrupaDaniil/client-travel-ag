@@ -17,8 +17,12 @@ html, body {
 
 body {
   margin: 0 auto !important;
-  width: 1440px !important;
   font-family: Futura, sans-serif !important;
+}
+
+.container {
+  min-width: 402px !important;
+  max-width: 1440px !important;
 }
 
 .hide-block {

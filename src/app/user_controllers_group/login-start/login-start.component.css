@@ -1,0 +1,31 @@
+.start-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 999px;
+  height: 685px;
+  border-radius: 50px;
+  background: #8DBECD;
+  margin-top: 89px;
+}
+
+.login-card-image-container {
+  width: 534px;
+  height: 621px;
+  margin-right: 45px;
+  border-radius: 50px;
+  background: #ffffff;
+}
+
+.login-card-form-container {
+  width: 349px;
+  height: 621px;
+  border-radius: 50px;
+  background: #ffffff;
+}
