@@ -7,14 +7,6 @@
   height: 46px;
 }
 
-.menu-button:hover {
-  box-shadow: 0 0 7px rgb(234, 234, 234);
-}
-
-.menu-button:active {
-  transform: scale(0.90);
-}
-
 .user-menu {
   border: none !important;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4) !important;
@@ -54,12 +46,10 @@
   border-radius: 50%;
 }
 
-.loginUserBtn:hover {
-  box-shadow: 0 0 7px rgba(234, 234, 234, 0.7);
-}
-
-.loginUserBtn:active {
+:is(.loginUserBtn, .menu-button):active {
+  will-change: transform;
   transform: scale(0.90);
+  transition: transform 0.1s ease-in-out;
 }
 
 .containerLogo {
@@ -68,7 +58,7 @@
   border-radius: 50%;
 }
 
-.containerLogo:hover {
+:is(.containerLogo, .loginUserBtn, .menu-button):hover {
   box-shadow: 0 0 7px rgba(234, 234, 234, 0.7);
 }
 

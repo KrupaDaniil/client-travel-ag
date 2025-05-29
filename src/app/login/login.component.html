@@ -1,14 +1,13 @@
 <div class="login-form-container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title class="fw-semibold">Login</mat-card-title>
-    </mat-card-header>
-    @if (loginForm) {
-      <form [formGroup]="loginForm">
-        <mat-card-content>
-          <div class="mb-3">
-            <input type="text" formControlName="login" placeholder="Username" class="form-control form-control-sm">
-            <div class="errorTextContainer">
+  <div class="bg-login-form-container">
+    <div class="sing-in-container">
+      <div class="sing-in-container-header headerText">Вхід</div>
+
+      <div class="sing-in-container-body">
+        @if (loginForm) {
+          <form [formGroup]="loginForm">
+            <input type="text" formControlName="login" placeholder="Введіть логін*" class="input-control">
+            <div class="errorTextContainer margin-bottom-5">
               @if (this.invalidUsername()) {
                 <span class="me-1">{{ this.invalidUsername() }}</span>
               }
@@ -21,51 +20,52 @@
                 }
               }
             </div>
-          </div>
 
+            <div class="custom-password">
+              <input type="password" formControlName="password" placeholder="Введіть пароль*" #passInp>
+              <button (click)="onSHBtnClick()">
+                <img ngSrc="/icons/password-hide-icon.svg" width="20" height="20" alt="Password" #SHImg>
+              </button>
+            </div>
 
-          <input type="password" formControlName="password" placeholder="Password"
-                 class="form-control form-control-sm">
-          <div class="errorTextContainer">
-            @if (this.invalidPassword()) {
-              <span class="me-1">{{ this.invalidPassword() }}</span>
-            }
-            @if (loginForm.get("password")?.invalid && loginForm.get("password")?.touched) {
-              @if (loginForm.get("password")!.hasError("required")) {
-                <span class="me-1">{{ this.errorMessage[0] }}</span>
+            <div class="errorTextContainer">
+              @if (this.invalidPassword()) {
+                <span class="me-1">{{ this.invalidPassword() }}</span>
               }
-              @if (loginForm.get("password")!.hasError("pattern")) {
-                <span class="me-1">{{ this.errorMessage[1] }}</span>
+              @if (loginForm.get("password")?.invalid && loginForm.get("password")?.touched) {
+                @if (loginForm.get("password")!.hasError("required")) {
+                  <span class="me-1">{{ this.errorMessage[0] }}</span>
+                }
+                @if (loginForm.get("password")!.hasError("pattern")) {
+                  <span class="me-1">{{ this.errorMessage[1] }}</span>
+                }
               }
-            }
-          </div>
+            </div>
 
+            <div class="button-container">
+              <button type="button" class="singInButton margin-bottom-4" (click)="onSubmit()">Увійти</button>
 
-        </mat-card-content>
-        <mat-card-actions>
-          @if (loginForm.get("login")?.invalid || loginForm.get("password")?.invalid) {
-            <button type="button" mat-stroked-button class="singInButton" (click)="onSubmit()" disabled>SingIn</button>
-          } @else {
-            <button type="button" mat-stroked-button class="singInButton" (click)="onSubmit()">SingIn</button>
-          }
+              <button type="button" class="reg-button" (click)="withRegistration()">Ще не має акаунту</button>
 
-        </mat-card-actions>
-      </form>
+              <div class="o-auth-container">
+                <button class="o-auth-btn">
+                  <img ngSrc="/icons/icons-google.svg" alt="Google" width="44" height="44" priority
+                       (click)="singInGoogle()">
+                </button>
+                <button class="o-auth-btn">
+                  <img ngSrc="/icons/icons-github.svg" alt="GitHub" width="44" height="44" priority
+                       (click)="singInGitHub()">
+                </button>
+              </div>
 
-      <div class="d-flex align-items-center justify-content-center my-2">
-        <button mat-fab (click)="withGoogle()" class="me-3 bg-white h-50 w-auto shadow-sm">
-          <img ngSrc="icons/icons-google.svg" width="35" height="35" alt="Google">
-        </button>
-        <button mat-fab (click)="withGitHub()" class="bg-white h-50 w-auto shadow-sm">
-          <img ngSrc="icons/icons-github.svg" width="35" height="35" alt="GitHub">
-        </button>
+            </div>
+
+          </form>
+
+        }
+
       </div>
-    } @else {
-      <mat-card-content>
-        <div class="text-danger fw-semibold">Sorry!</div>
-        <div class="text-center">The service is temporarily unavailable</div>
-      </mat-card-content>
-    }
+    </div>
+  </div>
 
-  </mat-card>
 </div>

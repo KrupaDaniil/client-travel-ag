@@ -4,13 +4,13 @@
       <div class="d-flex align-items-center justify-content-start">
         <button class="menu-button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-          <img ngSrc="icons/menu_24dp.svg" height="35" width="35" alt="menu">
+          <img ngSrc="/icons/menu_24dp.svg" height="35" width="35" alt="menu">
         </button>
       </div>
 
       <div class="d-flex align-items-center justify-content-center">
         <a routerLink="/" class="containerLogo">
-          <img ngSrc="icons/logo_icon.png" alt="logo" width="55" height="55" priority>
+          <img ngSrc="/icons/logo_icon.png" alt="logo" width="55" height="55" priority>
         </a>
       </div>
 
@@ -44,8 +44,8 @@
           </div>
           <button mat-stroked-button class="link-button" (click)="onLogout()">Logout</button>
         } @else {
-          <a class="loginUserBtn">
-            <img ngSrc="icons/login_user_icon.svg" height="45" width="45" alt="Login_User">
+          <a class="loginUserBtn" routerLink="/authorization">
+            <img ngSrc="/icons/login_user_icon.svg" height="45" width="45" alt="Login_User">
           </a>
         }
       </div>
