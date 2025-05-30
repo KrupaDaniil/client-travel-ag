@@ -8,11 +8,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 999px;
+  max-width: 999px;
   height: 685px;
   border-radius: 50px;
   background: #8DBECD;
   margin-top: 89px;
+  padding: 0 35px;
 }
 
 .login-card-image-container {
@@ -91,7 +92,7 @@
   width: 110px;
   height: 1px;
   background: #8DBECD;
-  margin: 38px 0 38px 0;
+  margin: 38px 0;
 }
 
 .otherButtonsContainer {
@@ -130,4 +131,68 @@
   will-change: transform;
   transform: scale(0.98);
   transition: transform 0.1s ease-in-out;
+}
+
+@media (max-width: 1050px) {
+  .login-card-image-container {
+    display: none;
+  }
+}
+
+@media (max-width: 556px) {
+
+  .login-card {
+    width: 292px;
+    height: 505px;
+    padding: 0;
+    margin-top: 135px;
+  }
+
+  .logo-container > img {
+    width: 37px;
+    height: 37px;
+  }
+
+  .login-card-form-container {
+    width: 250px;
+    height: 458px;
+    border-radius: 30px;
+  }
+
+  .singInBtn {
+    margin-top: 46px;
+  }
+
+  :is(.singInBtn, .singUpBtn) {
+    width: 217px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .orTextContainer {
+    margin: 10px 0;
+    font-size: 11px;
+  }
+
+  .hrLine {
+    width: 81px;
+    margin: 92px 0 28px 0;
+  }
+
+  .srvText {
+    font-size: 11px;
+  }
+
+  .otherButtonsContainer {
+    margin-top: 29px;
+  }
+
+  .gBtn > img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .gBtn:first-child {
+    margin-right: 22px;
+  }
 }

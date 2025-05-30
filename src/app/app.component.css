@@ -68,6 +68,93 @@
   padding: 0 !important;
 }
 
+.menu-item {
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+  padding: 10px;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  text-decoration: underline #D9913C;
+}
+
+.user-menu-item {
+  margin-left: 97px;
+}
+
+.disabled-item {
+  color: black;
+  font-size: 20px;
+  padding: 10px;
+  opacity: 0.5;
+  font-weight: 525;
+  cursor: pointer;
+}
+
+.link-button {
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 30px;
+  background-color: transparent;
+  border: 1px solid #D9913C;
+  color: #D9913C;
+  font-size: 14px;
+  margin-right: 80px;
+}
+
+.link-button:hover {
+  background-color: #D9913C;
+  color: white;
+}
+
+.link-button:active {
+  transform: scale(0.95);
+}
+
+.logout-container {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+  margin-top: 35px;
+}
+
+.is-user {
+  font-weight: bold;
+  font-size: 22px;
+  margin-left: 97px;
+}
+
+.close {
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+}
+
+.offcanvas {
+  width: 500px !important;
+}
+
+.offcanvas-header {
+  margin-top: 20px !important;
+}
+
+.menu-logo {
+  margin-left: 97px;
+}
+
+.mg-cls {
+  margin-left: 126px;
+}
+
+.menu-links {
+  margin-top: 80px;
+  margin-left: 97px;
+}
+
+
 @media (max-width: 550px) {
   .menu-button {
     display: flex;

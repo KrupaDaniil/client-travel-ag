@@ -1,13 +1,8 @@
-.main-container {
-  display: block;
-  position: relative;
-}
-
 .login-form-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 89dvh;
 }
 
 .bg-login-form-container {
@@ -15,7 +10,7 @@
   align-items: center;
   justify-content: center;
   width: 292px;
-  height: 505px;
+  min-height: 505px;
   background: #8DBECD;
   border-radius: 30px;
 }
@@ -25,9 +20,10 @@
   align-items: center;
   flex-direction: column;
   width: 250px;
-  height: 458px;
+  min-height: 410px;
   background: white;
   border-radius: 30px;
+  margin: 24px 0 24px 0;
 }
 
 .sing-in-container-header {
@@ -36,63 +32,6 @@
   justify-content: center;
   margin-top: 29px;
   margin-bottom: 63px;
-}
-
-.input-control {
-  width: 217px;
-  height: 27px;
-  border-radius: 30px;
-  border: 1px solid #8DBECD;
-  color: #8DBECD;
-  padding-left: 10px;
-  font-size: 10pt;
-}
-
-.input-control:focus {
-  box-shadow: none;
-  outline: none;
-}
-
-.custom-password {
-  display: flex;
-  align-items: center;
-  width: 217px;
-  height: 27px;
-  border-radius: 30px;
-  border: 1px solid #8DBECD;
-}
-
-.custom-password > input {
-  width: 172px;
-  height: 25px;
-  margin-left: 11px;
-  border: none;
-  color: #8DBECD;
-  padding: 0;
-  font-size: 10pt;
-}
-
-.custom-password > button {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
-
-.input-control::placeholder {
-  color: #8DBECD;
-}
-
-.custom-password > input::placeholder {
-  color: #8DBECD;
-}
-
-.custom-password > input:focus {
-  box-shadow: none;
-  outline: none;
 }
 
 .headerText {
@@ -142,7 +81,7 @@ input[type="password"]::-ms-reveal {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 85px;
+  margin: 85px 0 13px 0;
 }
 
 .o-auth-btn {

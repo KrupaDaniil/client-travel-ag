@@ -15,73 +15,82 @@
       </div>
 
       <div class="d-flex align-items-center justify-content-end">
-        @if (isLogin()) {
-          <div class="dropdown">
-            <button type="button" class="btn fw-semibold me-3 border-0" data-bs-toggle="dropdown"
-                    aria-expanded="false">{{ username() }}
-            </button>
-            <ul class="dropdown-menu user-menu">
-              <li class="user-d-item">
-                <a class="dropdown-item" routerLink="booked-tours">Booked tours</a>
-              </li>
-
-              <li class="user-d-item">
-                <hr class="dropdown-divider">
-              </li>
-
-              <li class="user-d-item">
-                <a class="dropdown-item" routerLink="user-tours">Completed tours</a>
-              </li>
-
-              <li class="user-d-item">
-                <hr class="dropdown-divider">
-              </li>
-
-              <li class="user-d-item">
-                <a class="dropdown-item" routerLink="user-information">User information</a>
-              </li>
-            </ul>
-          </div>
-          <button mat-stroked-button class="link-button" (click)="onLogout()">Logout</button>
-        } @else {
-          <a class="loginUserBtn" routerLink="/authorization">
-            <img ngSrc="/icons/login_user_icon.svg" height="45" width="45" alt="Login_User">
-          </a>
-        }
+        <a class="loginUserBtn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUserMenu"
+           aria-controls="offcanvasUserMenu" aria-label="Toggle navigation">
+          <img ngSrc="/icons/login_user_icon.svg" height="45" width="45" alt="Login_User">
+        </a>
       </div>
 
-      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUserMenu"
+           aria-labelledby="offcanvasUserMenu">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          <div class="row w-100">
+            <div class="col">
+              @if (isLogin()) {
+                <div class="offcanvas-title is-user" id="offcanvasUserMenuLabel">{{ username() }}</div>
+              }
+            </div>
+            <div class="col">
+              <div class="d-flex align-items-center h-100">
+                <button type="button" class="close mg-cls" data-bs-dismiss="offcanvas" aria-label="Close">
+                  <img ngSrc="/icons/close-btn-menu.svg" height="24" width="24" alt="Close">
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                 aria-expanded="false">
-                Dropdown
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-          </ul>
-          <form class="d-flex mt-3" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
+          @if (isLogin()) {
+            <div class="row row-cols-1 row-gap-3 user-menu-item">
+              <a class="col menu-item" routerLink="booked-tours" data-bs-dismiss="offcanvas">Booked tours</a>
+              <a class="col menu-item" routerLink="user-tours" data-bs-dismiss="offcanvas">Completed tours</a>
+              <a class="col menu-item" routerLink="user-information" data-bs-dismiss="offcanvas">User
+                information</a>
+            </div>
+            <div class="logout-container">
+              <button class="link-button" (click)="onLogout()" data-bs-dismiss="offcanvas">Вихід</button>
+            </div>
+          } @else {
+            <div class="row row-cols-1 row-gap-3">
+              <span class="col disabled-item">Booked tours</span>
+              <span class="col disabled-item">Completed tours</span>
+              <span class="col disabled-item">User information</span>
+            </div>
+            <div class="logout-container">
+              <a class="link-button" routerLink="/authorization" data-bs-dismiss="offcanvas">Увійти</a>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+           aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <div class="row w-100">
+            <div class="col">
+              <div class="menu-logo">
+                <img ngSrc="/icons/logo_end_text.svg" width="152" height="43" alt="logo">
+              </div>
+            </div>
+            <div class="col">
+              <div class="d-flex align-items-center h-100">
+                <button type="button" class="close mg-cls" data-bs-dismiss="offcanvas" aria-label="Close">
+                  <img ngSrc="/icons/close-btn-menu.svg" height="24" width="24" alt="Close">
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="offcanvas-body">
+          <div class="row row-cols-1 row-gap-3 menu-links">
+            <a class="col menu-item" routerLink="">Тури</a>
+            <a class="col menu-item" routerLink="">Новини</a>
+            <a class="col menu-item" routerLink="">Країни</a>
+            <a class="col menu-item" routerLink="">Питання та відповіді</a>
+            <a class="col menu-item" routerLink="">Відгуки</a>
+            <a class="col menu-item" routerLink="">Контакти</a>
+          </div>
         </div>
       </div>
     </div>
