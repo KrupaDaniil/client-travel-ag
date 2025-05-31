@@ -1,5 +1,6 @@
 import {patchState, signalStore, type, withMethods, withState} from "@ngrx/signals";
 import {
+  addEntities,
   addEntity,
   entityConfig,
   EntityId,
@@ -25,6 +26,7 @@ import {IFromCountryEntity} from "../interfaces/filters-block/i-from-country.ent
 import {ITagEntity} from "../interfaces/hotels-block/i-tag.entity";
 import {IFoodTypeEntity} from '../interfaces/hotels-block/i-food-type.entity';
 import {IRoomTypeEntity} from '../interfaces/hotels-block/i-room-type.entity';
+import {IHotelEntity} from '../interfaces/hotels-block/i-hotel.entity';
 
 function loadUserStartData(): () => IUserStartData {
   return () => {
@@ -37,6 +39,12 @@ function loadUserStartData(): () => IUserStartData {
     }
   };
 }
+
+const hotelConfig = entityConfig({
+  entity: type<IHotelEntity>(),
+  collection: "hotels",
+  selectId: hotel=>hotel.id
+})
 
 const userConfig = entityConfig({
   entity: type<IUser>(),
@@ -120,6 +128,7 @@ export const EntityStorage = signalStore(
   withEntities(tagConfig),
   withEntities(foodTypeConfig),
   withEntities(roomTypeConfig),
+  withEntities(hotelConfig),
   withMethods(store => ({
     addUserStartData(startData: IUserStartData): void {
       patchState(store, startData);
@@ -219,6 +228,9 @@ export const EntityStorage = signalStore(
     },
     removeFromToCountry(id: number): void {
       patchState(store, removeEntity(id, fromToCountryConfig));
+    },
+    setAllHotels(hotels:IHotelEntity[]):void{
+      patchState(store, addEntities(hotels,hotelConfig))
     }
   }))
 );

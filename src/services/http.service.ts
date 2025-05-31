@@ -23,6 +23,7 @@ import {IBlobImageEntity} from "../interfaces/country-block/i-blob-image.entity"
 import {IFromToEntity} from "../interfaces/filters-block/i-from-to.entity";
 import {IFromCountryEntity} from "../interfaces/filters-block/i-from-country.entity";
 import {ILoginError} from '../interfaces/i-login-error';
+import {IHotelEntity} from '../interfaces/hotels-block/i-hotel.entity';
 
 @Injectable({
   providedIn: "root"
@@ -265,6 +266,22 @@ export class HttpService {
         (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
       )
     );
+  }
+
+  loadingHotelsByCountryId(countryId:number):Observable<IHotelEntity[] | IError> {
+    console.log(countryId);
+    return this.http.get<Object>(`${this.baseUrl}/hotel/all/${countryId}`,{observe:"response"})
+      .pipe(
+        map((resp:HttpResponse<object>):IHotelEntity[] | IError =>{
+          if (resp.status === 200) {
+            return resp.body as IHotelEntity[];
+          }
+          else {
+            return resp.body as IError;
+          }
+        })
+        ,catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error")))
+      );
   }
 
   // block adding // ------------------------------------------------------------
@@ -575,6 +592,8 @@ export class HttpService {
       )
     );
   }
+
+
 
   // other methods block// ------------------------------------------------------------
   checkUsername(username: string): Observable<boolean> {

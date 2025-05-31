@@ -17,6 +17,7 @@ import { CityManagementComponent } from "./admin_controllers_group/city-manageme
 import { ClimateManagementComponent } from "./admin_controllers_group/climate-management/climate-management.component";
 import { LanguageManagementComponent } from "./admin_controllers_group/language-management/language-management.component";
 import { FromToManagementComponent } from "./admin_controllers_group/from-to-management/from-to-management.component";
+import {HotelsListByCityComponent} from './hotel-controllers-group/hotels-list-by-city/hotels-list-by-city.component';
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -46,5 +47,10 @@ export const routes: Routes = [
 			{ path: "from-to-management", component: FromToManagementComponent }
 		]
 	},
-	{ path: "**", component: Error404Component }
+  {
+    path: "hotels/:countryId",
+    component:HotelsListByCityComponent
+  },
+	{ path: "**", component: Error404Component },
+
 ];

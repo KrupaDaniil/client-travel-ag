@@ -33,6 +33,21 @@ export class CountryService {
     });
   }
 
+  setCountryById(id: number): void {
+    this.http_s.loadingCountryById(id).subscribe({
+      next:(item: ICountryEntity | IError) => {
+        if(this.check.isError(item)) {
+          this.message.setMessage((item as IError).message);
+        }
+        else{
+          this.message.setMessage(null);
+          this.store.setCountry(item as ICountryEntity);
+
+        }
+      }
+    });
+  }
+
   async addingCountry(country: FormData): Promise<boolean> {
     return await firstValueFrom(
       this.http_s.addCountry(country).pipe(
