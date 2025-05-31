@@ -1,79 +1,110 @@
 <div class="registration-form-container">
   @if (registrationForm) {
-    <mat-card>
-      <mat-card-header class="d-flex align-items-center justify-content-center">
-        <mat-card-title class="fw-semibold">Registration</mat-card-title>
-      </mat-card-header>
+    <div class="from-container">
+      <div class="reg-card">
+        <div class="reg-card-header fw-medium">Реєстрація</div>
+        <div class="reg-card-body">
+          <form [formGroup]="registrationForm">
+            <input type="text" formControlName="username" placeholder="Введіть ім'я користувача*" class="input-control">
+            <div class="errorTextContainer margin-bottom-5">
+              @if (registrationForm.get("username")?.invalid && registrationForm.get("username")?.touched) {
+                @if (registrationForm.get("username")!.hasError("required")) {
+                  <div class="me-1">The field cannot be empty;</div>
+                }
+                @if (registrationForm.get("username")!.hasError("pattern")) {
+                  <div class="me-1">Only letters and " _ " , " - " are available;</div>
+                }
+                @if (registrationForm.get("username")!.hasError("checkUsername")) {
+                  <div class="me-1">The username is already taken;</div>
+                }
+              }
+            </div>
 
-      @if (this.messageService.message() !== null) {
-        <div class="text-danger">{{this.messageService.message()}}</div>
-      }
+            <div class="custom-password">
+              <input type="password" formControlName="password" placeholder="Введіть пароль*" #passInp>
+              <button (click)="onSHBtnClick()">
+                <img ngSrc="/icons/password-hide-icon.svg" alt="SHImg" width="20" height="20"
+                     #SHImg/>
+              </button>
+            </div>
 
-      <form [formGroup]="registrationForm">
-        <mat-card-content>
-          @if (registrationForm.get("username")?.invalid && registrationForm.get("username")?.touched) {
-            @if (registrationForm.get("username")!.hasError("required")) {
-              <div class="text-danger">The field cannot be empty</div>
-            }
-            @if (registrationForm.get("username")!.hasError("pattern")) {
-              <div class="text-danger">Only letters and " _ " , " - " are available</div>
-            }
-            @if (registrationForm.get("username")!.hasError("checkUsername")) {
-              <div class="text-danger">The username is already taken</div>
-            }
-          }
-          <input type="text" formControlName="username" placeholder="Enter username" class="form-control mb-3">
+            <div class="errorTextContainer margin-bottom-5">
+              @if (registrationForm.get("password")?.invalid && registrationForm.get("password")?.touched) {
+                @if (registrationForm.get("password")!.hasError("required")) {
+                  <div class="me-1">The field cannot be empty;</div>
+                }
+                @if (registrationForm.get("password")!.hasError("minlength")) {
+                  <div class="me-1">The password must be longer than 6 characters;</div>
+                }
+              }
+            </div>
 
-          @if (registrationForm.get("password")?.invalid && registrationForm.get("password")?.touched) {
-            @if (registrationForm.get("password")!.hasError("required")) {
-              <div class="text-danger">The field cannot be empty</div>
-            }
-            @if (registrationForm.get("password")!.hasError("minlength")) {
-              <div class="text-danger">The password must be longer than 6 characters</div>
-            }
-          }
-          <input type="password" formControlName="password" placeholder="Enter password" class="form-control mb-3">
+            <input type="text" formControlName="firstName" placeholder="Введіть ім'я*" class="input-control">
+            <div class="errorTextContainer margin-bottom-5">
+              @if (registrationForm.get("firstName")?.invalid && registrationForm.get("firstName")?.touched) {
+                @if (registrationForm.get("firstName")!.hasError("required")) {
+                  <div class="me-1">The field cannot be empty;</div>
+                }
+                @if (registrationForm.get("firstName")!.hasError("pattern")) {
+                  <div class="me-1">Only letters and " _ " , " - " are available;</div>
+                }
+              }
+            </div>
 
-          @if (registrationForm.get("firstName")?.invalid && registrationForm.get("firstName")?.touched) {
-            @if (registrationForm.get("firstName")!.hasError("required")) {
-              <div class="text-danger">The field cannot be empty</div>
-            }
-            @if (registrationForm.get("firstName")!.hasError("pattern")) {
-              <div class="text-danger">Only letters and " _ " , " - " are available</div>
-            }
-          }
-          <input type="text" formControlName="firstName" placeholder="Enter name" class="form-control mb-3">
+            <input type="text" formControlName="lastName" placeholder="Введіть прізвище*" class="input-control">
+            <div class="errorTextContainer margin-bottom-5">
+              @if (registrationForm.get("lastName")?.invalid && registrationForm.get("lastName")?.touched) {
+                @if (registrationForm.get("lastName")!.hasError("required")) {
+                  <div class="me-1">The field cannot be empty;</div>
+                }
+                @if (registrationForm.get("lastName")!.hasError("pattern")) {
+                  <div class="me-1">Only letters and " _ " , " - " are available;</div>
+                }
+              }
+            </div>
 
-          @if (registrationForm.get("lastName")?.invalid && registrationForm.get("lastName")?.touched) {
-            @if (registrationForm.get("lastName")!.hasError("required")) {
-              <div class="text-danger">The field cannot be empty</div>
-            }
-            @if (registrationForm.get("lastName")!.hasError("pattern")) {
-              <div class="text-danger">Only letters and " _ " , " - " are available</div>
-            }
-          }
-          <input type="text" formControlName="lastName" placeholder="Enter surname" class="form-control mb-3">
+            <input type="email" formControlName="email" placeholder="Введіть email*" class="input-control">
+            <div class="errorTextContainer margin-bottom-5">
+              @if (registrationForm.get("email")?.invalid && registrationForm.get("email")?.touched) {
+                @if (registrationForm.get("email")!.hasError("email")) {
+                  <div class="me-1">Incorrect format</div>
+                }
+                @if (registrationForm.get("email")!.hasError("checkEmail")) {
+                  <div class="me-1">The username is already taken</div>
+                }
+              }
+            </div>
 
-          @if (registrationForm.get("email")?.invalid && registrationForm.get("email")?.touched) {
-            @if (registrationForm.get("email")!.hasError("email")) {
-              <div class="text-danger">Incorrect format</div>
-            }
-            @if (registrationForm.get("email")!.hasError("checkEmail")) {
-              <div class="text-danger">The username is already taken</div>
-            }
-          }
-          <input type="email" formControlName="email" placeholder="Enter email" class="form-control mb-3">
+            <div class="custom-date">
+              <input type="text" formControlName="birthday" [owlDateTime]="brDt" placeholder="дд.мм.рррр" readonly>
+              <button [owlDateTimeTrigger]="brDt">
+                <img ngSrc="/icons/calendar-ico.svg" width="20" height="20" alt="Calendar">
+              </button>
+              <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
+            </div>
 
-          <input type="date" formControlName="birthday" aria-label="Enter birthday" class="form-control mb-3">
-        </mat-card-content>
-        <mat-card-actions class="d-flex align-items-center justify-content-center">
-          <button type="button" mat-stroked-button class="singUpButton" (click)="onSubmit()">SingUp</button>
-        </mat-card-actions>
-      </form>
 
-    </mat-card>
-  } @else {
-    <div class="text-center fw-semibold fs-4">Sorry registration is temporarily unavailable</div>
+            <div class="reg-card-buttons-block">
+              <button type="button" class="singUpButton" (click)="onSubmit()">Зареєструватися</button>
+              <button type="button" class="reg-button" (click)="withLogin()">Вже є аккаунт</button>
+            </div>
+          </form>
+
+          <div class="o-auth-container">
+            <button class="o-auth-btn">
+              <img ngSrc="/icons/icons-google.svg" alt="Google" width="44" height="44" priority
+                   (click)="singUpGoogle()">
+            </button>
+            <button class="o-auth-btn">
+              <img ngSrc="/icons/icons-github.svg" alt="GitHub" width="44" height="44" priority
+                   (click)="singUpGitHub()">
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   }
 
 </div>

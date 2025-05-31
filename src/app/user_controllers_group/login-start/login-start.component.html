@@ -1,0 +1,33 @@
+<div class="start-container">
+  <div class="login-card">
+    <div class="login-card-image-container">
+      <img ngSrc="/project_images/login_full_start.jpg" alt="tour image" width="534" height="621"
+           class="login-card-image" priority>
+    </div>
+    <div class="login-card-form-container">
+      <div class="login-card-form-header">
+        <div class="logo-container">
+          <img ngSrc="/icons/logo_icon.png" alt="Logo" width="73" height="73" priority>
+        </div>
+      </div>
+
+      <div class="login-card-body">
+        <button class="singInBtn" (click)="withLogin()">Увійти</button>
+        <div class="srvText orTextContainer">або</div>
+        <button class="singUpBtn" (click)="withRegistration()">Реєстрація</button>
+        <hr class="hrLine">
+        <div class="srvText">інші типи входу</div>
+        <div class="otherButtonsContainer">
+          <button class="gBtn" (click)="loginInGoogle()">
+            <img ngSrc="/icons/icons-google.svg" alt="Google" width="59" height="59" priority>
+          </button>
+          <button class="gBtn" (click)="loginInGitHub()">
+            <img ngSrc="/icons/icons-github.svg" alt="GitHub" width="59" height="59" priority>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

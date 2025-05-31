@@ -1,0 +1,198 @@
+.start-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 999px;
+  height: 685px;
+  border-radius: 50px;
+  background: #8DBECD;
+  margin-top: 89px;
+  padding: 0 35px;
+}
+
+.login-card-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 534px;
+  height: 621px;
+  margin-right: 45px;
+  border-radius: 50px;
+  background: #ffffff;
+}
+
+.login-card-image {
+  border-radius: 50px;
+}
+
+.login-card-form-container {
+  width: 349px;
+  height: 621px;
+  border-radius: 50px;
+  background: #ffffff;
+}
+
+.login-card-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-container {
+  border-radius: 50%;
+  background: white;
+  margin-top: 17px;
+}
+
+.login-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.singInBtn {
+  margin-top: 59px;
+  width: 294px;
+  height: 61px;
+  border-radius: 39px;
+  border: 1px solid #D9913C;
+  background: #D9913C;
+  color: white;
+  font-size: 24px;
+}
+
+.singUpBtn {
+  width: 294px;
+  height: 61px;
+  border-radius: 39px;
+  border: 1px solid #D9913C;
+  background: transparent;
+  color: #D9913C;
+  font-size: 24px;
+}
+
+.srvText {
+  color: #8DBECD;
+  font-size: 16px;
+  text-align: center;
+}
+
+.orTextContainer {
+  margin: 13px 0;
+}
+
+.hrLine {
+  width: 110px;
+  height: 1px;
+  background: #8DBECD;
+  margin: 38px 0;
+}
+
+.otherButtonsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 21px;
+}
+
+.custom-tooltip {
+  --bs-tooltip-bg: #ffffff;
+  --bs-tooltip-color: #8DBECD;
+  font-size: 14px;
+}
+
+.gBtn {
+  width: 100%;
+  background: transparent;
+  border-radius: 50%;
+  border: none;
+}
+
+
+.gBtn:first-child {
+  margin-right: 29px;
+}
+
+
+:is(.singInBtn, .singUpBtn):hover {
+  will-change: transform;
+  transform: scale(1.02);
+  transition: transform 0.1s ease-in-out;
+}
+
+:is(.gBtn, .singInBtn, .singUpBtn):active {
+  will-change: transform;
+  transform: scale(0.98);
+  transition: transform 0.1s ease-in-out;
+}
+
+@media (max-width: 1050px) {
+  .login-card-image-container {
+    display: none;
+  }
+}
+
+@media (max-width: 556px) {
+
+  .login-card {
+    width: 292px;
+    height: 505px;
+    padding: 0;
+    margin-top: 135px;
+  }
+
+  .logo-container > img {
+    width: 37px;
+    height: 37px;
+  }
+
+  .login-card-form-container {
+    width: 250px;
+    height: 458px;
+    border-radius: 30px;
+  }
+
+  .singInBtn {
+    margin-top: 46px;
+  }
+
+  :is(.singInBtn, .singUpBtn) {
+    width: 217px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .orTextContainer {
+    margin: 10px 0;
+    font-size: 11px;
+  }
+
+  .hrLine {
+    width: 81px;
+    margin: 92px 0 28px 0;
+  }
+
+  .srvText {
+    font-size: 11px;
+  }
+
+  .otherButtonsContainer {
+    margin-top: 29px;
+  }
+
+  .gBtn > img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .gBtn:first-child {
+    margin-right: 22px;
+  }
+}

@@ -5,16 +5,155 @@
   transform: translate(-50%, -50%);
 }
 
-mat-card {
-  width: 17rem !important;
+.from-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 292px;
+  min-height: 505px;
+  background: #8DBECD;
+  border-radius: 30px;
+}
+
+.reg-card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 250px;
+  min-height: 458px;
+  background: white;
+  border-radius: 30px;
+  margin: 24px 0 24px 0;
+}
+
+.reg-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 11px;
+  color: #8DBECD;
+  font-size: 20px;
+}
+
+.margin-bottom-5 {
+  margin-bottom: 5px;
+}
+
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+input[type="date"] {
+  padding-right: 7px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url("/public/icons/calendar-ico.svg");
+}
+
+.reg-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-card-buttons-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .singUpButton {
-  color: black !important;
-  height: 2rem;
+  width: 217px;
+  height: 27px;
+  background: #D9913C;
+  border-radius: 39px;
+  border: none;
+  color: white;
+  margin: 18px 0 4px 0;
 }
 
-.singUpButton:hover {
-  background: rgba(238, 238, 238, 0.5) !important;
+.reg-button {
+  width: 217px;
+  height: 27px;
+  background: transparent;
+  border-radius: 39px;
+  border: 1px solid #D9913C;
+  color: #D9913C;
 }
+
+.o-auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 13px 0;
+}
+
+.o-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+}
+
+.o-auth-btn:first-child {
+  margin-right: 22px;
+}
+
+
+:is(.singUpButton, .reg-button):hover {
+  will-change: transform;
+  transform: scale(1.02);
+  transition: transform 0.1s ease-in-out;
+}
+
+:is(.singUpButton, .reg-button, .o-auth-btn):active {
+  will-change: transform;
+  transform: scale(0.96);
+  transition: transform 0.1s ease-in-out;
+}
+
+.custom-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 217px;
+  height: 27px;
+  border-radius: 30px;
+  border: 1px solid #8DBECD;
+}
+
+.custom-date > input {
+  width: 168px;
+  height: 25px;
+  margin-left: 11px;
+  border: none;
+  padding: 0;
+  font-size: 10pt;
+}
+
+.custom-date > button {
+  width: 25px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-right: 5px;
+}
+
+.custom-date > input:focus {
+  outline: none;
+  caret-color: transparent;
+}
+
+.custom-date > input::placeholder {
+  color: #8DBECD;
+}
+
+
+
 

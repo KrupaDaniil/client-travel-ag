@@ -1,39 +1,111 @@
-.main-container {
-  display: block;
-  position: relative;
-}
-
 .login-form-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-mat-card {
-  width: 17rem;
-}
-
-mat-card-header, mat-card-actions {
   display: flex;
-  align-content: center;
+  align-items: center;
   justify-content: center;
+  height: 89dvh;
+}
+
+.bg-login-form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 292px;
+  min-height: 505px;
+  background: #8DBECD;
+  border-radius: 30px;
+}
+
+.sing-in-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 250px;
+  min-height: 410px;
+  background: white;
+  border-radius: 30px;
+  margin: 24px 0 24px 0;
+}
+
+.sing-in-container-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 29px;
+  margin-bottom: 63px;
+}
+
+.headerText {
+  font-size: 20px;
+  color: #8DBECD;
+}
+
+.margin-bottom-5 {
+  margin-bottom: 5px;
+}
+
+.margin-bottom-4 {
+  margin-bottom: 4px;
+}
+
+
+.button-container {
+  margin-top: 48px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .singInButton {
-  color: black !important;
-  height: 2rem;
+  width: 217px;
+  height: 27px;
+  background: #D9913C;
+  border-radius: 39px;
+  border: none;
+  color: white;
 }
 
-.singInButton:hover {
-  background: rgba(238, 238, 238, 0.5) !important;
+.reg-button {
+  width: 217px;
+  height: 27px;
+  background: transparent;
+  border-radius: 39px;
+  border: 1px solid #D9913C;
+  color: #D9913C;
 }
 
-.errorTextContainer {
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+.o-auth-container {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  margin-left: 15px;
-  color: red;
-  font-size: 10pt;
+  justify-content: center;
+  margin: 85px 0 13px 0;
+}
+
+.o-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+}
+
+.o-auth-btn:first-child {
+  margin-right: 22px;
+}
+
+
+:is(.singInButton, .reg-button):hover {
+  will-change: transform;
+  transform: scale(1.02);
+  transition: transform 0.1s ease-in-out;
+}
+
+:is(.singInButton, .reg-button, .o-auth-btn):active {
+  will-change: transform;
+  transform: scale(0.96);
+  transition: transform 0.1s ease-in-out;
 }
