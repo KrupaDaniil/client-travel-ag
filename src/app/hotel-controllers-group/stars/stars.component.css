@@ -1,0 +1,23 @@
+
+.stars {
+  position: relative;
+
+}
+.stars svg {
+  width: 45px;
+}
+
+.cover {
+  background: #8DBECD;
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: color;
+  position: absolute;
+  top: 0;
+  right: 0px;
+}
+
+svg {
+  fill: #D9913C;
+}
+

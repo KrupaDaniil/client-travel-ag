@@ -1,0 +1,72 @@
+.hotel-card{
+  width: 950px;
+  margin:0 auto;
+  color:white;
+  font-family: 'Futura Std', sans-serif;
+}
+
+.hotel-image{
+  border-radius: 50px;
+  height: 505px;
+  width:505px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 180%;
+}
+
+
+.hotel-info{
+  width: 440px;
+  height: 420px;
+  padding: 40px 40px 40px 45px;
+  background-color: #8DBECD;
+  border-radius: 0 50px 50px 0 ;
+}
+
+
+.hotel-info h3{
+  font-size: 50px !important;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.hotel-rate{
+  display: flex;
+  gap:15px;
+  flex-direction: column;
+}
+
+.rounded-text{
+  border-radius: 39px;
+  padding: 10px 14px;
+  height: 41px;
+  filter: drop-shadow(0px 4px 10px rgba(17, 33, 45, 0.15));
+}
+
+.hotel-address{
+  margin-top: 30px;
+  background-color: white;
+  color: #8DBECD;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.hotel-address span{
+  line-height: 1;
+}
+
+.hotel-place{
+  background-color: #D9913C;
+  width: fit-content;
+}
+
+.hotel-info button{
+  background-color: #9F943B;
+  color: white;
+  border: none;
+  width: 155px;
+  margin-left: auto;
+}
