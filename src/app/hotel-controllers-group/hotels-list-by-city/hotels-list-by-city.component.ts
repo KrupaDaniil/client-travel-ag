@@ -1,5 +1,4 @@
-import {Component, computed, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {Component, computed, inject, OnInit, Signal} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
 import {HotelService} from '../../../services/Hotels/hotel.service';
@@ -23,43 +22,43 @@ import {CountryService} from '../../../services/country.service';
 export class HotelsListByCityComponent implements OnInit {
   private store = inject(EntityStorage)
 
-  readonly hotels:Signal<IHotelEntity[]> = computed(()=>this.store.hotelsEntities());
-  readonly countries:Signal<ICountryEntity[]> = computed(()=>this.store.countriesEntities());
+  readonly hotels: Signal<IHotelEntity[]> = computed(() => this.store.hotelsEntities());
+  readonly countries: Signal<ICountryEntity[]> = computed(() => this.store.countriesEntities());
 
-  countryId:number;
-   get country(){
-     return this.countries().length > 0 ? this.countries()[0] : null;
-   }
+  countryId: number;
+
+  get country() {
+    return this.countries().length > 0 ? this.countries()[0] : null;
+  }
 
 
-  constructor(private service: HotelService,private countryService:CountryService,private route: ActivatedRoute) {
+  constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get("countryId");
     this.countryId = id ? Number(id) : 0;
   }
 
 
-
   currentIndex = 0;
+
   get visibleHotels() {
-    if(this.hotels().length > 0) {
+    if (this.hotels().length > 0) {
       const visible = [];
       for (let i = 0; i < 3; i++) {
         visible.push(this.hotels()[(this.currentIndex + i) % this.hotels().length]);
       }
       return visible;
-    }
-    else{
+    } else {
       return null;
     }
   }
 
   nextSlide() {
-    if(this.hotels())
+    if (this.hotels())
       this.currentIndex = (this.currentIndex + 1) % this.hotels().length;
   }
 
   prevSlide() {
-    if(this.hotels())
+    if (this.hotels())
       this.currentIndex = (this.currentIndex - 1 + this.hotels().length) % this.hotels().length;
 
   }

@@ -6,12 +6,12 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {AuthService} from '../services/auth.service';
 import {JWTInterceptor} from '../service-classes/jwtinterceptor';
-import {provideNativeDateAdapter} from '@angular/material/core';
 import {
   OWL_DATE_TIME_FORMATS,
   OwlDateTimeModule,
   OwlNativeDateTimeModule,
 } from '@danielmoncada/angular-datetime-picker';
+import {provideHotToastConfig} from '@ngxpert/hot-toast';
 
 
 // Визначення власних форматів
@@ -33,10 +33,10 @@ export const appConfig: ApplicationConfig = {
     AuthService,
     provideHttpClient(withInterceptors([JWTInterceptor])),
     provideHttpClient(),
-    provideNativeDateAdapter(),
     provideAnimationsAsync(),
     importProvidersFrom(OwlDateTimeModule, OwlNativeDateTimeModule),
     {provide: LOCALE_ID, useValue: 'uk-UA'},
-    {provide: OWL_DATE_TIME_FORMATS, useValue: DT_FORMATS}
+    {provide: OWL_DATE_TIME_FORMATS, useValue: DT_FORMATS}, provideHotToastConfig(),
+    provideHotToastConfig()
   ]
 };

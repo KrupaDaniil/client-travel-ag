@@ -23,7 +23,6 @@ import {IMainCountryForCityEntity} from "../../../interfaces/country-block/i-mai
 import {IBlobImageEntity} from "../../../interfaces/country-block/i-blob-image.entity";
 import {ICountryEntity} from "../../../interfaces/country-block/i-country.entity";
 import {CountryService} from "../../../services/country.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-city-management",
@@ -41,7 +40,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class CityManagementComponent implements OnInit, AfterViewChecked {
   private readonly store = inject(EntityStorage);
-  private snackBar: MatSnackBar = inject(MatSnackBar);
+  // private snackBar;
   private isSetEntitiesFlag: boolean;
   private isSetIntervalFlag: boolean;
   private isSelectedRow: boolean;
@@ -345,19 +344,19 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
   private showMessage(): void {
     effect(() => {
       if (this.messageInfo() !== null) {
-        this.snackBar.open(this.messageInfo() as string, "close", {
-          verticalPosition: "bottom",
-          horizontalPosition: "center"
-        });
+        // this.snackBar.open(this.messageInfo() as string, "close", {
+        //   verticalPosition: "bottom",
+        //   horizontalPosition: "center"
+        // });
       }
     });
   }
 
   private showInfoMessage(): void {
-    this.snackBar.open(this.messageInfo() as string, "close", {
-      verticalPosition: "bottom",
-      horizontalPosition: "center"
-    });
+    // this.snackBar.open(this.messageInfo() as string, "close", {
+    //   verticalPosition: "bottom",
+    //   horizontalPosition: "center"
+    // });
   }
 
   onSelectedFile(event: Event): void {

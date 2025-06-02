@@ -21,9 +21,7 @@ import {LanguageService} from "../../../services/language.service";
 import {IClimateEntity} from "../../../interfaces/country-block/i-climate.entity";
 import {ILanguageEntity} from "../../../interfaces/country-block/i-language.entity";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {NgOptimizedImage} from "@angular/common";
-import {MatButtonModule} from "@angular/material/button";
 import {NgSelectModule} from "@ng-select/ng-select";
 import {ICountryRequestEntity} from "../../../interfaces/country-block/i-country-request.entity";
 import {IBlobImageEntity} from "../../../interfaces/country-block/i-blob-image.entity";
@@ -35,7 +33,6 @@ import {ICountryCityEntity} from "../../../interfaces/country-block/i-country-ci
   imports: [
     ReactiveFormsModule,
     NgOptimizedImage,
-    MatButtonModule,
     NgSelectModule
   ],
   providers: [CountryService, ClimateService, LanguageService, MessageService],
@@ -45,7 +42,7 @@ import {ICountryCityEntity} from "../../../interfaces/country-block/i-country-ci
 })
 export class CountryManagementComponent implements OnInit, AfterViewChecked {
   private readonly store = inject(EntityStorage);
-  private snackBar: MatSnackBar = inject(MatSnackBar);
+  // private snackBar;
 
   private isSelectedRow: boolean;
   loadingFailed: WritableSignal<boolean>;
@@ -358,20 +355,20 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
 
   showMessage(): void {
     effect(() => {
-      if (this.infoMessages() !== null) {
-        this.snackBar.open(this.infoMessages() as string, "close", {
-          verticalPosition: "bottom",
-          horizontalPosition: "center"
-        });
-      }
+      // if (this.infoMessages() !== null) {
+      //   this.snackBar.open(this.infoMessages() as string, "close", {
+      //     verticalPosition: "bottom",
+      //     horizontalPosition: "center"
+      //   });
+      // }
     });
   }
 
   private showInfo(): void {
-    this.snackBar.open(this.infoMessages() as string, "close", {
-      verticalPosition: "bottom",
-      horizontalPosition: "center"
-    });
+    // this.snackBar.open(this.infoMessages() as string, "close", {
+    //   verticalPosition: "bottom",
+    //   horizontalPosition: "center"
+    // });
   }
 
   openAddCountryModal(): void {

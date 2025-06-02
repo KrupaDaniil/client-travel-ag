@@ -22,7 +22,6 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {CountryCityEntity} from "../../../models/country-city.entity";
 import {IMainCountryForCityEntity} from "../../../interfaces/country-block/i-main-country-for-city.entity";
 import {NgSelectComponent, NgSelectModule} from "@ng-select/ng-select";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-from-to-management",
@@ -34,7 +33,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class FromToManagementComponent implements OnInit {
   private readonly store = inject(EntityStorage);
-  private readonly snackBar: MatSnackBar = inject(MatSnackBar);
+  // private readonly snackBar;
 
   private listFromToEntity: Signal<IFromToEntity[]> = computed(() => this.store.fromToEntitiesEntities());
   displayList: WritableSignal<IFromToEntity[] | null>;
@@ -54,8 +53,6 @@ export class FromToManagementComponent implements OnInit {
   private names: string[];
   private isSelectedRow: boolean;
 
-  private readonly searchBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
-    viewChild<ElementRef<HTMLButtonElement>>("searchBtn");
   private readonly removeBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
     viewChild<ElementRef<HTMLButtonElement>>("removeFrTEntityBtn");
 
@@ -105,12 +102,12 @@ export class FromToManagementComponent implements OnInit {
 
   showMessage(): void {
     effect(() => {
-      if (this.message.message() !== null) {
-        this.snackBar.open(this.message.message() as string, "close", {
-          verticalPosition: "bottom",
-          horizontalPosition: "center"
-        });
-      }
+      // if (this.message.message() !== null) {
+      //   this.snackBar.open(this.message.message() as string, "close", {
+      //     verticalPosition: "bottom",
+      //     horizontalPosition: "center"
+      //   });
+      // }
     });
   }
 
@@ -333,14 +330,6 @@ export class FromToManagementComponent implements OnInit {
     });
   }
 
-  protected upCount(): void {
-    this.cntCount++;
-  }
-
-  protected resetCount(): void {
-    this.cntCount = 0;
-  }
-
   private getArrFTCity(countries: IFromCountryEntity[], cities: ICountryCityEntity[]): IFTCityEntity[] {
     const map = new Map<number, IMainCountryForCityEntity>();
 
@@ -350,7 +339,7 @@ export class FromToManagementComponent implements OnInit {
       }
     }
 
-    const toRes: IFTCityEntity[] = cities.map((city: ICountryCityEntity) => {
+    return cities.map((city: ICountryCityEntity) => {
       const entity: IFTCityEntity = {
         id: city.id,
         name: city.name,
@@ -359,7 +348,5 @@ export class FromToManagementComponent implements OnInit {
 
       return entity;
     });
-
-    return toRes;
   }
 }
