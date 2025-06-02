@@ -15,69 +15,64 @@
   </div>
 </div>
 
-<mat-sidenav-container class="bg-body searchBlock">
-  <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
-  <mat-sidenav-content>
-    <div class="my-3">
-      <table class="table table-hover align-middle">
-        <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Country from</th>
-          <th scope="col">CityFrom</th>
-          <th scope="col">Country(ies) to</th>
-          <th scope="col">City(ies)</th>
-        </tr>
-        </thead>
-        <tbody class="table-group-divider" #fromToBlock>
-          @if (displayList() && displayList()!.length > 0) {
-            @for (entity of displayList(); track entity.id; let i = $index) {
-              <tr [attr.data-from-to-id]="entity.id">
-                <th scope="row">
-                  <div class="d-flex align-items-center justify-content-center">
-                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="ftrEntity" disabled/>
-                    <div class="ms-2">{{ i + 1 }}</div>
-                  </div>
-                </th>
+<div class="my-3">
+  <table class="table table-hover align-middle">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Country from</th>
+      <th scope="col">CityFrom</th>
+      <th scope="col">Country(ies) to</th>
+      <th scope="col">City(ies)</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider" #fromToBlock>
+      @if (displayList() && displayList()!.length > 0) {
+        @for (entity of displayList(); track entity.id; let i = $index) {
+          <tr [attr.data-from-to-id]="entity.id">
+            <th scope="row">
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="ftrEntity" disabled/>
+                <div class="ms-2">{{ i + 1 }}</div>
+              </div>
+            </th>
 
-                <td>{{ entity.cityFrom.country.name }}</td>
-                <td>{{ entity.cityFrom.name }}</td>
+            <td>{{ entity.cityFrom.country.name }}</td>
+            <td>{{ entity.cityFrom.name }}</td>
 
-                @for (frt_cnt of entity.citiesTo; track frt_cnt.id; let i = $index; ) {
-                  @if (i === 0) {
-                    <td>{{ frt_cnt.country.name }}</td>
-                  }
-                }
-                <td>
-                  <div class="d-flex align-items-center flex-wrap toCityBlock">
-                    @for (frt_ct of entity.citiesTo; track frt_ct.id) {
-                      <span class="me-2">{{ frt_ct.name }}</span>
-                    }
-                  </div>
-                </td>
-              </tr>
+            @for (frt_cnt of entity.citiesTo; track frt_cnt.id; let i = $index; ) {
+              @if (i === 0) {
+                <td>{{ frt_cnt.country.name }}</td>
+              }
             }
+            <td>
+              <div class="d-flex align-items-center flex-wrap toCityBlock">
+                @for (frt_ct of entity.citiesTo; track frt_ct.id) {
+                  <span class="me-2">{{ frt_ct.name }}</span>
+                }
+              </div>
+            </td>
+          </tr>
+        }
 
-          } @else {
-            <tr>
-              <td colspan="9">
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                  @if (this.loadingFailed()) {
-                    <span class="fs-4">List is empty</span>
-                  } @else {
-                    <div class="spinner-border text-secondary" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  }
+      } @else {
+        <tr>
+          <td colspan="9">
+            <div class="d-flex align-items-center justify-content-center mt-3">
+              @if (this.loadingFailed()) {
+                <span class="fs-4">List is empty</span>
+              } @else {
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
                 </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
 
 <dialog class="container custom-dialog" id="addingCountyDialog" #addingFrTEntityDialog>
   <div class="closeBtnContainer my-3">
