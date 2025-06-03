@@ -15,67 +15,62 @@
   </div>
 </div>
 
-<mat-sidenav-container class="bg-body searchBlock">
-  <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
-  <mat-sidenav-content>
-    <div class="my-3">
-      <table class="table table-hover align-middle">
-        <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Name</th>
-          <th scope="col">City Image</th>
-          <th scope="col">Country</th>
-          <th scope="col">Description</th>
-        </tr>
-        </thead>
-        <tbody class="table-group-divider" #cityBlock>
-          @if (displayCityList() && displayCityList()!.length > 0) {
-            @for (city of displayCityList(); track city.id; let i = $index) {
-              <tr *ngIf="city" [attr.data-city-id]="city.id">
-                <th scope="row">
-                  <div class="d-flex align-items-center justify-content-center">
-                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="selectedCity" disabled/>
-                    <div class="ms-2">{{ i + 1 }}</div>
-                  </div>
-                </th>
-                <td>{{ city.name }}</td>
-                <td>
-                  <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-5"
-                          [attr.data-img-city-id]="city.id"
-                          aria-label="Show image button" (click)="setImage($event)">Show image
-                  </button>
-                </td>
-                <td *ngIf="city.country">{{ city.country.name }}</td>
-                <td>
-                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-5 px-3"
-                          aria-label="Show description button"
-                          [attr.data-ds-city-id]="city.id" (click)="setDescription($event)">Show
-                  </button>
-                </td>
-              </tr>
-            }
+<div class="my-3">
+  <table class="table table-hover align-middle">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Name</th>
+      <th scope="col">City Image</th>
+      <th scope="col">Country</th>
+      <th scope="col">Description</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider" #cityBlock>
+      @if (displayCityList() && displayCityList()!.length > 0) {
+        @for (city of displayCityList(); track city.id; let i = $index) {
+          <tr *ngIf="city" [attr.data-city-id]="city.id">
+            <th scope="row">
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="selectedCity" disabled/>
+                <div class="ms-2">{{ i + 1 }}</div>
+              </div>
+            </th>
+            <td>{{ city.name }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-5"
+                      [attr.data-img-city-id]="city.id"
+                      aria-label="Show image button" (click)="setImage($event)">Show image
+              </button>
+            </td>
+            <td *ngIf="city.country">{{ city.country.name }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-secondary rounded-5 px-3"
+                      aria-label="Show description button"
+                      [attr.data-ds-city-id]="city.id" (click)="setDescription($event)">Show
+              </button>
+            </td>
+          </tr>
+        }
 
-          } @else {
-            <tr>
-              <td colspan="5">
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                  @if (this.loadingFailed()) {
-                    <span class="fs-4">List of cities is empty</span>
-                  } @else {
-                    <div class="spinner-border text-secondary" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  }
+      } @else {
+        <tr>
+          <td colspan="5">
+            <div class="d-flex align-items-center justify-content-center mt-3">
+              @if (this.loadingFailed()) {
+                <span class="fs-4">List of cities is empty</span>
+              } @else {
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
                 </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
 
 <dialog class="container custom-dialog" id="addingCountyDialog" #addingCityDialog>
   <div class="closeBtnContainer my-3">

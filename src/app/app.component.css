@@ -86,10 +86,10 @@
 
 .disabled-item {
   color: black;
-  font-size: 20px;
+  font-size: 18px;
   padding: 10px;
   opacity: 0.5;
-  font-weight: 525;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -100,7 +100,7 @@
   background-color: transparent;
   border: 1px solid #D9913C;
   color: #D9913C;
-  font-size: 14px;
+  font-size: 16px;
   margin-right: 80px;
 }
 

@@ -17,75 +17,70 @@
   </div>
 </div>
 
-<mat-sidenav-container class="bg-body searchBlock">
-  <mat-sidenav mode="side" position="start" class="bg-body"></mat-sidenav>
-  <mat-sidenav-content>
-    <div class="my-3">
-      <table class="table table-hover align-middle">
-        <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Name</th>
-          <th scope="col">Flag</th>
-          <th scope="col">Capital city</th>
-          <th scope="col">Description</th>
-          <th scope="col">Languages</th>
-          <th scope="col">Climate</th>
-          <th scope="col">Currency</th>
-          <th scope="col">Phone code</th>
-        </tr>
-        </thead>
-        <tbody class="table-group-divider" #countryBlock>
-          @if (displayCountryList() && displayCountryList()!.length > 0) {
-            @for (country of displayCountryList(); track country.id; let i = $index) {
-              <tr [attr.data-country-id]="country.id">
-                <th scope="row">
-                  <div class="d-flex align-items-center justify-content-center">
-                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="country" disabled/>
-                    <div class="ms-2">{{ i + 1 }}</div>
-                  </div>
-                </th>
-                <td>{{ country.name }}</td>
-                <td>
-                  <img [ngSrc]="country.flagImage.blobUrl" alt="country image" width="60" height="40">
-                </td>
-                <td>{{ country.capitalCity.name }}</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
-                          [attr.data-ds-country-id]="country.id" (click)="setDescription($event)">Show
-                  </button>
-                </td>
-                <td>
-                  @for (language of country.languages; track language.id) {
-                    {{ language.name }}
-                  }
-                </td>
-                <td>{{ country.climate.name }}</td>
-                <td>{{ country.currency }}</td>
-                <td>{{ country.phoneCode }}</td>
-              </tr>
-            }
+<div class="my-3">
+  <table class="table table-hover align-middle">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Name</th>
+      <th scope="col">Flag</th>
+      <th scope="col">Capital city</th>
+      <th scope="col">Description</th>
+      <th scope="col">Languages</th>
+      <th scope="col">Climate</th>
+      <th scope="col">Currency</th>
+      <th scope="col">Phone code</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider" #countryBlock>
+      @if (displayCountryList() && displayCountryList()!.length > 0) {
+        @for (country of displayCountryList(); track country.id; let i = $index) {
+          <tr [attr.data-country-id]="country.id">
+            <th scope="row">
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="country" disabled/>
+                <div class="ms-2">{{ i + 1 }}</div>
+              </div>
+            </th>
+            <td>{{ country.name }}</td>
+            <td>
+              <img [ngSrc]="country.flagImage.blobUrl" alt="country image" width="60" height="40">
+            </td>
+            <td>{{ country.capitalCity.name }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary rounded-5 px-3" aria-label="Show description button"
+                      [attr.data-ds-country-id]="country.id" (click)="setDescription($event)">Show
+              </button>
+            </td>
+            <td>
+              @for (language of country.languages; track language.id) {
+                {{ language.name }}
+              }
+            </td>
+            <td>{{ country.climate.name }}</td>
+            <td>{{ country.currency }}</td>
+            <td>{{ country.phoneCode }}</td>
+          </tr>
+        }
 
-          } @else {
-            <tr>
-              <td colspan="9">
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                  @if (this.loadingFailed()) {
-                    <span class="fs-4">List of countries is empty</span>
-                  } @else {
-                    <div class="spinner-border text-secondary" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  }
+      } @else {
+        <tr>
+          <td colspan="9">
+            <div class="d-flex align-items-center justify-content-center mt-3">
+              @if (this.loadingFailed()) {
+                <span class="fs-4">List of countries is empty</span>
+              } @else {
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
                 </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
 
 <dialog class="container custom-dialog" id="addingCountyDialog" #addingCountryDialog>
   <div class="closeBtnContainer my-3">

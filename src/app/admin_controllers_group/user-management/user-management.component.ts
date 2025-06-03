@@ -19,9 +19,8 @@ import {MessageService} from '../../../services/message.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import {RoleService} from '../../../services/role.service';
 import {IRole} from '../../../interfaces/i-role';
-import {NgIf} from '@angular/common';
+import {NgIf, NgOptimizedImage} from '@angular/common';
 import {INewUser} from '../../../interfaces/i-new-user';
-import {MatSidenav, MatSidenavContainer, MatSidenavContent,} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-user-management',
@@ -29,9 +28,7 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent,} from '@angular/mate
     FormsModule,
     ReactiveFormsModule,
     NgIf,
-    MatSidenavContainer,
-    MatSidenavContent,
-    MatSidenav,
+    NgOptimizedImage,
   ],
   providers: [UserService, MessageService],
   templateUrl: './user-management.component.html',
@@ -63,9 +60,6 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
   @ViewChild('editUserBtn') editUserBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild('editModalBtnClose') editModalBtnClose?: ElementRef<HTMLButtonElement>;
   @ViewChild('RemoveUserBtn') removeUserBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild('sidenav') sidenav?: MatSidenav;
-  @ViewChild('searchBtn') searchBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild('btnCloseSdv') btnCloseSdv?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private userService: UserService,
@@ -93,18 +87,6 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     if (this.editModalBtnClose?.nativeElement) {
       this.render2.listen(this.editModalBtnClose.nativeElement, 'click', () => {
         this.closeEditUserModel();
-      });
-    }
-
-    if (this.searchBtn?.nativeElement) {
-      this.render2.listen(this.searchBtn.nativeElement, 'click', () => {
-        this.sidenav?.open().then();
-      });
-    }
-
-    if (this.btnCloseSdv?.nativeElement) {
-      this.render2.listen(this.btnCloseSdv.nativeElement, 'click', () => {
-        this.sidenav?.close().then();
       });
     }
   }
@@ -413,8 +395,8 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
   private createSearchForm(): void {
     this.searchDataForm = new FormGroup({
-      search_username: new FormControl(''),
-      search_email: new FormControl(''),
+      search_text: new FormControl(''),
+      search_option: new FormControl(''),
     });
   }
 
@@ -422,16 +404,24 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     const formValue = this.searchDataForm?.value;
 
     if (formValue) {
-      this.searchList = this.userList().filter((user: IUser) => {
-        return (
-          (formValue.search_username
-            ? user.username.includes(formValue.search_username)
-            : true) &&
-          (formValue.search_email
-            ? user.email.includes(formValue.search_email)
-            : true)
-        );
-      });
+      const option: string = formValue.search_option;
+
+      if (option === "username") {
+        this.searchList = this.userList().filter((user: IUser) => {
+          return (
+            (formValue.search_text ? user.username.includes(formValue.search_text) : true)
+          );
+        });
+      }
+
+      if (option === "email") {
+        this.searchList = this.userList().filter((user: IUser) => {
+          return (
+            (formValue.search_text ? user.email.includes(formValue.search_text) : true)
+          );
+        });
+
+      }
 
       if (this.searchList && this.searchList.length > 0) {
         this.displayContent.set(this.searchList);

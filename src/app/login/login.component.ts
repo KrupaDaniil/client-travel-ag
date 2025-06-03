@@ -1,25 +1,15 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  Renderer2,
-  Signal,
-  signal,
-  viewChild,
-  WritableSignal
-} from '@angular/core';
+import {Component, ElementRef, OnInit, Signal, signal, viewChild, WritableSignal} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import {IUserLogin} from '../../interfaces/user-auth/i-user-login';
 import {AuthService} from '../../services/auth.service';
 import {MessageService} from '../../services/message.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {ILoginError} from '../../interfaces/i-login-error';
 import {IError} from '../../interfaces/i-error';
 import {ValidationService} from '../../services/validation.service';
 import {Oauth2Service} from '../../services/oauth2.service';
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +23,6 @@ import {Oauth2Service} from '../../services/oauth2.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
-  private snackBar: MatSnackBar = inject(MatSnackBar);
   private isEmpty: RegExp | undefined;
   loginForm: FormGroup | undefined;
   readonly errorMessage: string[];
@@ -47,7 +36,7 @@ export class LoginComponent implements OnInit {
 
 
   constructor(private userService: UserService, private messageService: MessageService,
-              private check: ValidationService, private oauth2: Oauth2Service, private render: Renderer2) {
+              private check: ValidationService, private oauth2: Oauth2Service, private toast: HotToastService) {
     this.errorMessage = ['Required field;', 'Cannot be empty;'];
     this.invalidUsername = signal<string | null>(null);
     this.invalidPassword = signal<string | null>(null);
@@ -127,10 +116,12 @@ export class LoginComponent implements OnInit {
 
   private showErrorMessage(): void {
     if (this.messageService.message() !== null) {
-      this.snackBar.open(this.messageService.message() as string, 'close', {
-        verticalPosition: 'bottom',
-        horizontalPosition: 'center',
-      });
+      this.toast.show(`${this.messageService.message()}`, {
+        theme: "snackbar",
+        duration: 5000,
+        autoClose: true,
+        position: "bottom-left"
+      })
     }
   }
 

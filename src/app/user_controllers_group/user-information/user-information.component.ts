@@ -3,24 +3,17 @@ import {IUserInfo} from '../../../interfaces/user-auth/i-user-info';
 import {UserService} from '../../../services/user.service';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
-import {MatGridList, MatGridTile} from '@angular/material/grid-list';
-import {MatButton} from '@angular/material/button';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {MessageService} from '../../../services/message.service';
+import {HotToastService} from '@ngxpert/hot-toast';
+import {NgOptimizedImage} from '@angular/common';
+import {OwlDateTimeModule} from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-information',
   imports: [
-    MatCard,
-    MatCardTitle,
-    MatCardHeader,
-    MatCardContent,
-    MatGridList,
-    MatGridTile,
     ReactiveFormsModule,
-    MatCardActions,
-    MatButton
+    NgOptimizedImage,
+    OwlDateTimeModule,
   ],
   providers: [UserService, FormBuilder, MessageService],
   templateUrl: './user-information.component.html',
@@ -28,12 +21,13 @@ import {MessageService} from '../../../services/message.service';
 })
 export class UserInformationComponent implements OnInit {
   private store = inject(EntityStorage);
-  private snackBar: MatSnackBar = inject(MatSnackBar);
+  private toast: HotToastService = inject(HotToastService);
   private userInfo: WritableSignal<IUserInfo | null> = signal<IUserInfo | null>(null);
   private readonly username: Signal<string> = computed(() => this.store.username());
   formData: FormGroup | undefined;
 
-  constructor(private userService: UserService, private fb: FormBuilder, private messageService: MessageService) {
+  constructor(private userService: UserService, private fb: FormBuilder,
+              private messageService: MessageService) {
     this.loadUserInfo();
   }
 
@@ -89,9 +83,18 @@ export class UserInformationComponent implements OnInit {
   }
 
   private showMessage(): void {
-    this.snackBar.open(this.messageService.message() as string, 'close', {
-      verticalPosition: "bottom",
-      horizontalPosition: "center",
-    });
+    if (this.messageService.message !== null) {
+      this.toast.show(`${this.messageService.message()}`, {
+        theme: "snackbar",
+        duration: 5000,
+        autoClose: true,
+        position: "bottom-center",
+        dismissible: true,
+        style: {
+          "border-radius": "30px"
+        }
+      })
+    }
+
   }
 }

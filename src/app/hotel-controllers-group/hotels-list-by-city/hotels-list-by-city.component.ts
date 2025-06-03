@@ -69,5 +69,7 @@ export class HotelsListByCityComponent implements OnInit {
     this.service.getRandomHotelsByCountryId(this.countryId,4);
     this.service.getTopHotelsByCountryId(this.countryId,3);
     this.countryService.setCountryById(this.countryId);
+
+
   }
 }

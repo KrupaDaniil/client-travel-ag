@@ -4,14 +4,31 @@
   </div>
 } @else {
   <div class="row my-3">
-    <div class="col">
-      <div class="d-flex align-items-center justify-content">
-        <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #searchBtn>Search</button>
+    <div class="col g-cn">
+      <div class="d-flex align-items-center">
+        <form *ngIf="searchDataForm" [formGroup]="searchDataForm">
+          <div class="searchBlock">
+            <input class="form-control form-control-sm" type="text" aria-label="search input"
+                   formControlName="search_text">
+            <select class="form-select form-select-sm" formControlName="search_option"
+                    aria-label="select search option">
+              <option selected hidden="hidden" disabled>search by...</option>
+              <option value="username">Username</option>
+              <option value="email">Email</option>
+            </select>
+            <button type="button" class="btn btn-sm" (click)="searchUser()">
+              <img ngSrc="/icons/search_adm_org.svg" width="20" height="20" alt="search icon">
+            </button>
+            <button type="button" class="btn btn-sm" (click)="clearSearch()">
+              <img ngSrc="/icons/clear_close.png" width="20" height="20" alt="clear icon">
+            </button>
+          </div>
+        </form>
       </div>
 
     </div>
     <div class="col">
-      <div class="d-flex align-items-center justify-content-end">
+      <div class="btn-act-block">
         <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #addUserBtn>Add user</button>
         <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3" #editUserBtn>Edit user</button>
         <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3" #RemoveUserBtn>Remove user</button>
@@ -20,84 +37,56 @@
   </div>
 
   @if (displayContent() !== null && displayContent()!.length > 0) {
-    <mat-sidenav-container class="searchBlock bg-body">
-      <mat-sidenav #sidenav class="bg-body" mode="side" position="start">
-        <div class="d-flex align-items-center justify-content-end pe-5">
-          <button class="btn-close" #btnCloseSdv></button>
-        </div>
-        <div class="d-flex align-items-center justify-content-center flex-column my-3">
-          <form *ngIf="searchDataForm" [formGroup]="searchDataForm" class="w-75">
-            <div class="col input-group input-group-sm mb-3">
-              <span class="input-group-text">Username</span>
-              <input type="text" class="form-control" aria-label="Username" formControlName="search_username">
-            </div>
-            <div class="col input-group input-group-sm mb-3">
-              <span class="input-group-text">Email</span>
-              <input type="email" class="form-control" aria-label="Email" formControlName="search_email">
-            </div>
-            <div class="d-flex align-items-center justify-content-end">
-              <button type="button" class="btn btn-sm btn-outline-success px-4 me-2 rounded-5"
-                      (click)="searchUser()">Search
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-danger px-4 rounded-5"
-                      (click)="clearSearch()">Clear
-              </button>
-            </div>
-          </form>
-        </div>
-      </mat-sidenav>
-      <mat-sidenav-content>
-        <div class="my-3">
-          <table class="table table-hover align-middle">
-            <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col">Username</th>
-              <th scope="col">Name</th>
-              <th scope="col">Surname</th>
-              <th scope="col">Birthday</th>
-              <th scope="col">Email</th>
-              <th scope="col">Is Active</th>
-              <th scope="col">Roles</th>
+
+    <div class="my-3">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Username</th>
+          <th scope="col">Name</th>
+          <th scope="col">Surname</th>
+          <th scope="col">Birthday</th>
+          <th scope="col">Email</th>
+          <th scope="col">Is Active</th>
+          <th scope="col">Roles</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider" #usersBlock>
+          @for (user of displayContent(); track user.id; let i = $index) {
+            <tr [attr.data-user-id]="user.id">
+              <th scope="row">
+                <div class="d-flex align-items-center justify-content-center">
+                  <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId" disabled/>
+                  <div class="ms-2">{{ i + 1 }}</div>
+                </div>
+              </th>
+              <td>{{ user.username }}</td>
+              <td>{{ user.firstName }}</td>
+              <td>{{ user.lastName }}</td>
+              <td>{{ user.birthday }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                @if (user.active) {
+                  <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
+                } @else {
+                  <input type="checkbox" class="checked-flag form-check-input" disabled/>
+                }
+              </td>
+              <td>
+                @if (user.roles.length > 0) {
+                  @for (role of user.roles; track $index) {
+                    <div class="mb-1">{{ role.name }}</div>
+                  }
+                } @else {
+                  <div class="mb-1">No roles assigned</div>
+                }
+              </td>
             </tr>
-            </thead>
-            <tbody class="table-group-divider" #usersBlock>
-              @for (user of displayContent(); track user.id; let i = $index) {
-                <tr [attr.data-user-id]="user.id">
-                  <th scope="row">
-                    <div class="d-flex align-items-center justify-content-center">
-                      <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId" disabled/>
-                      <div class="ms-2">{{ i + 1 }}</div>
-                    </div>
-                  </th>
-                  <td>{{ user.username }}</td>
-                  <td>{{ user.firstName }}</td>
-                  <td>{{ user.lastName }}</td>
-                  <td>{{ user.birthday }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>
-                    @if (user.active) {
-                      <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
-                    } @else {
-                      <input type="checkbox" class="checked-flag form-check-input" disabled/>
-                    }
-                  </td>
-                  <td>
-                    @if (user.roles.length > 0) {
-                      @for (role of user.roles; track $index) {
-                        <div class="mb-1">{{ role.name }}</div>
-                      }
-                    } @else {
-                      <div class="mb-1">No roles assigned</div>
-                    }
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+          }
+        </tbody>
+      </table>
+    </div>
 
 
     <dialog id="addUserModal" #addUserModal class="custom-dialog">
