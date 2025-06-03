@@ -267,6 +267,37 @@ export class HttpService {
     );
   }
 
+  loadingRandomHotelsByCountryId(countryId:number, amount:number):Observable<IHotelEntity[] | IError> {
+
+    return this.http.get<Object>(`${this.baseUrl}/hotel/random/${countryId}?amount=${amount}`,{observe:"response"})
+      .pipe(
+        map((resp:HttpResponse<object>):IHotelEntity[] | IError =>{
+          if (resp.status === 200) {
+            return resp.body as IHotelEntity[];
+          }
+          else {
+            return resp.body as IError;
+          }
+        })
+        ,catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error")))
+      );
+  }
+
+  loadingTopHotelsByCountryId(countryId:number, amount:number):Observable<IHotelEntity[] | IError> {
+    return this.http.get<Object>(`${this.baseUrl}/hotel/top/${countryId}?amount=${amount}`,{observe:"response"})
+      .pipe(
+        map((resp:HttpResponse<object>):IHotelEntity[] | IError=>{
+          if (resp.status === 200) {
+            return resp.body as IHotelEntity[];
+          }
+          else{
+            return resp.body as IError;
+          }
+        }),
+        catchError((error:HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Top hotels loading error")))
+      );
+  }
+
   loadingHotelsByCountryId(countryId:number):Observable<IHotelEntity[] | IError> {
     console.log(countryId);
     return this.http.get<Object>(`${this.baseUrl}/hotel/all/${countryId}`,{observe:"response"})

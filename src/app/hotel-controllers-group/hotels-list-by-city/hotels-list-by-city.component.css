@@ -13,9 +13,10 @@
   width: 1214px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size:contain;
+  background-size:cover;
   margin-top: 70px;
   margin-bottom: 45px;
+  border-radius: 50px;
 }
 
 .city-description{

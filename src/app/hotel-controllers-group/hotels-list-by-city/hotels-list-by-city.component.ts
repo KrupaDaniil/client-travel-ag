@@ -24,11 +24,12 @@ export class HotelsListByCityComponent implements OnInit {
   private store = inject(EntityStorage)
 
   readonly hotels:Signal<IHotelEntity[]> = computed(()=>this.store.hotelsEntities());
+  readonly topHotels:Signal<IHotelEntity[]> = computed(()=>this.store.topHotelsEntities());
   readonly countries:Signal<ICountryEntity[]> = computed(()=>this.store.countriesEntities());
 
   countryId:number;
-   get country(){
-     return this.countries().length > 0 ? this.countries()[0] : null;
+   get country():ICountryEntity |undefined{
+     return this.countries().length > 0 ? this.countries()[0] : undefined;
    }
 
 
@@ -65,9 +66,8 @@ export class HotelsListByCityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.getHotelsByCountryId(this.countryId);
+    this.service.getRandomHotelsByCountryId(this.countryId,4);
+    this.service.getTopHotelsByCountryId(this.countryId,3);
     this.countryService.setCountryById(this.countryId);
-
-
   }
 }

@@ -27,6 +27,7 @@ import {ITagEntity} from "../interfaces/hotels-block/i-tag.entity";
 import {IFoodTypeEntity} from '../interfaces/hotels-block/i-food-type.entity';
 import {IRoomTypeEntity} from '../interfaces/hotels-block/i-room-type.entity';
 import {IHotelEntity} from '../interfaces/hotels-block/i-hotel.entity';
+import {IHotelImage} from '../interfaces/hotels-block/IHotelImage.entity';
 
 function loadUserStartData(): () => IUserStartData {
   return () => {
@@ -43,6 +44,12 @@ function loadUserStartData(): () => IUserStartData {
 const hotelConfig = entityConfig({
   entity: type<IHotelEntity>(),
   collection: "hotels",
+  selectId: hotel=>hotel.id
+})
+
+const topHotelConfig = entityConfig({
+  entity: type<IHotelEntity>(),
+  collection: "topHotels",
   selectId: hotel=>hotel.id
 })
 
@@ -129,6 +136,7 @@ export const EntityStorage = signalStore(
   withEntities(foodTypeConfig),
   withEntities(roomTypeConfig),
   withEntities(hotelConfig),
+  withEntities(topHotelConfig),
   withMethods(store => ({
     addUserStartData(startData: IUserStartData): void {
       patchState(store, startData);
@@ -231,6 +239,9 @@ export const EntityStorage = signalStore(
     },
     setAllHotels(hotels:IHotelEntity[]):void{
       patchState(store, addEntities(hotels,hotelConfig))
+    },
+    setTopHotels(hotels:IHotelEntity[]):void{
+      patchState(store, addEntities(hotels,topHotelConfig))
     }
   }))
 );
