@@ -1,8 +1,7 @@
-import {Component, computed, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {Component, computed, inject, OnInit, Signal} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
-import {HotelService} from '../../../services/Hotels/hotel.service';
+import {HotelService} from '../../../services/hotels/hotel.service';
 import {ActivatedRoute} from '@angular/router';
 import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {EntityStorage} from '../../../storage/entity.storage';
@@ -23,51 +22,51 @@ import {CountryService} from '../../../services/country.service';
 export class HotelsListByCityComponent implements OnInit {
   private store = inject(EntityStorage)
 
-  readonly hotels:Signal<IHotelEntity[]> = computed(()=>this.store.hotelsEntities());
-  readonly topHotels:Signal<IHotelEntity[]> = computed(()=>this.store.topHotelsEntities());
-  readonly countries:Signal<ICountryEntity[]> = computed(()=>this.store.countriesEntities());
+  readonly hotels: Signal<IHotelEntity[]> = computed(() => this.store.hotelsEntities());
+  readonly topHotels: Signal<IHotelEntity[]> = computed(() => this.store.topHotelsEntities());
+  readonly countries: Signal<ICountryEntity[]> = computed(() => this.store.countriesEntities());
 
-  countryId:number;
-   get country():ICountryEntity |undefined{
-     return this.countries().length > 0 ? this.countries()[0] : undefined;
-   }
+  countryId: number;
+
+  get country(): ICountryEntity | undefined {
+    return this.countries().length > 0 ? this.countries()[0] : undefined;
+  }
 
 
-  constructor(private service: HotelService,private countryService:CountryService,private route: ActivatedRoute) {
+  constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get("countryId");
     this.countryId = id ? Number(id) : 0;
   }
 
 
-
   currentIndex = 0;
+
   get visibleHotels() {
-    if(this.hotels().length > 0) {
+    if (this.hotels().length > 0) {
       const visible = [];
       for (let i = 0; i < 3; i++) {
         visible.push(this.hotels()[(this.currentIndex + i) % this.hotels().length]);
       }
       return visible;
-    }
-    else{
+    } else {
       return null;
     }
   }
 
   nextSlide() {
-    if(this.hotels())
+    if (this.hotels())
       this.currentIndex = (this.currentIndex + 1) % this.hotels().length;
   }
 
   prevSlide() {
-    if(this.hotels())
+    if (this.hotels())
       this.currentIndex = (this.currentIndex - 1 + this.hotels().length) % this.hotels().length;
 
   }
 
   ngOnInit(): void {
-    this.service.getRandomHotelsByCountryId(this.countryId,4);
-    this.service.getTopHotelsByCountryId(this.countryId,3);
+    this.service.getRandomHotelsByCountryId(this.countryId, 4);
+    this.service.getTopHotelsByCountryId(this.countryId, 3);
     this.countryService.setCountryById(this.countryId);
 
 
