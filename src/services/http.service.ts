@@ -24,6 +24,7 @@ import {IFromToEntity} from "../interfaces/filters-block/i-from-to.entity";
 import {IFromCountryEntity} from "../interfaces/filters-block/i-from-country.entity";
 import {ILoginError} from '../interfaces/i-login-error';
 import {IHotelEntity} from '../interfaces/hotels-block/i-hotel.entity';
+import {ITagEntity} from '../interfaces/hotels-block/i-tag.entity';
 
 @Injectable({
   providedIn: "root"
@@ -267,19 +268,32 @@ export class HttpService {
     );
   }
 
-  loadingHotelsByCountryId(countryId:number):Observable<IHotelEntity[] | IError> {
+  loadingAllTags(): Observable<ITagEntity[] | IError> {
+    return this.http.get<Object>(`${this.baseUrl}/hotel/tags`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): ITagEntity[] | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as ITagEntity[];
+        } else {
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
+      )
+    );
+  }
+
+  loadingHotelsByCountryId(countryId: number): Observable<IHotelEntity[] | IError> {
     console.log(countryId);
-    return this.http.get<Object>(`${this.baseUrl}/hotel/all/${countryId}`,{observe:"response"})
+    return this.http.get<Object>(`${this.baseUrl}/hotel/all/${countryId}`, {observe: "response"})
       .pipe(
-        map((resp:HttpResponse<object>):IHotelEntity[] | IError =>{
+        map((resp: HttpResponse<object>): IHotelEntity[] | IError => {
           if (resp.status === 200) {
             return resp.body as IHotelEntity[];
-          }
-          else {
+          } else {
             return resp.body as IError;
           }
         })
-        ,catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error")))
+        , catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error")))
       );
   }
 
@@ -398,6 +412,20 @@ export class HttpService {
         (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
       )
     );
+  }
+
+  addTag(tag: FormData): Observable<ITagEntity | IError> {
+    return this.http.post(`${this.baseUrl}/hotel/tags/create`, tag, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): ITagEntity | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as ITagEntity;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Tag creation error");
+        }
+      }),
+      catchError((error: HttpErrorResponse): Observable<IError> =>
+        of(this.getErrorMessage(error, this.errorDefaultMessage[0])))
+    )
   }
 
   // block update // ------------------------------------------------------------
@@ -592,7 +620,20 @@ export class HttpService {
     );
   }
 
-
+  deleteTag(id: number): Observable<boolean | IError> {
+    return this.http.delete(`${this.baseUrl}/hotel/tags/delete/${id}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): boolean | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return true;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
+        }
+      }),
+      catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+      )
+    )
+  }
 
   // other methods block// ------------------------------------------------------------
   checkUsername(username: string): Observable<boolean> {

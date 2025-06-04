@@ -37,9 +37,11 @@ export class ValidationService {
 
   isLoginError(item: any): boolean {
     return (
-      item !== null && typeof item === "object" &&
-      typeof item.usernameError === "string" || typeof item.usernameError === null || typeof item.passwordError === null ||
-      typeof item.passwordError === "string"
+      item !== null && typeof item === "object" && (
+        item.usernameError === null || typeof item.usernameError === "string"
+      ) && (
+        item.passwordError === null || typeof item.passwordError === "string"
+      )
     )
   }
 
