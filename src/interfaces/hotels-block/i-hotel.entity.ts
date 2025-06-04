@@ -6,4 +6,7 @@ export interface IHotelEntity {
   rate:number;
   description:string;
   images:IHotelImage[];
+  address:string;
+  feedbacksAmount:number;
+  place:number;
 }

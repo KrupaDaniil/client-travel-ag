@@ -1,10 +1,11 @@
+
 <div class="container d-flex justify-content-center align-items-center flex-column">
-  <!--  <div class="mat-card-baner" style="background-image: url('/imgs/image (1).png')">-->
-  <!--    <h3 class="mat-card-title">{{country?.name}}</h3>-->
-  <!--  </div>-->
+  <div class="mat-card-baner" style="background-image: url('/imgs/image (1).jpg')">
+    <h3 class="mat-card-title">{{country?.name}}</h3>
+  </div>
 
   <p class="city-description">
-    {{ country?.description }}
+    {{country?.description}}
   </p>
 
   <div class="fact-block d-flex justify-content-center align-items-center">
@@ -14,16 +15,12 @@
       </h3>
 
       <ul>
-        <li>Сицилія - це найбільша область Італії і найбільший острів Середземного моря.</li>
-        <li>Острів розташований досить близько до материкової частини і відокремлений від неї Мессинською протокою.</li>
-        <li>Окрім Середземного його омивають ще два моря: Іонічне і Тірренське.</li>
+        <li>Сицилія - це найбільша область Італії і найбільший острів Середземного моря. </li>
+        <li>Острів розташований досить близько до материкової частини і відокремлений від неї Мессинською протокою. </li>
+        <li>Окрім Середземного його омивають ще два моря: Іонічне і Тірренське. </li>
         <li>М'який, типово середземноморський клімат дарує острову 2500 теплих годин в році.</li>
-        <li>Тури на Сицилію варто придбати тільки заради природних пам'яток, таких як діючі вулкани Етна і Стромболі,
-          лавандові поляни, зарості розмарину.
-        </li>
-        <li>Основний доход Сицилії складає сільське господарство і туризм. Тому для мандрівників тут створені усі умови.
-          Крім того, особливу увагу уряд приділяє екологічному туризму.
-        </li>
+        <li>Тури на Сицилію варто придбати тільки заради природних пам'яток, таких як діючі вулкани Етна і Стромболі, лавандові поляни, зарості розмарину. </li>
+        <li>Основний доход Сицилії складає сільське господарство і туризм. Тому для мандрівників тут створені усі умови. Крім того, особливу увагу уряд приділяє екологічному туризму.</li>
       </ul>
     </div>
   </div>
@@ -49,7 +46,7 @@
             Шукати
           </button>
         </div>
-        <div class="col-6 button">
+        <div class="col-6 button" >
           <button type="button" class="btn dark">
             Скинути фільтри
           </button>
@@ -58,31 +55,37 @@
 
     </form>
   </div>
-  <div class="carousel-container" *ngIf="visibleHotels!=null">
-    <div class="carousel-wrapper">
-      <div class="carousel-block" style="position: relative;">
-        <button class="nav left" style="position: absolute;left:10%" (click)="prevSlide()">&#10094;</button>
-        <div class="carousel">
-          <div
-            class="carousel-card"
-            *ngFor="let hotel of visibleHotels; let i = index"
-            [ngClass]="{ 'center': i === 1, 'left' : i == 0,'right': i==2 }">
-            <img [src]="hotel.images[0].url" alt="Hotel image"/>
-            <div class="hotel-title">{{ hotel.hotelName }}</div>
+
+
+    <div class="carousel-container" *ngIf="visibleHotels!=null">
+      <div class="carousel-wrapper">
+        <div class="carousel-block" style="position: relative;">
+          <button class="nav left" style="position: absolute;left:10%" (click)="prevSlide()">&#10094;</button>
+          <div class="carousel">
+            <div
+              class="carousel-card"
+              *ngFor="let hotel of visibleHotels; let i = index"
+              [ngClass]="{ 'center': i === 1, 'left' : i == 0,'right': i==2 }">
+              <img [src]="hotel.images[0].url" alt="Hotel image" />
+              <div class="hotel-title">{{ hotel.hotelName }}</div>
+            </div>
           </div>
+
+          <button class="nav right"  style="position: absolute;right: 10%" (click)="nextSlide()">&#10095;</button>
         </div>
 
-        <button class="nav right" style="position: absolute;right: 10%" (click)="nextSlide()">&#10095;</button>
       </div>
 
+      <div class="carousel-label">Популярні готелі</div>
     </div>
 
-    <div class="carousel-label">Популярні готелі</div>
-  </div>
 
 
-  <app-hotel-card style="margin-top: 90px;">
-  </app-hotel-card>
+  @for (hotel of topHotels();track $index){
+    <app-hotel-card style="margin-top: 90px;" [hotel]="hotel" [country]="country">
+    </app-hotel-card>
+  }
+
 </div>
 
 
