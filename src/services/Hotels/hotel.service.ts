@@ -32,4 +32,13 @@ export class HotelService {
     })
   }
 
+  public getHotelById(hotelId: number) {
+    let tmp = this.store.hotelsEntities().find((hotel)=>hotel.id === hotelId);
+    if(tmp!=undefined){
+      console.log("Hotel found in storage");
+      return tmp;
+    }
+    return this.http.loadingHotelById(hotelId);
+
+  }
 }

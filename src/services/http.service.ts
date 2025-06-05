@@ -328,6 +328,21 @@ export class HttpService {
       );
   }
 
+  public loadingHotelById(hotelId: number) {
+    return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}`,{observe:"response"}).pipe(
+      map((resp:HttpResponse<Object>):IHotelEntity | IError=>{
+        if (resp.status === 200) {
+          return resp.body as IHotelEntity;
+        }
+        else{
+          return resp.body as IError;
+        }
+      }),
+      catchError((error:HttpErrorResponse):Observable<IError> => of(this.getErrorMessage(error, "Data loading error")))
+
+    );
+  }
+
   // block adding // ------------------------------------------------------------
   addUser(user: INewUser): Observable<IUser | IError> {
     return this.http.post(`${this.baseUrl}/add-user`, user, {observe: "response"}).pipe(
@@ -698,4 +713,6 @@ export class HttpService {
       return new ErrorMessage(error.status, message);
     }
   }
+
+
 }

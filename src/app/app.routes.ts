@@ -20,6 +20,7 @@ import { FromToManagementComponent } from "./admin_controllers_group/from-to-man
 import { LoginStartComponent } from "./user_controllers_group/login-start/login-start.component";
 import { HotelsListByCityComponent } from "./hotel-controllers-group/hotels-list-by-city/hotels-list-by-city.component";
 import { TagManagementComponent } from "./admin_controllers_group/tag-management/tag-management.component";
+import {HotelDetailsComponent} from './hotel-controllers-group/hotel-details/hotel-details.component';
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -55,5 +56,9 @@ export const routes: Routes = [
 		path: "hotels/:countryId",
 		component: HotelsListByCityComponent
 	},
+  {
+    path: "hotels/view/:hotelId",
+    component: HotelDetailsComponent
+  },
 	{ path: "**", component: Error404Component }
 ];

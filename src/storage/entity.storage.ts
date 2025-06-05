@@ -162,6 +162,7 @@ export const EntityStorage = signalStore(
 		setCountry(country: ICountryEntity): void {
 			patchState(store, setEntity(country, countryConfig));
 		},
+
 		setAdminCity(city: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>): void {
 			patchState(store, setEntity(city, cityConfig));
 		},
@@ -174,6 +175,9 @@ export const EntityStorage = signalStore(
 		setTag(tag: ITagEntity): void {
 			patchState(store, setEntity(tag, tagConfig));
 		},
+    setHotel(hotel:IHotelEntity):void{
+      patchState(store,setEntity(hotel, hotelConfig))
+    },
 
 		setAllUsers(users: IUser[]): void {
 			patchState(store, setAllEntities(users, userConfig));
