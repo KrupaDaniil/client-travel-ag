@@ -9,11 +9,11 @@ import {
   Signal,
   ViewChild,
 } from '@angular/core';
-import { EntityStorage } from '../../../storage/entity.storage';
-import { ClimateService } from '../../../services/climate.service';
-import { MessageService } from '../../../services/message.service';
-import { IClimateEntity } from '../../../interfaces/country-block/i-climate.entity';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {EntityStorage} from '../../../storage/entity.storage';
+import {ClimateService} from '../../../services/climate.service';
+import {MessageService} from '../../../services/message.service';
+import {IClimateEntity} from '../../../interfaces/country-block/i-climate.entity';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-climate-management',
@@ -40,11 +40,9 @@ export class ClimateManagementComponent implements OnInit, AfterViewChecked {
   @ViewChild('removeClimateBtn')
   removeClimateBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild('climateBlock') climateBlock?: ElementRef<HTMLTableSectionElement>;
-  constructor(
-    private climateService: ClimateService,
-    private message: MessageService,
-    private render: Renderer2
-  ) {
+
+  constructor(private climateService: ClimateService, private message: MessageService,
+              private render: Renderer2) {
     this.climateName = new FormControl('', Validators.required);
     this.isSelectedRow = false;
   }

@@ -1,4 +1,5 @@
 export interface ITagEntity {
-	id: number;
-	name: string;
+  id: number;
+  tagName: string;
+  tagImageUrl: string;
 }

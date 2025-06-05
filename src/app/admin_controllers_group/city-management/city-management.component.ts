@@ -70,12 +70,8 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
   protected addCityForm: FormGroup | undefined;
   protected editCityForm: FormGroup | undefined;
 
-  constructor(
-    private cityService: CityService,
-    private message: MessageService,
-    private countryService: CountryService,
-    private render: Renderer2
-  ) {
+  constructor(private cityService: CityService, private message: MessageService,
+              private countryService: CountryService, private render: Renderer2) {
     this.displayCityList = signal<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | null>(null);
     this.descriptionCity = signal<string | null>(null);
     this.imageCityUrl = signal<string | null>(null);
@@ -107,7 +103,7 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
         this.loadingFailed.set(false);
       } else {
         if (!this.isSetIntervalFlag) {
-          setInterval(() => {
+          setTimeout(() => {
             this.loadingFailed.set(true);
           }, 30000);
           this.isSetIntervalFlag = true;
@@ -279,8 +275,6 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
       "imgCityId"
     );
 
-    console.log(currentCity);
-
     if (currentCity) {
       if (currentCity.cityImage) {
         this.imageCityUrl.set(currentCity.cityImage.blobUrl);
@@ -331,10 +325,7 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private getCurrentCity(
-    event: Event,
-    dtsName: string
-  ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | undefined {
+  private getCurrentCity(event: Event, dtsName: string): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | undefined {
     const element = event.target as HTMLElement;
     const id: number = Number.parseInt(element.dataset[dtsName] as string);
 
@@ -367,7 +358,5 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
     } else {
       this.cityImg = undefined;
     }
-
-    console.log(this.cityImg);
   }
 }
