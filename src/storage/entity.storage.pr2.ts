@@ -17,11 +17,11 @@ export const EntityStoragePr2 = signalStore(
 			patchState(store, setEntity(adminHotel, adminHotelConfig));
 		},
 
-		setAllEntities(adminHotels: IAdminHotelEntity[]): void {
+		setAllAdminHotels(adminHotels: IAdminHotelEntity[]): void {
 			patchState(store, setAllEntities(adminHotels, adminHotelConfig));
 		},
 
-		removeEntity(id: number): void {
+		removeAdminHotel(id: number): void {
 			patchState(store, removeEntity(id, adminHotelConfig));
 		}
 	}))
