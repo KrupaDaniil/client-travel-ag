@@ -10,24 +10,23 @@ import {
 	setEntity,
 	withEntities
 } from "@ngrx/signals/entities";
-import {IUser} from "../interfaces/i-user";
-import {IRole} from "../interfaces/i-role";
-import {IUserStartData} from "../interfaces/user-auth/i-user-start-data";
-import {inject} from "@angular/core";
-import {AuthService} from "../services/auth.service";
-import {IClimateEntity} from "../interfaces/country-block/i-climate.entity";
-import {ILanguageEntity} from "../interfaces/country-block/i-language.entity";
-import {ICountryEntity} from "../interfaces/country-block/i-country.entity";
-import {ICityEntity} from "../interfaces/country-block/i-city.entity";
-import {IMainCountryForCityEntity} from "../interfaces/country-block/i-main-country-for-city.entity";
-import {IBlobImageEntity} from "../interfaces/country-block/i-blob-image.entity";
-import {IFromToEntity} from "../interfaces/filters-block/i-from-to.entity";
-import {IFromCountryEntity} from "../interfaces/filters-block/i-from-country.entity";
-import {ITagEntity} from "../interfaces/hotels-block/i-tag.entity";
-import {IFoodTypeEntity} from '../interfaces/hotels-block/i-food-type.entity';
-import {IRoomTypeEntity} from '../interfaces/hotels-block/i-room-type.entity';
-import {IHotelEntity} from '../interfaces/hotels-block/i-hotel.entity';
-import {IHotelImage} from '../interfaces/hotels-block/IHotelImage.entity';
+import { IUser } from "../interfaces/i-user";
+import { IRole } from "../interfaces/i-role";
+import { IUserStartData } from "../interfaces/user-auth/i-user-start-data";
+import { inject } from "@angular/core";
+import { AuthService } from "../services/auth.service";
+import { IClimateEntity } from "../interfaces/country-block/i-climate.entity";
+import { ILanguageEntity } from "../interfaces/country-block/i-language.entity";
+import { ICountryEntity } from "../interfaces/country-block/i-country.entity";
+import { ICityEntity } from "../interfaces/country-block/i-city.entity";
+import { IMainCountryForCityEntity } from "../interfaces/country-block/i-main-country-for-city.entity";
+import { IBlobImageEntity } from "../interfaces/country-block/i-blob-image.entity";
+import { IFromToEntity } from "../interfaces/filters-block/i-from-to.entity";
+import { IFromCountryEntity } from "../interfaces/filters-block/i-from-country.entity";
+import { ITagEntity } from "../interfaces/hotels-block/i-tag.entity";
+import { IFoodTypeEntity } from "../interfaces/hotels-block/i-food-type.entity";
+import { IRoomTypeEntity } from "../interfaces/hotels-block/i-room-type.entity";
+import { IHotelEntity } from "../interfaces/hotels-block/i-hotel.entity";
 
 function loadUserStartData(): () => IUserStartData {
 	return () => {
@@ -42,16 +41,16 @@ function loadUserStartData(): () => IUserStartData {
 }
 
 const hotelConfig = entityConfig({
-  entity: type<IHotelEntity>(),
-  collection: "hotels",
-  selectId: hotel=>hotel.id
-})
+	entity: type<IHotelEntity>(),
+	collection: "hotels",
+	selectId: hotel => hotel.id
+});
 
 const topHotelConfig = entityConfig({
-  entity: type<IHotelEntity>(),
-  collection: "topHotels",
-  selectId: hotel=>hotel.id
-})
+	entity: type<IHotelEntity>(),
+	collection: "topHotels",
+	selectId: hotel => hotel.id
+});
 
 const userConfig = entityConfig({
 	entity: type<IUser>(),
@@ -122,30 +121,30 @@ const roomTypeConfig = entityConfig({
 export const EntityStorage = signalStore(
 	{ providedIn: "root" },
 
-  withState<IUserStartData>(loadUserStartData()),
-  withEntities(userConfig),
-  withEntities(roleConfig),
-  withEntities(climateConfig),
-  withEntities(languageConfig),
-  withEntities(countryConfig),
-  withEntities(cityConfig),
-  withEntities(fromToConfig),
-  withEntities(fromToCountryConfig),
-  withEntities(tagConfig),
-  withEntities(foodTypeConfig),
-  withEntities(roomTypeConfig),
-  withEntities(hotelConfig),
-  withEntities(topHotelConfig),
-  withMethods(store => ({
-    addUserStartData(startData: IUserStartData): void {
-      patchState(store, startData);
-    },
-    addUser(user: IUser): void {
-      patchState(store, addEntity(user, userConfig));
-    },
-    addRole(role: IRole): void {
-      patchState(store, addEntity(role, roleConfig));
-    },
+	withState<IUserStartData>(loadUserStartData()),
+	withEntities(userConfig),
+	withEntities(roleConfig),
+	withEntities(climateConfig),
+	withEntities(languageConfig),
+	withEntities(countryConfig),
+	withEntities(cityConfig),
+	withEntities(fromToConfig),
+	withEntities(fromToCountryConfig),
+	withEntities(tagConfig),
+	withEntities(foodTypeConfig),
+	withEntities(roomTypeConfig),
+	withEntities(hotelConfig),
+	withEntities(topHotelConfig),
+	withMethods(store => ({
+		addUserStartData(startData: IUserStartData): void {
+			patchState(store, startData);
+		},
+		addUser(user: IUser): void {
+			patchState(store, addEntity(user, userConfig));
+		},
+		addRole(role: IRole): void {
+			patchState(store, addEntity(role, roleConfig));
+		},
 
 		setUser(user: IUser): void {
 			patchState(store, setEntity(user, userConfig));
@@ -209,9 +208,9 @@ export const EntityStorage = signalStore(
 		setAllHotels(hotels: IHotelEntity[]): void {
 			patchState(store, addEntities(hotels, hotelConfig));
 		},
-    setTopHotels(hotels:IHotelEntity[]):void{
-      patchState(store, addEntities(hotels,topHotelConfig))
-    },
+		setTopHotels(hotels: IHotelEntity[]): void {
+			patchState(store, addEntities(hotels, topHotelConfig));
+		},
 
 		updateUserStartData(userStartData: Partial<IUserStartData>): void {
 			if (Object.keys(userStartData).length > 0) {
@@ -219,38 +218,38 @@ export const EntityStorage = signalStore(
 			}
 		},
 
-    removeUserStartData(): void {
-      patchState(store, {roles: [], username: ""});
-    },
-    removeUser(id: number): void {
-      patchState(store, removeEntity(id, userConfig));
-    },
-    removeUsers(ids: EntityId[]): void {
-      patchState(store, removeEntities(ids, userConfig));
-    },
-    removeRole(id: number): void {
-      patchState(store, removeEntity(id, roleConfig));
-    },
-    removeClimate(id: number): void {
-      patchState(store, removeEntity(id, climateConfig));
-    },
-    removeLanguage(id: number): void {
-      patchState(store, removeEntity(id, languageConfig));
-    },
-    removeCountry(id: number): void {
-      patchState(store, removeEntity(id, countryConfig));
-    },
-    removeCity(id: number): void {
-      patchState(store, removeEntity(id, cityConfig));
-    },
-    removeFromToEntity(id: string): void {
-      patchState(store, removeEntity(id, fromToConfig));
-    },
-    removeFromToCountry(id: number): void {
-      patchState(store, removeEntity(id, fromToCountryConfig));
-    },
-    removeTags(id: number): void {
-      patchState(store, removeEntity(id, tagConfig));
-    }
-  }))
+		removeUserStartData(): void {
+			patchState(store, { roles: [], username: "" });
+		},
+		removeUser(id: number): void {
+			patchState(store, removeEntity(id, userConfig));
+		},
+		removeUsers(ids: EntityId[]): void {
+			patchState(store, removeEntities(ids, userConfig));
+		},
+		removeRole(id: number): void {
+			patchState(store, removeEntity(id, roleConfig));
+		},
+		removeClimate(id: number): void {
+			patchState(store, removeEntity(id, climateConfig));
+		},
+		removeLanguage(id: number): void {
+			patchState(store, removeEntity(id, languageConfig));
+		},
+		removeCountry(id: number): void {
+			patchState(store, removeEntity(id, countryConfig));
+		},
+		removeCity(id: number): void {
+			patchState(store, removeEntity(id, cityConfig));
+		},
+		removeFromToEntity(id: string): void {
+			patchState(store, removeEntity(id, fromToConfig));
+		},
+		removeFromToCountry(id: number): void {
+			patchState(store, removeEntity(id, fromToCountryConfig));
+		},
+		removeTags(id: number): void {
+			patchState(store, removeEntity(id, tagConfig));
+		}
+	}))
 );
