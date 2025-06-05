@@ -1,0 +1,31 @@
+.hotel-top{
+  padding-top:70px;
+  padding-bottom: 56px;
+}
+
+.hotel-header {
+  border: 3px solid #D9913C;
+  border-radius: 50px;
+  max-width: 1214px;
+  margin-top:71px;
+}
+
+
+button{
+  background-color: #9F943B;
+  border-radius: 39px;
+  padding: 3px 20px;
+  color: white;
+  font-size: 20px;
+
+}
+
+.feedback-amount{
+  font-size: 20px;
+}
+
+.address-block{
+  color: #11212D;
+}
+
+

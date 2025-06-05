@@ -1,0 +1,30 @@
+<div class="d-flex justify-content-center">
+
+  <div class="row hotel-header justify-content-center p-3" *ngIf="hotel!=undefined">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-10 hotel-top">
+          <h1>{{hotel.hotelName}}</h1>
+        </div>
+        <div class="col-2 hotel-top">
+          <button>Забронювати</button>
+        </div>
+
+        <div class="col-6">
+          <app-stars [rate]="hotel.rate"></app-stars>
+          <span class="feedback-amount">({{hotel.feedbacksAmount}} відгуків)</span>
+        </div>
+        <div class="col-6 text-end address-block">
+          <span class="address">
+            <img src="/imgs/bi_geo-alt-dark.png" style="margin-right: 10px"/>
+            {{hotel.address}}
+          </span><br>
+          <span>
+            #{{hotel.place}} of 0 in Lipai
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
