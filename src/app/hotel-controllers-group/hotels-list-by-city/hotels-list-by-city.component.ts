@@ -1,5 +1,4 @@
 import {Component, computed, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
-import {MatCard, MatCardContent} from '@angular/material/card';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
 import {HotelService} from '../../../services/Hotels/hotel.service';
