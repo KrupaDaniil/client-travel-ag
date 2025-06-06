@@ -26,6 +26,7 @@ import { ILoginError } from "../interfaces/i-login-error";
 import { IHotelEntity } from "../interfaces/hotels-block/i-hotel.entity";
 import { ITagEntity } from "../interfaces/hotels-block/i-tag.entity";
 import { IAdminHotelEntity } from "../interfaces/hotels-block/i-admin-hotel.entity";
+import { IMinUser } from "../interfaces/i-min-user";
 
 @Injectable({
 	providedIn: "root"
@@ -184,6 +185,22 @@ export class HttpService {
 			catchError(
 				(error: HttpErrorResponse): Observable<IError> =>
 					of(this.getErrorMessage(error, "Error loading user by username"))
+			)
+		);
+	}
+
+	loadingMinUserByUsername(username: string): Observable<IMinUser | IError> {
+		return this.http.get(`${this.baseUrl}/min-user-get-username/${username}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IMinUser | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IMinUser;
+				} else {
+					return new ErrorMessage(HttpStatusCode.NotFound, "User not found");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Failed to retrieve data from the server"))
 			)
 		);
 	}
@@ -352,21 +369,20 @@ export class HttpService {
 		);
 	}
 
-  public loadingHotelById(hotelId: number) {
-    return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}`,{observe:"response"}).pipe(
-      map((resp:HttpResponse<Object>):IHotelEntity | IError=>{
-        if (resp.status === 200) {
-          return resp.body as IHotelEntity;
-        }
-        else{
-          return resp.body as IError;
-        }
-      }),
-      catchError((error:HttpErrorResponse):Observable<IError> => of(this.getErrorMessage(error, "Data loading error")))
-
-    );
-  }
-
+	public loadingHotelById(hotelId: number) {
+		return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}`, { observe: "response" }).pipe(
+			map((resp: HttpResponse<Object>): IHotelEntity | IError => {
+				if (resp.status === 200) {
+					return resp.body as IHotelEntity;
+				} else {
+					return resp.body as IError;
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
+			)
+		);
+	}
 
 	// block adding // ------------------------------------------------------------
 	addUser(user: INewUser): Observable<IUser | IError> {
@@ -502,11 +518,11 @@ export class HttpService {
 		);
 	}
 
-	addHotel(hotel: FormData): Observable<Number | IError> {
+	addHotel(hotel: FormData): Observable<number | IError> {
 		return this.http.post(`${this.baseUrl}/hotel/create`, hotel, { observe: "response" }).pipe(
-			map((response: HttpResponse<Object>): Number | IError => {
+			map((response: HttpResponse<Object>): number | IError => {
 				if (response.status === HttpStatusCode.Ok) {
-					return response.body as Number;
+					return response.body as number;
 				} else {
 					return new ErrorMessage(HttpStatusCode.BadRequest, "Hotel creation error");
 				}

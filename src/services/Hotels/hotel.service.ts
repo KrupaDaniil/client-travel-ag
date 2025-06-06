@@ -49,16 +49,16 @@ export class HotelService {
 		});
 	}
 
-	async createHotel(hotel: FormData): Promise<Number | undefined> {
+	async createHotel(hotel: FormData): Promise<number | undefined> {
 		return await firstValueFrom(
 			this.http.addHotel(hotel).pipe(
-				map((item: Number | IError): Number | undefined => {
+				map((item: number | IError): number | undefined => {
 					if (this.check.isError(item)) {
 						this.message.setMessage((item as IError).message);
 						return undefined;
 					} else {
 						this.message.setMessage(null);
-						return item as Number;
+						return item as number;
 					}
 				})
 			)
@@ -92,13 +92,12 @@ export class HotelService {
 			}
 		});
 	}
-  public getHotelById(hotelId: number) {
-    let tmp = this.store.hotelsEntities().find((hotel)=>hotel.id === hotelId);
-    if(tmp!=undefined){
-      console.log("Hotel found in storage");
-      return tmp;
-    }
-    return this.http.loadingHotelById(hotelId);
-
-  }
+	public getHotelById(hotelId: number) {
+		let tmp = this.store.hotelsEntities().find(hotel => hotel.id === hotelId);
+		if (tmp != undefined) {
+			console.log("Hotel found in storage");
+			return tmp;
+		}
+		return this.http.loadingHotelById(hotelId);
+	}
 }
