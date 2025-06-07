@@ -100,7 +100,24 @@ export class HttpService {
 					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
 				}
 			}),
-			catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, error.message)))
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to loading users"))
+			)
+		);
+	}
+
+	loadingAllManagers(roleId: number): Observable<IMinUser[] | IError> {
+		return this.http.get(`${this.baseUrl}/users-get-roleId/${roleId}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IMinUser[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IMinUser[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Could not load managers"))
+			)
 		);
 	}
 
@@ -113,7 +130,24 @@ export class HttpService {
 					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
 				}
 			}),
-			catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, error.message)))
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to loading roles"))
+			)
+		);
+	}
+
+	loadingRoleByName(name: string): Observable<IRole | IError> {
+		return this.http.get(`${this.baseUrl}/role/${name}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IRole | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IRole;
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Failed to load role");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to loading role"))
+			)
 		);
 	}
 
@@ -126,7 +160,9 @@ export class HttpService {
 					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
 				}
 			}),
-			catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, error.message)))
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to loading climates"))
+			)
 		);
 	}
 
@@ -140,7 +176,7 @@ export class HttpService {
 				}
 			}),
 			catchError((error: HttpErrorResponse): Observable<IError> => {
-				return of(this.getErrorMessage(error, error.message));
+				return of(this.getErrorMessage(error, "Failed to loading languages"));
 			})
 		);
 	}
@@ -154,7 +190,9 @@ export class HttpService {
 					return new ErrorMessage(HttpStatusCode.NotFound, "User not found");
 				}
 			}),
-			catchError((error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, error.message)))
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to loading user"))
+			)
 		);
 	}
 

@@ -1,6 +1,6 @@
 import { IMinCityEntity } from "../country-block/i-min-city.entity";
 import { IMinCountryEntity } from "../country-block/i-min-country.entity";
-import { IMinUserEntity } from "../i-min-user.entity";
+import { IMinUser } from "../i-min-user";
 import { ITagEntity } from "./i-tag.entity";
 import { IHotelImage } from "./IHotelImage.entity";
 
@@ -14,5 +14,5 @@ export interface IAdminHotelEntity {
 	tags: ITagEntity[];
 	country: IMinCountryEntity;
 	city: IMinCityEntity;
-	manager: IMinUserEntity;
+	manager: IMinUser;
 }

@@ -1,6 +1,7 @@
 import { patchState, signalStore, type, withMethods } from "@ngrx/signals";
 import { entityConfig, removeEntity, setAllEntities, setEntity, withEntities } from "@ngrx/signals/entities";
 import { IAdminHotelEntity } from "../interfaces/hotels-block/i-admin-hotel.entity";
+import { IMinUser } from "../interfaces/i-min-user";
 
 const adminHotelConfig = entityConfig({
 	entity: type<IAdminHotelEntity>(),
@@ -16,7 +17,6 @@ export const EntityStoragePr2 = signalStore(
 		setAdminHotel(adminHotel: IAdminHotelEntity): void {
 			patchState(store, setEntity(adminHotel, adminHotelConfig));
 		},
-
 		setAllAdminHotels(adminHotels: IAdminHotelEntity[]): void {
 			patchState(store, setAllEntities(adminHotels, adminHotelConfig));
 		},

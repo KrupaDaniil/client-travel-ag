@@ -116,6 +116,22 @@ export class UserService {
 		});
 	}
 
+	async loadingAllManagers(roleId: number): Promise<IMinUser[] | undefined> {
+		return await firstValueFrom(
+			this.http.loadingAllManagers(roleId).pipe(
+				map((item: IMinUser[] | IError): IMinUser[] | undefined => {
+					if (this.check.isError(item)) {
+						this.messageService.setMessage((item as IError).message);
+						return undefined;
+					} else {
+						this.messageService.setMessage(null);
+						return item as IMinUser[];
+					}
+				})
+			)
+		);
+	}
+
 	loadingUserById(id: number): Observable<IUser | null> {
 		return this.http.loadingUserById(id).pipe(
 			map((item: IUser | IError): IUser | null => {
