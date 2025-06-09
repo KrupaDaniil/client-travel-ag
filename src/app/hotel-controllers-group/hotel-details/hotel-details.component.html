@@ -1,12 +1,11 @@
-<div class="d-flex justify-content-center">
-
+<div class="d-flex justify-content-center align-items-center flex-column">
   <div class="row hotel-header justify-content-center p-3" *ngIf="hotel!=undefined">
     <div class="col-12">
-      <div class="row">
-        <div class="col-10 hotel-top">
+      <div class="row justify-content-between">
+        <div class="col-9 hotel-top">
           <h1>{{hotel.hotelName}}</h1>
         </div>
-        <div class="col-2 hotel-top">
+        <div class="col-2 hotel-top" style="width: fit-content;">
           <button>Забронювати</button>
         </div>
 
@@ -27,4 +26,9 @@
     </div>
   </div>
 
+
+  <app-hotel-carousel style="margin-top:105px;margin-bottom: 70px" [images]="hotel?.images"></app-hotel-carousel>
+
+
+  <app-hotel-booking class="w-100 d-flex flex-column align-items-center"></app-hotel-booking>
 </div>

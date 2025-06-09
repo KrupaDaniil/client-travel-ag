@@ -1,0 +1,28 @@
+<div class="carousel-group" *ngIf="images">
+
+  @for (img of images; track $index) {
+    @if($index<9){
+      <div class="hotel-image-card" [ngClass]="[$index==0 ? 'big' : '', $index==images.length-1 ? 'last' : '']">
+        <div class="hotel-image" [style.background-image]="'url('+img.url+')'"></div>
+      </div>
+    } @else if($index==9) {
+      <div class="hotel-image-card" [ngClass]="[$index==images.length-1 ? 'last' : '']">
+        <div class="cover" *ngIf="$index!=images.length">
+          <span class="cover-text">
+            + {{images.length-10}}
+          </span>
+        </div>
+        <div class="hotel-image" [style.background-image]="'url('+img.url+')'"></div>
+      </div>
+    }
+
+  }
+  @if(images.length<9){
+    @for (img of Array(9-images.length+1); track $index) {
+      <div class="hotel-image-card">
+        <div class="hotel-image blank"></div>
+      </div>
+    }
+  }
+
+</div>
