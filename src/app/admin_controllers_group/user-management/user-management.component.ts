@@ -48,7 +48,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
     this.messageService.message()
   );
   displayContent: WritableSignal<IUser[] | null> = signal<IUser[] | null>(null);
-  addUserForm: FormGroup | undefined;
+    addUserForm: FormGroup | undefined;
   editUserForm: FormGroup | undefined;
   searchDataForm: FormGroup | undefined;
 

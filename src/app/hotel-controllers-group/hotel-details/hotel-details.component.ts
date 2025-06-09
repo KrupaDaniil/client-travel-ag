@@ -8,12 +8,16 @@ import {CountryService} from '../../../services/country.service';
 import {ActivatedRoute} from '@angular/router';
 import {isObservable} from 'rxjs';
 import {ValidationService} from '../../../services/validation.service';
+import {HotelCarouselComponent} from '../hotel-carousel/hotel-carousel.component';
+import {HotelBookingComponent} from '../hotel-booking/hotel-booking.component';
 
 @Component({
   selector: 'app-hotel-details',
   imports: [
     NgIf,
-    StarsComponent
+    StarsComponent,
+    HotelCarouselComponent,
+    HotelBookingComponent
   ],
   templateUrl: './hotel-details.component.html',
   styleUrl: './hotel-details.component.css'

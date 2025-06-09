@@ -1,0 +1,70 @@
+<div class="booking-bg">
+  <h3>
+    Подивитись ціни для дат вашої подорожі
+  </h3>
+
+  <div class="booking-container">
+    <form [formGroup]="bookForm">
+
+      <div class="data-container">
+        <div class="custom-date">
+          <button [owlDateTimeTrigger]="brDt">
+            <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
+          </button>
+          <input type="text" formControlName="checkin" [owlDateTime]="brDt" placeholder="Заселення" readonly>
+
+          <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
+        </div>
+        <div class="custom-date" >
+          <button [owlDateTimeTrigger]="brDt">
+            <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
+          </button>
+          <input type="text" formControlName="checkout" [owlDateTime]="brDt" placeholder="Виселення" readonly>
+
+          <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
+        </div>
+        <div class="amount custom-date">
+          <img ngSrc="/icons/amount.svg" width="11" height="24" alt="amount"/>
+          <select formControlName="amount" class="form-select">
+            <option value="-1" selected>Кількість</option>
+            @for (num of Array(9); track $index) {
+              <option value="{{$index+1}}">{{$index+1}}</option>
+            }
+          </select>
+        </div>
+        <div class="roomtype custom-date">
+          <img ngSrc="/icons/room.svg" width="30" height="30" alt="amount"/>
+          <select formControlName="roomType" class="form-select">
+            <option value="-1" selected>Номер</option>
+          </select>
+        </div>
+        <div class="from custom-date">
+          <img ngSrc="/icons/from.svg" width="30" height="30" alt="amount"/>
+          <select formControlName="to" class="form-select">
+            <option value="-1" selected>Звідки</option>
+          </select>
+        </div>
+        <div class="to custom-date">
+          <img ngSrc="/icons/to.svg" width="30" height="30" alt="amount"/>
+          <select formControlName="from" class="form-select">
+            <option value="-1" selected>Куди</option>
+          </select>
+        </div>
+      </div>
+
+
+
+      <div class="result-container">
+        <b>Включно:</b>
+        <div class="options-container">
+          <span>Сніданок</span>
+          <span>Трансфер</span>
+          <span>Страхування</span>
+          <span>Безвіз</span>
+        </div>
+        <b>1234 грн</b>
+        <input type="submit" value="Забронювати"/>
+      </div>
+    </form>
+  </div>
+</div>
