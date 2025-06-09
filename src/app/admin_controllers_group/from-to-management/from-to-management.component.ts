@@ -93,9 +93,9 @@ export class FromToManagementComponent implements OnInit {
         this.displayList.set(entities);
         this.loadingFailed.set(false);
       } else {
-        setInterval(() => {
+        setTimeout(() => {
           this.loadingFailed.set(true);
-        }, 60000);
+        }, 40000);
       }
     });
   }

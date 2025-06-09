@@ -1,10 +1,10 @@
-.mat-card-title{
+.mat-card-title {
   color: white;
   text-align: center;
 
 }
 
-.mat-card-baner{
+.mat-card-baner {
   text-align: center;
   height: 391px;
   display: flex;
@@ -13,118 +13,117 @@
   width: 1214px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size:cover;
+  background-size: cover;
   margin-top: 70px;
   margin-bottom: 45px;
   border-radius: 50px;
 }
 
-.city-description{
+.city-description {
   max-width: 930px;
   font-size: 24px;
 
 }
 
-.fact-block{
+.fact-block {
   border: 3px solid #D9913C;
   width: 100%;
   border-radius: 70px;
 }
 
-.fact-block h3{
+.fact-block h3 {
   font-weight: bold;
   padding-top: 30px;
   padding-bottom: 35px;
 }
 
-.fact-block .content{
+.fact-block .content {
   max-width: 930px;
   font-size: 24px;
   font-family: 'Futura Std', sans-serif;
 }
 
-.form-search{
+.form-search {
   width: 100%;
   text-align: center;
   background-color: #8DBECD;
   border-radius: 50px;
-  margin-top:52px;
+  margin-top: 52px;
 }
 
-.form-search .hotel-name{
+.form-search .hotel-name {
   margin: 50px auto 35px;
 }
 
-.form-search .form-control-sm{
+.form-search .form-control-sm {
   max-width: 223px;
 }
 
-.form-search h3{
+.form-search h3 {
   margin-top: 36px;
   margin-bottom: 20px;
-  color:white;
+  color: white;
 }
 
-.form-search .row{
+.form-search .row {
   max-width: 682px;
   margin-left: auto;
   margin-right: auto;
 }
 
-.form-search form{
+.form-search form {
   background-color: white;
   margin-left: 80px;
   margin-right: 80px;
-  margin-bottom:60px;
+  margin-bottom: 60px;
   border-radius: 50px;
 }
 
-.button{
-  margin-top:55px;
+.button {
+  margin-top: 55px;
   margin-bottom: 50px;
 }
 
-.btn{
+.btn {
   border-radius: 39px;
-  border:none;
-  background-color:#8DBECD;
-  color:white;
+  border: none;
+  background-color: #8DBECD;
+  color: white;
   text-transform: uppercase;
-  height:57px;
+  height: 57px;
   min-width: 213px;
-  filter: drop-shadow(0px 4px 5px rgba(17, 35,45, 15));
+  filter: drop-shadow(0px 4px 5px rgba(17, 35, 45, 15));
 }
 
 
-button.dark{
+button.dark {
   background-color: #D9D9D9;
   width: 254px;
 }
 
 
-
 /*asdasdasd*/
 .carousel-container {
-  margin-top:145px;
+  margin-top: 145px;
   background-image: url('../../../assets/imgs/carousel_back.svg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  border-radius: 50px 50px 0 0 ;
+  border-radius: 50px 50px 0 0;
   display: flex;
   position: relative;
   min-height: 500px;
 }
 
-.carousel-wrapper{
+.carousel-wrapper {
   display: flex;
   justify-content: center;
   align-items: start;
-  margin-top:70px;
+  margin-top: 70px;
 }
 
 
-.carousel-block{
+.carousel-block {
   display: flex;
   align-items: center;
 
@@ -204,11 +203,11 @@ button.dark{
   justify-self: center;
 }
 
-.carousel-card.left{
+.carousel-card.left {
   transform: translateX(50%);
 }
 
-.carousel-card.right{
+.carousel-card.right {
   transform: translateX(-50%);
 }
 
