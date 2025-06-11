@@ -27,6 +27,8 @@ import {IHotelEntity} from "../interfaces/hotels-block/i-hotel.entity";
 import {ITagEntity} from "../interfaces/hotels-block/i-tag.entity";
 import {IAdminHotelEntity} from "../interfaces/hotels-block/i-admin-hotel.entity";
 import {IMinUser} from "../interfaces/i-min-user";
+import {IMinCountryEntity} from '../interfaces/country-block/i-min-country.entity';
+import {IMinCityEntity} from '../interfaces/country-block/i-min-city.entity';
 
 @Injectable({
   providedIn: "root"
@@ -263,6 +265,21 @@ export class HttpService {
       );
   }
 
+  loadingAllMinCountry(): Observable<IMinCountryEntity[] | IError> {
+    return this.http.get<Object>(`${this.baseUrl}/api/countries/admin/min-countries`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IMinCountryEntity[] | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IMinCountryEntity[];
+        } else {
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      }),
+      catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to loading countries"))
+      )
+    );
+  }
+
   loadingCountryById(id: number): Observable<ICountryEntity | IError> {
     return this.http
       .get<Object>(`${this.baseUrl}/api/countries/${id}`, {
@@ -282,6 +299,19 @@ export class HttpService {
       );
   }
 
+  loadingMinCountryById(id: number): Observable<IMinCountryEntity | IError> {
+    return this.http.get(`${this.baseUrl}/api/countries/${id}/admin`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IMinCountryEntity | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IMinCountryEntity;
+        } else {
+          return new ErrorMessage(response.status, `Unable to load country with ID ${id}`);
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> =>
+        of(this.getErrorMessage(error, "Error loading min countries data")))
+    )
+  }
+
   loadingAllAdminCities(): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
     return this.http.get<Object>(`${this.baseUrl}/admin-cities`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError => {
@@ -294,6 +324,20 @@ export class HttpService {
       catchError((error: HttpErrorResponse): Observable<IError> => {
         return of(this.getErrorMessage(error, "Data loading error"));
       })
+    );
+  }
+
+  loadingAllCountryMinCities(id: number): Observable<IMinCityEntity[] | IError> {
+    return this.http.get(`${this.baseUrl}/admin-cities/${id}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IMinCityEntity[] | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IMinCityEntity[];
+        } else {
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      }), catchError((error: HttpErrorResponse): Observable<IError> =>
+        of(this.getErrorMessage(error, "Error loading min cities data"))
+      )
     );
   }
 
@@ -403,6 +447,21 @@ export class HttpService {
       }),
       catchError(
         (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Error loading hotels"))
+      )
+    );
+  }
+
+  loadingHotelByIdToAdmin(hotelId: number): Observable<IAdminHotelEntity | IError> {
+    return this.http.get(`${this.baseUrl}/hotel/admin/${hotelId}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IAdminHotelEntity | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IAdminHotelEntity;
+        } else {
+          return new ErrorMessage(response.status, "Failed to load hotel");
+        }
+      }),
+      catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Error loading hotel"))
       )
     );
   }
@@ -800,7 +859,7 @@ export class HttpService {
   }
 
   deleteHotel(id: number): Observable<boolean | IError> {
-    return this.http.delete(`${this.baseUrl}/remove/${id}`, {observe: "response"}).pipe(
+    return this.http.delete(`${this.baseUrl}/hotel/remove/${id}`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): boolean | IError => {
         if (response.status === HttpStatusCode.Ok) {
           return true;

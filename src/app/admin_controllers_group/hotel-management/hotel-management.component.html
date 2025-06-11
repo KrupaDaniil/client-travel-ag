@@ -7,7 +7,7 @@
   </div>
   <div class="col">
     <div class="d-flex align-items-center justify-content-end">
-      <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddModal()">Add</button>
+      <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddHotelModal()">Add</button>
       <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-4" (click)="openEditModal()">Edit
       </button>
       <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-4" #removeHotelBtn>Remove</button>
@@ -113,48 +113,52 @@
       }
     </tbody>
   </table>
+</div>
 
-  @if (selectedHotel) {
-    <dialog class="custom-dialog" #TagsDialog>
-      <div class="d-flex align-items-center justify-content-end my-3 pe-3">
-        <button class="btn-close" (click)="closeTagsModal()"></button>
-      </div>
-      <div class="row row-cols-1 p-5">
-        @if (selectedHotel.tags && selectedHotel.tags.length > 0) {
-          @for (tag of selectedHotel.tags; track tag.id; let i = $count) {
-            <div class="col">
+@if (selectedHotel) {
+  <dialog class="custom-dialog" #TagsDialog>
+    <div class="d-flex align-items-center justify-content-end my-3 pe-3">
+      <button class="btn-close" (click)="closeTagsModal()"></button>
+    </div>
+    <div class="row row-cols-1 p-5">
+      @if (selectedHotel.tags && selectedHotel.tags.length > 0) {
+        @for (tag of selectedHotel.tags; track tag.id; let i = $count) {
+          <div class="col">
+            <div class="d-flex align-items-center justify-content-center">
               <span>{{ i }}</span> <span>{{ tag.tagName }}</span>
               <span>
               <img ngSrc="{{tag.tagImageUrl}}" alt="tag image" width="24" height="24">
             </span>
             </div>
-          }
-        } @else {
-          <div class="col">
-            <div class="fw-semibold fs-4 text-center text-secondary">The selected hotel has no tags</div>
           </div>
         }
-
-      </div>
-    </dialog>
-
-    <dialog class="custom-dialog" #DescriptionDialog>
-      <div class="d-flex align-items-center justify-content-end my-3 pe-3">
-        <button class="btn-close" (click)="closeDescriptionModal()"></button>
-      </div>
-      @if (selectedHotel.description && selectedHotel.description.trim() !== "") {
-        <div class="d-flex align-items-center p-5 w-100">{{ selectedHotel.description }}</div>
       } @else {
-        <div class="fw-semibold fs-4 text-center text-secondary">The selected hotel has no description</div>
+        <div class="col">
+          <div class="fw-semibold fs-4 text-center text-secondary">The selected hotel has no tags</div>
+        </div>
       }
-    </dialog>
 
-    <dialog class="custom-dialog" #ImageDialog>
-      <div class="d-flex align-items-center justify-content-end my-3 pe-3">
-        <button class="btn-close" (click)="closeImageModal()"></button>
-      </div>
+    </div>
+  </dialog>
 
-      @if (selectedHotel.images && selectedHotel.images.length > 0) {
+  <dialog class="custom-dialog" #DescriptionDialog>
+    <div class="d-flex align-items-center justify-content-end my-3 pe-3">
+      <button class="btn-close" (click)="closeDescriptionModal()"></button>
+    </div>
+    @if (selectedHotel.description && selectedHotel.description.trim() !== "") {
+      <div class="d-flex align-items-center p-5 w-100">{{ selectedHotel.description }}</div>
+    } @else {
+      <div class="fw-semibold fs-4 text-center text-secondary">The selected hotel has no description</div>
+    }
+  </dialog>
+
+  <dialog class="custom-dialog" #ImageDialog>
+    <div class="d-flex align-items-center justify-content-end my-3 pe-3">
+      <button class="btn-close" (click)="closeImageModal()"></button>
+    </div>
+
+    @if (selectedHotel.images && selectedHotel.images.length > 0) {
+      <div class="d-flex align-items-center justify-content-center">
         <div class="carousel-admin-container">
           <div id="hotelImagesCarousel" class="carousel carousel-fade">
             <div class="carousel-inner">
@@ -182,11 +186,103 @@
             </button>
           </div>
         </div>
-      } @else {
-        <div class="fw-semibold fs-4 text-center text-secondary">The selected hotel has no images</div>
-      }
+      </div>
 
-    </dialog>
+    } @else {
+      <div class="fw-semibold fs-4 text-center text-secondary">The selected hotel has no images</div>
+    }
+
+  </dialog>
+}
+
+<dialog class="container custom-dialog" #AddHotelDialog>
+  <div class="d-flex align-items-center justify-content-end my-3 pe-3">
+    <button class="btn-close" (click)="closeAddHotelModal()"></button>
+  </div>
+  @if (addForm) {
+    <form method="dialog" [formGroup]="addForm" #addHotelForm>
+      <div class="row row-cols-2 px-3">
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Hotel name</span>
+            <input type="text" class="form-control form-control-sm admin-input" formControlName="hotelName"
+                   placeholder="Enter hotel name" required>
+          </div>
+        </div>
+
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Rate</span>
+            <input type="number" class="form-control form-control-sm admin-input" formControlName="rate"
+                   placeholder="Enter hotel rate" required>
+          </div>
+        </div>
+
+        <div class="col mb-3">
+          <div class="input-group input-group-sm admin-input-group">
+            <span class="input-group-text">Address</span>
+            <input type="text" class="form-control form-control-sm admin-input" formControlName="address"
+                   placeholder="Enter hotel address" required>
+          </div>
+        </div>
+
+        <div class="col mb-3">
+          <input type="file" class="form-control form-control-sm admin-input" (change)="onSelectedFiles($event)"
+                 accept="image/*" multiple>
+        </div>
+
+        <div class="col mb-3">
+          <ng-select class="ng-select-ngCs" [multiple]="true" notFoundText="Tags are missing"
+                     formControlName="tags" placeholder="Select tags">
+            @for (tag of tagsList(); track tag.id) {
+              <ng-option [value]="tag">
+                <div class="d-flex align-items-center">
+                  <span class="me-2">{{ tag.tagName }}</span>
+                  <img ngSrc="{{tag.tagImageUrl}}" alt="tag img" width="22" height="22">
+                </div>
+              </ng-option>
+            }
+          </ng-select>
+        </div>
+
+        <div class="col mb-3">
+          <ng-select [items]="countryList()" bindLabel="name" formControlName="country" class="ng-select-ngCs"
+                     notFoundText="Countries are missing" (change)="onSelectedCountry($event)"
+                     placeholder="Select country"></ng-select>
+        </div>
+
+        <div class="col mb-3">
+          <ng-select [items]="cityList()" bindLabel="name" formControlName="city" class="ng-select-ngCs"
+                     [loading]="isLoading()" notFoundText="Cities are missing" placeholder="Select city"></ng-select>
+        </div>
+
+        <div class="col mb-3">
+          <ng-select formControlName="manager" class="ng-select-ngCs" [loading]="isLoadingManagers()"
+                     placeholder="Select manager" notFoundText="Managers are missing"
+                     [compareWith]="selectedUser">
+            @for (manager of managers(); track manager.id) {
+              <ng-option [value]="manager">
+                <div class="d-flex align-items-center">
+                  <span class="me-2">{{ manager.lastName }} {{ manager.firstName }}</span>
+                  <span class="text-secondary">({{ manager.username }})</span>
+                </div>
+              </ng-option>
+            }
+          </ng-select>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-3 px-3">
+        <textarea class="form-control admin-input ds-ts" formControlName="description"></textarea>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-end my-4">
+        <button type="reset" class="btn btn-sm btn-outline-danger px-4 rounded-5 me-3">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-outline-success px-4 rounded-5 me-3" (click)="addingHotel()">Add
+        </button>
+      </div>
+    </form>
+  } @else {
+    <div class="fw-semibold fs-4 text-center text-secondary">Error creating form</div>
   }
 
-</div>
+</dialog>

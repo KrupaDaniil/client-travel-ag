@@ -52,7 +52,7 @@
 }
 
 .carousel-admin-container img {
-  width: 30dvw !important;
+  max-width: 40dvw;
 }
 
 .selected-flag:checked {
@@ -67,4 +67,15 @@
 .selected-flag:focus {
   box-shadow: 0 0 5px #8c8c8c;
   border-color: #e4e7ea;
+}
+
+.custom-dialog {
+  min-width: 60dvw !important;
+  max-height: 60dvh !important;
+}
+
+.ds-ts {
+  width: 100%;
+  height: 15dvh;
+  resize: none;
 }

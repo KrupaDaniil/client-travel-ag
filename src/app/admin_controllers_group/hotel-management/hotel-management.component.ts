@@ -16,7 +16,7 @@ import {HotelService} from "../../../services/Hotels/hotel.service";
 import {MessageService} from "../../../services/message.service";
 import {HotToastService} from "@ngxpert/hot-toast";
 import {IAdminHotelEntity} from "../../../interfaces/hotels-block/i-admin-hotel.entity";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ITagEntity} from "../../../interfaces/hotels-block/i-tag.entity";
 import {IMinCountryEntity} from "../../../interfaces/country-block/i-min-country.entity";
 import {IMinCityEntity} from "../../../interfaces/country-block/i-min-city.entity";
@@ -27,14 +27,21 @@ import {IMinUser} from "../../../interfaces/i-min-user";
 import {IRole} from "../../../interfaces/i-role";
 import {RoleService} from "../../../services/role.service";
 import {NgClass, NgOptimizedImage} from '@angular/common';
+import {NgOptionComponent, NgSelectComponent} from '@ng-select/ng-select';
+import {TagService} from '../../../services/hotels/tag.service';
+import {CountryService} from '../../../services/country.service';
+import {CityService} from '../../../services/city.service';
 
 @Component({
   selector: "app-hotel-management",
   imports: [
     NgClass,
-    NgOptimizedImage
+    NgOptimizedImage,
+    ReactiveFormsModule,
+    NgSelectComponent,
+    NgOptionComponent
   ],
-  providers: [HotelService, MessageService, UserService, RoleService],
+  providers: [HotelService, MessageService, UserService, RoleService, TagService, CountryService, CityService],
   templateUrl: "./hotel-management.component.html",
   styleUrl: "./hotel-management.component.css"
 })
@@ -44,20 +51,24 @@ export class HotelManagementComponent implements OnInit {
   private readonly toast: HotToastService = inject(HotToastService);
 
   private isSelectedHotel: boolean;
+  protected isLoading: WritableSignal<boolean> = signal<boolean>(false);
+  protected isLoadingManagers: WritableSignal<boolean> = signal<boolean>(true);
   private readonly username: string;
   private readonly roles: string[];
   protected selectedId: number | undefined;
-  private role: IRole | undefined;
-  private isAdmin: boolean;
-  private isManager: boolean;
+  protected isAdmin: boolean;
+  protected isManager: boolean;
   protected loadingFailed: WritableSignal<boolean>;
   protected selectedHotel: IAdminHotelEntity | undefined;
-  private managers: IMinUser[] | undefined;
+  protected managers: WritableSignal<IMinUser[] | null> = signal<IMinUser[] | null>(null);
   private currentUser: IMinUser | undefined;
 
   private hotels: Signal<IAdminHotelEntity[]> = computed((): IAdminHotelEntity[] => this.storePr2.adminHotelsEntities());
   private infoMessage: Signal<string | null> = computed((): string | null => this.message.message());
   displayHotels: WritableSignal<IAdminHotelEntity[] | null> = signal<IAdminHotelEntity[] | null>(null);
+  tagsList: Signal<ITagEntity[]> = computed((): ITagEntity[] => this.store.tagsEntities());
+  countryList: Signal<IMinCountryEntity[]> = computed((): IMinCountryEntity[] => this.storePr2.minCountriesEntities());
+  cityList: WritableSignal<IMinCityEntity[] | null> = signal<IMinCityEntity[] | null>(null);
 
   private hotelBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
     viewChild<ElementRef<HTMLTableSectionElement>>("hotelsBlock");
@@ -74,15 +85,26 @@ export class HotelManagementComponent implements OnInit {
   private removeHotelBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
     viewChild<ElementRef<HTMLButtonElement>>("removeHotelBtn");
 
+  private addHotelModal: Signal<ElementRef<HTMLDialogElement> | undefined> =
+    viewChild<ElementRef<HTMLDialogElement>>("AddHotelDialog");
+
+  private addHotelForm: Signal<ElementRef<HTMLFormElement> | undefined> =
+    viewChild<ElementRef<HTMLFormElement>>("addHotelForm");
+
   protected addForm: FormGroup | undefined;
   protected editForm: FormGroup | undefined;
   protected cityImage: File[] | null;
+  selectedUser =
+    (f_user: IMinUser, l_user: IMinUser): boolean => (f_user && l_user) && (f_user.id === l_user.id);
 
   constructor(
     private hotelService: HotelService,
     private message: MessageService,
     private userService: UserService,
     private roleService: RoleService,
+    private tagService: TagService,
+    private countryService: CountryService,
+    private cityService: CityService,
     private render: Renderer2
   ) {
     this.isSelectedHotel = false;
@@ -93,29 +115,42 @@ export class HotelManagementComponent implements OnInit {
     this.username = this.store.username().trim();
     this.roles = this.store.roles();
     this.initDisplayList();
+    this.showToast();
   }
 
   ngOnInit(): void {
     this.checkUser();
     this.hotelService.getAllHotelToAdmin();
-    this.createAddForm();
     this.loadingUsersByRoleManager();
     this.loadingCurrentUser();
     this.onSelectedRow();
+    this.initTags();
+    this.initCountries();
+    this.createAddForm();
+  }
+
+  private initTags(): void {
+    if (this.store.tagsEntities().length === 0) {
+      this.tagService.setAllTags();
+    }
+  }
+
+  private initCountries(): void {
+    if (this.storePr2.minCountriesEntities().length === 0) {
+      this.countryService.setAllMinCountry();
+    }
   }
 
   private initDisplayList(): void {
     effect(() => {
       const hotelList: IAdminHotelEntity[] = this.hotels();
-      if (this.displayHotels() === null) {
-        if (hotelList.length > 0) {
-          this.displayHotels.set(hotelList);
-          this.loadingFailed.set(false);
-        } else {
-          setTimeout(() => {
-            this.loadingFailed.set(true);
-          }, 40000);
-        }
+      if (hotelList.length > 0) {
+        this.displayHotels.set(hotelList);
+        this.loadingFailed.set(false);
+      } else {
+        setTimeout(() => {
+          this.loadingFailed.set(true);
+        }, 40000);
       }
     });
   }
@@ -176,6 +211,34 @@ export class HotelManagementComponent implements OnInit {
     }
   }
 
+  private clearAddForm(): void {
+    if (this.addHotelForm()?.nativeElement) {
+      this.addHotelForm()!.nativeElement.reset()
+    }
+  }
+
+  onSelectedCountry(country: IMinCountryEntity): void {
+    if (country && country.id) {
+      this.isLoading.set(true);
+
+      if (this.cityList() && this.cityList()!.length > 0) {
+        this.cityList.set(null);
+      }
+
+      this.cityService.getAllCountryCities(country.id).then((cities: IMinCityEntity[] | undefined): void => {
+        if (cities) {
+          this.cityList.set(cities);
+          this.isLoading.set(false);
+        } else {
+          this.cityList.set(null);
+          this.isLoading.set(false);
+        }
+      });
+    } else {
+      this.cityList.set(null);
+    }
+  }
+
   private createAddForm(): void {
     this.addForm = new FormGroup({
       hotelName: new FormControl("", Validators.required),
@@ -184,8 +247,23 @@ export class HotelManagementComponent implements OnInit {
       address: new FormControl("", Validators.required),
       tags: new FormControl<ITagEntity[] | null>(null, Validators.required),
       country: new FormControl<IMinCountryEntity | null>(null, Validators.required),
-      city: new FormControl<IMinCityEntity | null>(null, Validators.required)
+      city: new FormControl<IMinCityEntity | null>(null, Validators.required),
+      manager: new FormControl<IMinUser | null>(null, Validators.required)
     });
+
+    if (this.isAdmin && this.isManager) {
+      this.addForm.get("manager")?.enable();
+    }
+
+    if (this.isAdmin && !this.isManager) {
+      this.addForm.get("manager")?.enable();
+    }
+
+    if (!this.isAdmin && this.isManager) {
+      this.addForm.get("manager")?.disable();
+    }
+
+
   }
 
   protected addingHotel(): void {
@@ -196,7 +274,7 @@ export class HotelManagementComponent implements OnInit {
         const newHotel: FormData = new FormData();
         newHotel.append("hotelName", data.hotelName);
         newHotel.append("rate", data.rate);
-        newHotel.append("description", data.description);
+        newHotel.append("description", data.description.toString());
         newHotel.append("address", data.address);
 
         if (this.cityImage) {
@@ -229,7 +307,18 @@ export class HotelManagementComponent implements OnInit {
 
         this.hotelService.createHotel(newHotel).then((id: number | undefined): void => {
           if (id) {
-            this.hotelService.getHotelById(id);
+            this.hotelService.getAdminHotelById(id).then((adminHotel: IAdminHotelEntity | undefined): void => {
+              if (adminHotel) {
+                this.storePr2.setAdminHotel(adminHotel);
+                this.message.setMessage("Hotel added successfully!");
+                this.addForm?.reset();
+                this.clearAddForm();
+                this.cityImage = null;
+              } else {
+                this.message.setMessage("Failed to add hotel.");
+              }
+            })
+            this.hotelService.setIHotelEntityToStore(id);
           }
         });
       }
@@ -256,20 +345,6 @@ export class HotelManagementComponent implements OnInit {
     this.hotelService.removeHotel(id);
   }
 
-  openAddModal(): void {
-    if (this.isAdmin && this.isManager) {
-      if (this.addForm && this.currentUser) {
-        this.addForm.addControl("manager", new FormControl<IMinUser | null>(this.currentUser, Validators.required));
-      }
-    }
-
-    if (this.isAdmin && !this.isManager) {
-      if (this.addForm) {
-        this.addForm.addControl("manager", new FormControl<IMinUser | null>(null, Validators.required));
-      }
-    }
-  }
-
   openEditModal(): void {
   }
 
@@ -294,22 +369,25 @@ export class HotelManagementComponent implements OnInit {
   }
 
   private loadingUsersByRoleManager(): void {
-    this.roleService.getRoleByName(UserRoles.MANAGER).then((role: IRole | undefined): void => {
-      this.role = role;
-    });
 
-    if (this.role) {
-      this.userService.loadingAllManagers(this.role.id).then((mn: IMinUser[] | undefined): void => {
-        if (mn) {
-          this.managers = mn;
-        }
-      });
-    }
+    this.roleService.getRoleByName(UserRoles.MANAGER).then((role: IRole | undefined): void => {
+      if (role) {
+        this.userService.loadingAllManagers(role.id).then((mn: IMinUser[] | undefined): void => {
+          if (mn) {
+            this.managers.set(mn);
+            this.isLoadingManagers.set(false);
+          }
+        });
+      }
+    });
   }
 
   private loadingCurrentUser(): void {
     this.userService.loadingMinUserByUsername(this.username).then((user: IMinUser | undefined): void => {
       this.currentUser = user;
+      if (this.isAdmin && this.isManager) {
+        this.addForm?.get("manager")?.setValue(this.currentUser)
+      }
     });
   }
 
@@ -356,6 +434,12 @@ export class HotelManagementComponent implements OnInit {
     }
   }
 
+  openAddHotelModal(): void {
+    if (this.addHotelModal()?.nativeElement) {
+      this.addHotelModal()!.nativeElement.showModal();
+    }
+  }
+
   closeImageModal(): void {
     if (this.imageModal() && this.imageModal()?.nativeElement) {
       if (this.imageModal()!.nativeElement.open) {
@@ -376,5 +460,30 @@ export class HotelManagementComponent implements OnInit {
         this.descriptionModal()!.nativeElement.close();
       }
     }
+  }
+
+  closeAddHotelModal(): void {
+    if (this.addHotelModal() && this.addHotelModal()?.nativeElement) {
+      if (this.addHotelModal()!.nativeElement.open) {
+        this.addHotelModal()!.nativeElement.close();
+      }
+    }
+  }
+
+  private showToast(): void {
+    effect(() => {
+      if (this.infoMessage() !== null) {
+        this.toast.show(this.infoMessage()?.toString(), {
+          theme: "snackbar",
+          duration: 5000,
+          position: "bottom-center",
+          autoClose: true,
+          dismissible: true,
+          style: {
+            "border-radius": "30px"
+          }
+        });
+      }
+    });
   }
 }

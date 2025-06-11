@@ -6,12 +6,15 @@ import {ValidationService} from './validation.service';
 import {ICountryEntity} from '../interfaces/country-block/i-country.entity';
 import {firstValueFrom, map} from 'rxjs';
 import {IError} from '../interfaces/i-error';
+import {IMinCountryEntity} from '../interfaces/country-block/i-min-country.entity';
+import {EntityStoragePr2} from '../storage/entity.storage.pr2';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CountryService {
   private readonly store = inject(EntityStorage);
+  private readonly storePr2 = inject(EntityStoragePr2);
 
   constructor(
     private http_s: HttpService,
@@ -33,19 +36,44 @@ export class CountryService {
     });
   }
 
+  setAllMinCountry(): void {
+    this.http_s.loadingAllMinCountry().subscribe({
+      next: (item: IMinCountryEntity[] | IError) => {
+        if (this.check.isError(item)) {
+          this.message.setMessage((item as IError).message);
+        } else {
+          this.message.setMessage(null);
+          this.storePr2.setAllMinCountries(item as IMinCountryEntity[]);
+        }
+      }
+    });
+  }
+
   setCountryById(id: number): void {
     this.http_s.loadingCountryById(id).subscribe({
-      next:(item: ICountryEntity | IError) => {
-        if(this.check.isError(item)) {
+      next: (item: ICountryEntity | IError) => {
+        if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
-        }
-        else{
+        } else {
           this.message.setMessage(null);
           this.store.setCountry(item as ICountryEntity);
 
         }
       }
     });
+  }
+
+  setMinCountryById(id: number): void {
+    this.http_s.loadingMinCountryById(id).subscribe({
+      next: (item: IMinCountryEntity | IError) => {
+        if (this.check.isError(item)) {
+          this.message.setMessage((item as IError).message);
+        } else {
+          this.message.setMessage(null);
+          this.storePr2.setMinCountry(item as IMinCountryEntity);
+        }
+      }
+    })
   }
 
   async addingCountry(country: FormData): Promise<boolean> {
@@ -60,7 +88,9 @@ export class CountryService {
               return false;
             } else {
               this.message.setMessage(null);
-              this.store.setCountry(res as ICountryEntity);
+              const newCountry: ICountryEntity = res as ICountryEntity;
+              this.setMinCountryById(newCountry.id);
+              this.store.setCountry(newCountry);
               return true;
             }
           }
@@ -81,7 +111,9 @@ export class CountryService {
               return false;
             } else {
               this.message.setMessage(null);
-              this.store.setCountry(res as ICountryEntity);
+              const updatedCountry: ICountryEntity = res as ICountryEntity;
+              this.setMinCountryById(updatedCountry.id);
+              this.store.setCountry(updatedCountry);
               return true;
             }
           }
@@ -99,6 +131,8 @@ export class CountryService {
             return false;
           } else {
             this.message.setMessage(null);
+            this.store.removeCountry(id);
+            this.storePr2.removeMinCountry(id);
             return res as boolean;
           }
         })

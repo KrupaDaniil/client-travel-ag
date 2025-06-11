@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgForOf, NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common';
 import {OwlDateTimeModule} from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-hotel-booking',
   imports: [
     ReactiveFormsModule,
-    NgForOf,
     NgOptimizedImage,
     OwlDateTimeModule
   ],
@@ -20,7 +19,7 @@ export class HotelBookingComponent {
     checkout: new FormControl('', [Validators.required]),
     amount: new FormControl('', [Validators.required]),
     roomType: new FormControl('', [Validators.required]),
-    to:new FormControl('', [Validators.required]),
+    to: new FormControl('', [Validators.required]),
     from: new FormControl('', [Validators.required]),
   });
 
