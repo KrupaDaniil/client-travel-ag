@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, OnInit, Signal} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
 import {ActivatedRoute} from '@angular/router';
@@ -6,7 +6,7 @@ import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {ICountryEntity} from '../../../interfaces/country-block/i-country.entity';
 import {CountryService} from '../../../services/country.service';
-import {HotelService} from '../../../services/Hotels/hotel.service';
+import {HotelService} from '../../../services/hotels/hotel.service';
 
 @Component({
   selector: 'app-hotels-list-by-city',
@@ -54,19 +54,19 @@ export class HotelsListByCityComponent implements OnInit {
   }
 
   nextSlide() {
-    if(this.hotels())
+    if (this.hotels())
       this.currentIndex = (this.currentIndex + 1) % this.hotels().length;
   }
 
   prevSlide() {
-    if(this.hotels())
+    if (this.hotels())
       this.currentIndex = (this.currentIndex - 1 + this.hotels().length) % this.hotels().length;
 
   }
 
   ngOnInit(): void {
-    this.service.getRandomHotelsByCountryId(this.countryId,4);
-    this.service.getTopHotelsByCountryId(this.countryId,3);
+    this.service.getRandomHotelsByCountryId(this.countryId, 4);
+    this.service.getTopHotelsByCountryId(this.countryId, 3);
     this.countryService.setCountryById(this.countryId);
 
 

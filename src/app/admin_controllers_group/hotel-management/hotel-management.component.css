@@ -79,3 +79,7 @@
   height: 15dvh;
   resize: none;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -3,7 +3,7 @@ import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {NgIf} from '@angular/common';
 import {StarsComponent} from '../stars/stars.component';
 import {EntityStorage} from '../../../storage/entity.storage';
-import {HotelService} from '../../../services/Hotels/hotel.service';
+import {HotelService} from '../../../services/hotels/hotel.service';
 import {CountryService} from '../../../services/country.service';
 import {ActivatedRoute} from '@angular/router';
 import {ValidationService} from '../../../services/validation.service';
@@ -35,19 +35,6 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initHotel();
-
-    // let res = this.service.getHotelById(this.hotelId);
-    // console.log(res);
-    // if (!isObservable(res)) {
-    //   this.hotel = res;
-    // } else {
-    //   res.subscribe(res => {
-    //     if (!this.check.isError(res)) {
-    //       this.store.setHotel(res as IHotelEntity);
-    //       this.hotel = res as IHotelEntity;
-    //     }
-    //   })
-    // }
   }
 
   private initHotel(): void {

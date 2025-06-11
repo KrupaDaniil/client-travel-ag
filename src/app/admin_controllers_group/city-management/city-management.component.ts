@@ -23,6 +23,7 @@ import {IMainCountryForCityEntity} from "../../../interfaces/country-block/i-mai
 import {IBlobImageEntity} from "../../../interfaces/country-block/i-blob-image.entity";
 import {ICountryEntity} from "../../../interfaces/country-block/i-country.entity";
 import {CountryService} from "../../../services/country.service";
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: "app-city-management",
@@ -40,7 +41,7 @@ import {CountryService} from "../../../services/country.service";
 })
 export class CityManagementComponent implements OnInit, AfterViewChecked {
   private readonly store = inject(EntityStorage);
-  // private snackBar;
+  private toastBar: HotToastService = inject(HotToastService);
   private isSetEntitiesFlag: boolean;
   private isSetIntervalFlag: boolean;
   private isSelectedRow: boolean;
@@ -153,9 +154,6 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
           this.displayCityList.set(this.cityList());
           this.closeAddCityModal();
           this.message.setMessage("City added successfully");
-          this.showInfoMessage();
-        } else {
-          this.showInfoMessage();
         }
       });
     }
@@ -196,9 +194,6 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
           this.displayCityList.set(this.cityList());
           this.closeUpdateCityModal();
           this.message.setMessage("City updated successfully");
-          this.showInfoMessage();
-        } else {
-          this.showInfoMessage();
         }
       });
     }
@@ -209,9 +204,6 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
       if (res) {
         this.displayCityList.set(this.cityList());
         this.message.setMessage("City deleted successfully");
-        this.showInfoMessage();
-      } else {
-        this.showInfoMessage();
       }
     });
   }
@@ -335,19 +327,18 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
   private showMessage(): void {
     effect(() => {
       if (this.messageInfo() !== null) {
-        // this.snackBar.open(this.messageInfo() as string, "close", {
-        //   verticalPosition: "bottom",
-        //   horizontalPosition: "center"
-        // });
+        this.toastBar.show(this.messageInfo()?.toString(), {
+          theme: "snackbar",
+          duration: 5000,
+          position: "bottom-center",
+          dismissible: true,
+          autoClose: true,
+          style: {
+            "borderRadius": "30px"
+          }
+        });
       }
     });
-  }
-
-  private showInfoMessage(): void {
-    // this.snackBar.open(this.messageInfo() as string, "close", {
-    //   verticalPosition: "bottom",
-    //   horizontalPosition: "center"
-    // });
   }
 
   onSelectedFile(event: Event): void {
