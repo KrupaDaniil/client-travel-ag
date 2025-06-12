@@ -11,7 +11,7 @@
   width:505px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 180%;
+  background-size: cover;
 }
 
 
@@ -69,4 +69,27 @@
   border: none;
   width: 155px;
   margin-left: auto;
+}
+
+
+@media (max-width: 576px) {
+  .hotel-card{
+    flex-direction: column;
+    width: 100vw;
+  }
+
+  .hotel-card .hotel-image{
+    border-radius: 50px 50px 0 0;
+    height: 40vh;
+  }
+  .hotel-card .hotel-info{
+    border-radius: 0 0 50px 50px;
+  }
+
+  .hotel-info{
+    height: 100%;
+  }
+  .hotel-info button{
+    margin-top: 10px;
+  }
 }

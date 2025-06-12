@@ -6,11 +6,11 @@
 
 .mat-card-baner {
   text-align: center;
-  height: 391px;
+  height: 40vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1214px;
+  width: 80vw;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -29,6 +29,7 @@
   border: 3px solid #D9913C;
   width: 100%;
   border-radius: 70px;
+  padding:20px;
 }
 
 .fact-block h3 {
@@ -55,14 +56,10 @@
   margin: 50px auto 35px;
 }
 
-.form-search .form-control-sm {
-  max-width: 223px;
-}
 
 .form-search h3 {
-  margin-top: 36px;
-  margin-bottom: 20px;
   color: white;
+  margin: 36px 10px 20px;
 }
 
 .form-search .row {
@@ -91,14 +88,16 @@
   color: white;
   text-transform: uppercase;
   height: 57px;
-  min-width: 213px;
+  max-width: 213px;
+  width: 100%;
   filter: drop-shadow(0px 4px 5px rgba(17, 35, 45, 15));
 }
 
 
 button.dark {
   background-color: #D9D9D9;
-  width: 254px;
+  max-width: 254px;
+
 }
 
 
@@ -212,3 +211,28 @@ button.dark {
 }
 
 
+
+@media (max-width: 576px) {
+  .form-search form {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .carousel-container{
+    width: 100vw;
+    margin-top:5em;
+  }
+
+  .carousel-wrapper .carousel{
+    width: 100vw;
+  }
+  .carousel-card.center{
+    width: 100vw;
+  }
+  .nav.right{
+    right: 5% !important;
+  }
+  .nav.left{
+    left: 5% !important;
+  }
+}

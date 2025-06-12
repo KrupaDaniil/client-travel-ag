@@ -1,9 +1,3 @@
-
-
-
-
-
-
 <div class="hotel-card row align-items-center" *ngIf="hotel && country" >
   <div class="hotel-image col-6" [style.background-image]="'url(' + hotel.images[0].url + ')'" >
 
@@ -22,7 +16,7 @@
     <div class="rounded-text hotel-place">
       <span>#{{hotel.place}} of {{country.hotelsAmount}} hotels in {{country.name}}</span>
     </div>
-    <button class="rounded-text">Докладніше</button>
+    <button class="rounded-text" [routerLink]="'/hotels/view/' + hotel.id">Докладніше</button>
   </div>
 
 </div>
