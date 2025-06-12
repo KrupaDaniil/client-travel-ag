@@ -73,6 +73,7 @@
   border-radius: 39px;
   padding: 11px 48px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-top:32px;
@@ -88,4 +89,32 @@
   padding:12px;
   color: white;
   border: none;
+}
+
+@media (max-width: 576px) {
+  .booking-bg{
+    padding:10px;
+  }
+  .booking-bg h3{
+    padding:20px;
+    text-align: center;
+  }
+
+  .data-container{
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    max-width: unset;
+  }
+  .data-container .custom-date{
+    width: 100%;
+    justify-content: start;
+  }
+
+
+
+  .result-container input{
+    margin-top:20px;
+    flex-grow: 1;
+  }
 }

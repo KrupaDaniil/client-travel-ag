@@ -3,12 +3,13 @@ import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {NgIf} from '@angular/common';
 import {StarsComponent} from '../stars/stars.component';
 import {EntityStorage} from '../../../storage/entity.storage';
-import {HotelService} from '../../../services/hotels/hotel.service';
+import {HotelService} from '../../../services/Hotels/hotel.service';
 import {CountryService} from '../../../services/country.service';
 import {ActivatedRoute} from '@angular/router';
 import {ValidationService} from '../../../services/validation.service';
 import {HotelCarouselComponent} from '../hotel-carousel/hotel-carousel.component';
 import {HotelBookingComponent} from '../hotel-booking/hotel-booking.component';
+import {LoadingComponent} from '../../loading/loading.component';
 
 @Component({
   selector: 'app-hotel-details',
@@ -16,7 +17,8 @@ import {HotelBookingComponent} from '../hotel-booking/hotel-booking.component';
     NgIf,
     StarsComponent,
     HotelCarouselComponent,
-    HotelBookingComponent
+    HotelBookingComponent,
+    LoadingComponent,
   ],
   templateUrl: './hotel-details.component.html',
   styleUrl: './hotel-details.component.css'

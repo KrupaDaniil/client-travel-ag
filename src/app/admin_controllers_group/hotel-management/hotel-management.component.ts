@@ -35,7 +35,7 @@ import {
 import {TagService} from '../../../services/hotels/tag.service';
 import {CountryService} from '../../../services/country.service';
 import {CityService} from '../../../services/city.service';
-import {HotelService} from '../../../services/hotels/hotel.service';
+import {HotelService} from '../../../services/Hotels/hotel.service';
 
 @Component({
   selector: "app-hotel-management",

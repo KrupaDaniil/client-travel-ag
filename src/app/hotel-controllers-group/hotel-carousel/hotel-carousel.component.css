@@ -90,3 +90,28 @@ position: relative;
   grid-row-start: 1;
   grid-row-end: 4;
 }
+
+@media (max-width: 576px) {
+  .carousel-group{
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    padding:20px;
+  }
+
+  .carousel-group .big{
+    width: 80vw;
+    height:60vh;
+    margin-bottom:20px;
+  }
+
+  .hotel-image-card:not(.big){
+    width: 100px;
+    height: 100px;
+  }
+
+  .hotel-image-card:not(.big):not(:nth-last-child(-n+3)){
+    display: none;
+  }
+}

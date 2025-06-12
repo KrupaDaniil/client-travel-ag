@@ -30,3 +30,11 @@ button{
 }
 
 
+@media (max-width: 576px) {
+  .hotel-top{
+    padding-top:20px;
+    padding-bottom: 20px;
+  }
+}
+
+
