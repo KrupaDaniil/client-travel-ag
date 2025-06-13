@@ -1,0 +1,205 @@
+<div class="d-flex align-items-center justify-content-end">
+    <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddDialog()">Add</button>
+    <button class="btn btn-sm btn-outline-primary me-2 rounded-5 px-4" (click)="openEditDialog()">Edit</button>
+    <button class="btn btn-sm btn-outline-danger me-2 rounded-5 px-4" #removeRTBtn>Remove</button>
+  </div>
+  <div class="my-3">
+    <table class="table table-hover align-middle">
+      <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Hotel</th>
+        <th scope="col">Name</th>
+        <th scope="col">Max people</th>
+        <th scope="col">Price</th>
+      </tr>
+      </thead>
+      <tbody class="table-group-divider" #RTBlock>
+        @if (rooms() && rooms().length > 0) {
+          @for (room of rooms(); track room.id; let i = $index) {
+            <tr *ngIf="room" [attr.data-room-type-id]="room.id">
+              <th scope="row">
+                <div class="d-flex align-items-center justify-content-center">
+                  <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="selectedCity" disabled/>
+                  <div class="ms-2">{{ i + 1 }}</div>
+                </div>
+              </th>
+              <td>{{ room.hotel.hotelName }}</td>
+              <td>{{ room.name }}</td>
+              <td>{{ room.maxPeople }}</td>
+              <td>{{ room.price }}</td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="5">
+              <div class="d-flex align-items-center justify-content-center mt-3">
+                @if (this.loadingFailed()) {
+                  <span class="fs-4">List of room type is empty</span>
+                } @else {
+                  <div class="spinner-border text-secondary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <dialog class="custom-dialog p-3" #addRoomTypeDialog>
+    <div class="d-flex align-items-center justify-content-end my-3">
+        <button class="btn-close" (click)="closeAddDialog()"></button>
+    </div>
+    @if(addRoomForm && hotels()) {
+        <form method="dialog" [formGroup]="addRoomForm">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(addRoomForm.get("hotel")?.invalid && addRoomForm.get("hotel")?.touched) {
+
+                            @if (addRoomForm.get("hotel")?.hasError("required")) {
+                                <span>The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <ng-select class="ng-select-NgCs" [items]="hotels()" bindLabel="hotelName" formControlName="hotel"></ng-select>
+                </div>
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(addRoomForm.get("name")?.invalid && addRoomForm.get("name")?.touched) {
+
+                            @if (addRoomForm.get("name")?.hasError("required")) {
+                                <span>The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <div class="input-group admin-input-group">
+                        <span class="input-group-text">Name</span>
+                        <input type="text" class="form-control admin-input" formControlName="name" 
+                        aria-label="Enter room type name">
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(addRoomForm.get("maxPeople")?.invalid && addRoomForm.get("maxPeople")?.touched) {
+
+                            @if (addRoomForm.get("maxPeople")?.hasError("required")) {
+                                <span class="me-2">The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <div class="input-group admin-input-group">
+                        <span class="input-group-text">Max people</span>
+                        <input type="number" class="form-control admin-input" formControlName="maxPeople" 
+                        aria-label="Enter max people">
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(addRoomForm.get("price")?.invalid && addRoomForm.get("price")?.touched) {
+
+                            @if (addRoomForm.get("price")?.hasError("required")) {
+                                <span class="me-2">The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <div class="input-group admin-input-group">
+                        <span class="input-group-text">Price</span>
+                        <input type="number" class="form-control admin-input" formControlName="price" aria-label="Enter price">
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end my-3">
+                <button type="reset" class="btn btn-sm btn-outline-danger px-4 me-3 rounded-5">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-outline-success px-4 rounded-5" (click)="addRoomType()">Add</button>
+            </div>
+        </form>
+    } @else {
+      <div class="text-center fw-semibold fs-5 my-5">Critical data for creating an entity is missing</div>
+    }
+  </dialog>
+
+  <dialog class="custom-dialog p-3" #editRoomTypeDialog>
+    <div class="d-flex align-items-center justify-content-end my-3">
+        <button class="btn-close" (click)="closeEditDialog()"></button>
+    </div>
+    @if(editRoomForm) {
+        <form method="dialog" [formGroup]="editRoomForm">
+            <input type="hidden" formControlName="id">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(editRoomForm.get("hotel")?.invalid && editRoomForm.get("hotel")?.touched) {
+
+                            @if (editRoomForm.get("hotel")?.hasError("required")) {
+                                <span>The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <ng-select class="ng-select-NgCs" [items]="hotels()" bindLabel="hotelName" formControlName="hotel"></ng-select>
+                </div>
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(editRoomForm.get("name")?.invalid && editRoomForm.get("name")?.touched) {
+
+                            @if (editRoomForm.get("name")?.hasError("required")) {
+                                <span>The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <div class="input-group admin-input-group">
+                        <span class="input-group-text">Name</span>
+                        <input type="text" class="form-control admin-input" formControlName="name" 
+                        aria-label="Enter room type name">
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(editRoomForm.get("maxPeople")?.invalid && editRoomForm.get("maxPeople")?.touched) {
+
+                            @if (editRoomForm.get("maxPeople")?.hasError("required")) {
+                                <span class="me-2">The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <div class="input-group admin-input-group">
+                        <span class="input-group-text">Max people</span>
+                        <input type="number" class="form-control admin-input" formControlName="maxPeople" 
+                        aria-label="Enter max people">
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    <div class="errorTextContainer">
+                        @if(editRoomForm.get("price")?.invalid && editRoomForm.get("price")?.touched) {
+
+                            @if (editRoomForm.get("price")?.hasError("required")) {
+                                <span class="me-2">The field cannot be empty</span>
+                            }
+                        }
+                    </div>
+
+                    <div class="input-group admin-input-group">
+                        <span class="input-group-text">Price</span>
+                        <input type="number" class="form-control admin-input" formControlName="price" aria-label="Enter price">
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end my-3">
+                <button type="reset" class="btn btn-sm btn-outline-danger px-4 me-3 rounded-5">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-outline-success px-4 rounded-5" (click)="editRoomType()">Save</button>
+            </div>
+        </form>
+    } @else {
+      <div class="text-center fw-semibold fs-5 my-5">Critical data for creating an entity is missing</div>
+    }
+  </dialog>
