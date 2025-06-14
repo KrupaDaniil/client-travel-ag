@@ -1,0 +1,9 @@
+<span *ngFor="let star of fullStars" [style.font-size]="size+'px'">
+  ★
+</span>
+<span *ngIf="hasHalfStar" [style.font-size]="size+'px'">
+  ☆
+</span>
+<span *ngFor="let star of emptyStars" [style.font-size]="size+'px'">
+  ☆
+</span>

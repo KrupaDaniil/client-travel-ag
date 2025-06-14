@@ -8,6 +8,8 @@ import {IAdminHotelEntity} from "../../interfaces/hotels-block/i-admin-hotel.ent
 import {IError} from "../../interfaces/i-error";
 import {ValidationService} from "../validation.service";
 import {firstValueFrom, map, Observable, of} from "rxjs";
+import {IHotelFeedbackEntity} from '../../interfaces/hotels-block/i-hotel-feedback.entity';
+import {IHotelDetailsEntity} from '../../interfaces/hotels-block/i-hotel-details.entity';
 
 @Injectable({
   providedIn: "root"
@@ -37,6 +39,12 @@ export class HotelService {
     });
   }
 
+  public getFeedbacksByHotelId(hotelId:number):void{
+    this.http.loadingAllFeedbacksByHotelId(hotelId).subscribe(res => {
+      console.log(res);
+      this.storePr2.setAllHotelFeedbacks(res as IHotelFeedbackEntity[]);
+    });
+  }
   getAllHotelToAdmin(): void {
     this.http.loadingAllHotelToAdmin().subscribe({
       next: (item: IAdminHotelEntity[] | IError): void => {
@@ -49,6 +57,11 @@ export class HotelService {
       }
     });
   }
+
+  createFeedback(feedback:IHotelFeedbackEntity):Observable<IHotelFeedbackEntity | IError> {
+   return this.http.addFeedback(feedback);
+  }
+
 
   async createHotel(hotel: FormData): Promise<number | undefined> {
     return await firstValueFrom(
@@ -128,9 +141,9 @@ export class HotelService {
     });
   }
 
-  public getHotelById(hotelId: number): Observable<IHotelEntity | undefined> {
-    let tmp: IHotelEntity | undefined = this.store.hotelsEntities()
-      .find((hotel: IHotelEntity): boolean => hotel.id === hotelId);
+  public getHotelById(hotelId: number): Observable<IHotelDetailsEntity | undefined> {
+    let tmp: IHotelDetailsEntity | undefined = this.storePr2.hotelDetailsEntities()
+      .find((hotel: IHotelDetailsEntity): boolean => hotel.id === hotelId);
 
     if (tmp != undefined) {
       console.log("Hotel found in storage");
@@ -138,14 +151,14 @@ export class HotelService {
     }
 
     return this.http.loadingHotelById(hotelId).pipe(
-      map((item: IHotelEntity | IError): IHotelEntity | undefined => {
+      map((item: IHotelDetailsEntity | IError): IHotelDetailsEntity | undefined => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
           return undefined;
         } else {
           this.message.setMessage(null);
-          this.store.setHotel(item as IHotelEntity);
-          return item as IHotelEntity;
+          this.storePr2.setHotelDetails(item as IHotelDetailsEntity);
+          return item as IHotelDetailsEntity;
         }
       })
     );

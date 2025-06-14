@@ -25,7 +25,7 @@
 		"@ngrx/entity": "^19.2.1",
 		"@ngrx/signals": "^19.2.1",
 		"@ngxpert/hot-toast": "^4.2.0",
-		"bootstrap": "^5.3.3",
+		"bootstrap": "^5.3.6",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0",
 		"zone.js": "~0.15.0"
@@ -34,6 +34,7 @@
 		"@angular-devkit/build-angular": "^19.1.8",
 		"@angular/cli": "^19.1.6",
 		"@angular/compiler-cli": "^19.1.0",
+		"@types/bootstrap": "^5.2.10",
 		"@types/jasmine": "~5.1.0",
 		"jasmine-core": "~5.5.0",
 		"karma": "~6.4.0",

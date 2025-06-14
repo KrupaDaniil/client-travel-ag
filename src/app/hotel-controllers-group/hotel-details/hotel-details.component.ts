@@ -10,15 +10,17 @@ import {ValidationService} from '../../../services/validation.service';
 import {HotelCarouselComponent} from '../hotel-carousel/hotel-carousel.component';
 import {HotelBookingComponent} from '../hotel-booking/hotel-booking.component';
 import {LoadingComponent} from '../../loading/loading.component';
+import {HotelAboutComponent} from '../hotel-about/hotel-about.component';
+import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-details.entity';
 
 @Component({
   selector: 'app-hotel-details',
   imports: [
-    NgIf,
     StarsComponent,
     HotelCarouselComponent,
     HotelBookingComponent,
     LoadingComponent,
+    HotelAboutComponent,
   ],
   templateUrl: './hotel-details.component.html',
   styleUrl: './hotel-details.component.css'
@@ -27,7 +29,7 @@ export class HotelDetailsComponent implements OnInit {
 
   private readonly hotelId: number;
   private store = inject(EntityStorage)
-  public hotel?: IHotelEntity;
+  public hotel?: IHotelDetailsEntity;
 
   constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute,
               private check: ValidationService) {
@@ -40,12 +42,15 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   private initHotel(): void {
-    this.service.getHotelById(this.hotelId).subscribe((res: IHotelEntity | undefined): void => {
+    this.service.getHotelById(this.hotelId).subscribe((res: IHotelDetailsEntity | undefined): void => {
       if (res) {
         this.hotel = res;
+        console.log(this.hotel);
       }
     });
   }
+
+
 
 
 }

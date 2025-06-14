@@ -1,0 +1,200 @@
+
+<div class="about-container" *ngIf="hotel">
+  <h3 class="pt-4 pb-4">Про готель</h3>
+  <div class="about-inner-container">
+    <div class="mark-container" style="grid-area: stars">
+<!--      <app-stars [rate]="1"></app-stars>-->
+      <b class="me-3" style="font-size: 25px">{{hotel.rate}}</b>
+      <app-stars-rate [rating]="hotel.rate" [size]="30"></app-stars-rate>
+      <span>
+        ({{hotel.feedbacks.length}} відгуків)
+      </span>
+      <br>
+      <span>
+        #3 of 33 hotels in Lipari
+      </span>
+    </div>
+    <div class="button" style="grid-area: button">
+      <button type="button" data-bs-toggle="modal" data-bs-target="#addFeedbackModal">
+        Написати відгук
+      </button>
+    </div>
+    <div class="rates d-flex flex-column" style="grid-area: feedback">
+      <div class="rates_block mb-4 row">
+        @for (item of avgRates | keyvalue;track $index){
+          <div class="col-5">
+            <b>{{item.key}}</b>
+          </div>
+          <div class="col-5">
+            <div class="progress" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-warning" [style.width]="item.value * 100 / 5 + '%'" style="width: 75%"></div>
+            </div>
+          </div>
+          <div class="col-1">
+            {{item.value}}
+          </div>
+        }
+
+      </div>
+
+      <div class="rates_block mb-4 row">
+
+        @for (mark of ratingKeys;track $index){
+          <div class="col-5">
+            <b>{{mark}}</b>
+          </div>
+          <div class="col-5">
+            <div class="progress" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-warning" style="width: 75%"></div>
+            </div>
+          </div>
+          <div class="col-1">
+            {{ratesAmount[$index]}}
+          </div>
+        }
+
+
+      </div>
+
+
+    </div>
+    <div class="description" style="grid-area: description">
+      {{hotel.description}}
+    </div>
+
+    <div class="tags" style="grid-area: tags">
+
+        <h4>Зручності готелю</h4>
+        <div class="row">
+          @for (tag of hotel.tags; track $index){
+            <div class="col-6 mb-2">
+              <div class="d-flex">
+                <img ngSrc="{{tag.tagImageUrl}}" alt="ico" style="width: 15px;height:15px;" class="me-2"
+                     height="12" width="12"/>
+                <span class="text">{{tag.tagName}}</span>
+              </div>
+
+            </div>
+
+          }
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="addFeedbackModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addFeedbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addFeedbackModalLabel">Ваш коментар</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeModalButton" #closeModalButton aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @if(!isLoadingFeedback){
+          <form class="feedback-form d-grid" id="addFeedbackForm" [formGroup]="createFeedback" (ngSubmit)="addFeedback()">
+            <div class="rate-area">
+              <label class="form-label" for="locationRating">Локація</label>
+              <input type="number" formControlName="locationRating" id="locationRating" class="form-control" min="0" max="5"/>
+              @if(createFeedback.get("locationRating")?.invalid && createFeedback.get("locationRating")?.touched){
+                @if(createFeedback.get("locationRating")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+                @if(createFeedback.get("locationRating")?.hasError("min")||createFeedback.get("locationRating")?.hasError("max")){
+                  <div class="me-1 error-message">The value should be from 0 to 5</div>
+                }
+              }
+            </div>
+            <div class="rate-area">
+              <label class="form-label" for="roomsRating">Кімнати</label>
+              <input type="number" formControlName="roomsRating" id="roomsRating" class="form-control" min="0" max="5"/>
+              @if(createFeedback.get("roomsRating")?.invalid && createFeedback.get("roomsRating")?.touched){
+                @if(createFeedback.get("roomsRating")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+                @if(createFeedback.get("roomsRating")?.hasError("min")||createFeedback.get("roomsRating")?.hasError("max")){
+                  <div class="me-1 error-message">The value should be from 0 to 5</div>
+                }
+              }
+            </div>
+            <div class="rate-area">
+              <label class="form-label" for="cleanRating">Чистота</label>
+              <input type="number" formControlName="cleanRating" id="cleanRating" class="form-control" min="0" max="5"/>
+              @if(createFeedback.get("cleanRating")?.invalid && createFeedback.get("cleanRating")?.touched){
+                @if(createFeedback.get("cleanRating")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+                @if(createFeedback.get("cleanRating")?.hasError("min")||createFeedback.get("cleanRating")?.hasError("max")){
+                  <div class="me-1 error-message">The value should be from 0 to 5</div>
+                }
+              }
+            </div>
+            <div class="rate-area">
+              <label class="form-label" for="serviceRating">Обслуговування</label>
+              <input type="number" formControlName="serviceRating" id="serviceRating" class="form-control" min="0" max="5"/>
+              @if(createFeedback.get("serviceRating")?.invalid && createFeedback.get("serviceRating")?.touched){
+                @if(createFeedback.get("serviceRating")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+                @if(createFeedback.get("serviceRating")?.hasError("min")||createFeedback.get("serviceRating")?.hasError("max")){
+                  <div class="me-1 error-message">The value should be from 0 to 5</div>
+                }
+              }
+            </div>
+            <div class="rate-area">
+              <label class="form-label" for="sleepRating">Сон</label>
+              <input type="number" formControlName="sleepRating" id="sleepRating" class="form-control" min="0" max="5"/>
+              @if(createFeedback.get("sleepRating")?.invalid && createFeedback.get("sleepRating")?.touched){
+                @if(createFeedback.get("sleepRating")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+                @if(createFeedback.get("sleepRating")?.hasError("min")||createFeedback.get("sleepRating")?.hasError("max")){
+                  <div class="me-1 error-message">The value should be from 0 to 5</div>
+                }
+              }
+            </div>
+            <div class="rate-area">
+              <label class="form-label" for="priceRating">Ціна</label>
+              <input type="number" formControlName="priceRating" id="priceRating" class="form-control" min="0" max="5"/>
+              @if(createFeedback.get("priceRating")?.invalid && createFeedback.get("priceRating")?.touched){
+                @if(createFeedback.get("priceRating")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+                @if(createFeedback.get("priceRating")?.hasError("min")||createFeedback.get("priceRating")?.hasError("max")){
+                  <div class="me-1 error-message">The value should be from 0 to 5</div>
+                }
+              }
+            </div>
+
+            <div class="text-area mb-3">
+              <label for="text" class="form-label">Ваш коментар:</label>
+              <textarea cols="4" id="text" class="form-control w-100" formControlName="text">
+
+            </textarea>
+
+              @if(createFeedback.get("text")?.invalid && createFeedback.get("text")?.touched){
+                @if(createFeedback.get("text")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+              }
+            </div>
+          </form>
+        }
+        @else{
+          <h3>Публікуємо ваш коментар...</h3>
+        }
+
+      </div>
+      <div class="modal-footer">
+        @if(!isLoadingFeedback){
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+          <button type="submit" form="addFeedbackForm" class="btn btn-primary">Зберігти</button>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>

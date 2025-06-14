@@ -36,6 +36,8 @@ import { IRoomTypeCreateEntity } from "../interfaces/hotels-block/i-room-type-cr
 import { IFoodTypeCreateEntity } from "../interfaces/hotels-block/i-food-type-create.entity";
 import { IRoomUpdate } from "../interfaces/hotels-block/i-room-update";
 import { IFoodUpdate } from "../interfaces/hotels-block/i-food-update";
+import {IHotelFeedbackEntity} from '../interfaces/hotels-block/i-hotel-feedback.entity';
+import {IHotelDetailsEntity} from '../interfaces/hotels-block/i-hotel-details.entity';
 
 @Injectable({
 	providedIn: "root"
@@ -480,9 +482,9 @@ export class HttpService {
 
 	public loadingHotelById(hotelId: number) {
 		return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}`, { observe: "response" }).pipe(
-			map((resp: HttpResponse<Object>): IHotelEntity | IError => {
+			map((resp: HttpResponse<Object>): IHotelDetailsEntity | IError => {
 				if (resp.status === 200) {
-					return resp.body as IHotelEntity;
+					return resp.body as IHotelDetailsEntity;
 				} else {
 					return new ErrorMessage(resp.status, "Hotel not found");
 				}
@@ -534,6 +536,22 @@ export class HttpService {
 			)
 		);
 	}
+
+  public loadingAllFeedbacksByHotelId(hotelId:number):Observable<IHotelFeedbackEntity[] | IError> {
+    return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}/feedbacks`,{observe:"response"}).pipe(
+      map((resp:HttpResponse<Object>):IHotelFeedbackEntity[] | IError=>{
+        if (resp.status === HttpStatusCode.Ok) {
+          return resp.body as IHotelFeedbackEntity[];
+        }
+        else{
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      }),
+      catchError(
+        (error:HttpErrorResponse): Observable<IError> =>of(this.getErrorMessage(error, "Failed to load room types"))
+      )
+    );
+  }
 
 	// block adding // ------------------------------------------------------------
 	addUser(user: INewUser): Observable<IUser | IError> {
@@ -713,6 +731,21 @@ export class HttpService {
 			)
 		);
 	}
+
+  addFeedback(feedback: IHotelFeedbackEntity): Observable<IHotelFeedbackEntity | IError> {
+    return this.http.post(`${this.baseUrl}/hotel/${feedback.hotelId}/addFeedback`, feedback, { observe: "response" }).pipe(
+      map((response: HttpResponse<Object>): IHotelFeedbackEntity | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IHotelFeedbackEntity;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Feedback creation error");
+        }
+      }),
+      catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+      )
+    );
+  }
 
 	// block update // ------------------------------------------------------------
 	updateUser(user: IUser): Observable<boolean | IError> {

@@ -30,10 +30,12 @@
     </div>
 
 
-    <app-hotel-carousel style="margin-top:105px;margin-bottom: 70px" [images]="hotel?.images"></app-hotel-carousel>
+    <app-hotel-carousel style="margin-top:105px;margin-bottom: 70px" [images]="hotel.images"></app-hotel-carousel>
 
 
     <app-hotel-booking class="w-100 d-flex flex-column align-items-center"></app-hotel-booking>
+
+    <app-hotel-about style="max-width: 1213px;" class="mt-5" [hotel]="hotel"></app-hotel-about>
   </div>
 }
 @else{
