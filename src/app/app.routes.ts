@@ -67,11 +67,11 @@ export const routes: Routes = [
   },
   {path: "authorization", component: LoginStartComponent},
   {
-    path: "hotels/:countryId",
+    path: "Hotels/:countryId",
     component: HotelsListByCityComponent
   },
   {
-    path: "hotels/view/:hotelId",
+    path: "Hotels/view/:hotelId",
     component: HotelDetailsComponent
   },
   {path: "**", component: Error404Component}

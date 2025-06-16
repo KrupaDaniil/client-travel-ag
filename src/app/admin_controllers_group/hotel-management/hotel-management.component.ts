@@ -32,10 +32,10 @@ import {
   NgOptionTemplateDirective,
   NgSelectComponent
 } from '@ng-select/ng-select';
-import {TagService} from '../../../services/hotels/tag.service';
+import {TagService} from '../../../services/Hotels/tag.service';
 import {CountryService} from '../../../services/country.service';
 import {CityService} from '../../../services/city.service';
-import {HotelService} from '../../../services/hotels/hotel.service';
+import {HotelService} from '../../../services/Hotels/hotel.service';
 
 @Component({
   selector: "app-hotel-management",

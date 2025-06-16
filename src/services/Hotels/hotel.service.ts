@@ -39,12 +39,13 @@ export class HotelService {
     });
   }
 
-  public getFeedbacksByHotelId(hotelId:number):void{
+  public getFeedbacksByHotelId(hotelId: number): void {
     this.http.loadingAllFeedbacksByHotelId(hotelId).subscribe(res => {
       console.log(res);
       this.storePr2.setAllHotelFeedbacks(res as IHotelFeedbackEntity[]);
     });
   }
+
   getAllHotelToAdmin(): void {
     this.http.loadingAllHotelToAdmin().subscribe({
       next: (item: IAdminHotelEntity[] | IError): void => {
@@ -58,8 +59,8 @@ export class HotelService {
     });
   }
 
-  createFeedback(feedback:IHotelFeedbackEntity):Observable<IHotelFeedbackEntity | IError> {
-   return this.http.addFeedback(feedback);
+  createFeedback(feedback: IHotelFeedbackEntity): Observable<IHotelFeedbackEntity | IError> {
+    return this.http.addFeedback(feedback);
   }
 
 
@@ -151,7 +152,7 @@ export class HotelService {
     }
 
     return this.http.loadingHotelById(hotelId).pipe(
-      map((item: IHotelDetailsEntity | IError): IHotelDetailsEntity | undefined => {
+      map((item: IHotelEntity | IError): IHotelDetailsEntity | undefined => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
           return undefined;

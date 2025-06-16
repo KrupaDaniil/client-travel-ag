@@ -6,10 +6,10 @@ import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {ICountryEntity} from '../../../interfaces/country-block/i-country.entity';
 import {CountryService} from '../../../services/country.service';
-import {HotelService} from '../../../services/hotels/hotel.service';
+import {HotelService} from '../../../services/Hotels/hotel.service';
 
 @Component({
-  selector: 'app-hotels-list-by-city',
+  selector: 'app-Hotels-list-by-city',
   imports: [
     NgForOf,
     NgClass,

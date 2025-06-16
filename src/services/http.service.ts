@@ -38,10 +38,9 @@ import {IRoomUpdate} from "../interfaces/hotels-block/i-room-update";
 import {IFoodUpdate} from "../interfaces/hotels-block/i-food-update";
 import {IAdminTour} from '../interfaces/tour-block/i-admin-tour';
 import {IHotelFeedbackEntity} from '../interfaces/hotels-block/i-hotel-feedback.entity';
-import {IHotelDetailsEntity} from '../interfaces/hotels-block/i-hotel-details.entity';
 
 @Injectable({
-	providedIn: "root"
+  providedIn: "root"
 })
 export class HttpService {
   private readonly baseUrl: string;
@@ -415,7 +414,7 @@ export class HttpService {
           }
         }),
         catchError(
-          (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Top hotels loading error"))
+          (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Top Hotels loading error"))
         )
       );
   }
@@ -442,11 +441,11 @@ export class HttpService {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as IAdminHotelEntity[];
         } else {
-          return new ErrorMessage(response.status, "Failed to upload hotels");
+          return new ErrorMessage(response.status, "Failed to upload Hotels");
         }
       }),
       catchError(
-        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Error loading hotels"))
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Error loading Hotels"))
       )
     );
   }
@@ -502,11 +501,11 @@ export class HttpService {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as IMinHotel[];
         } else {
-          return new ErrorMessage(HttpStatusCode.BadRequest, "Failed to load hotels");
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Failed to load Hotels");
         }
       }), catchError(
         (error: HttpErrorResponse): Observable<IError> =>
-          of(this.getErrorMessage(error, "Failed to load hotels"))
+          of(this.getErrorMessage(error, "Failed to load Hotels"))
       )
     );
   }
@@ -541,18 +540,17 @@ export class HttpService {
     );
   }
 
-  public loadingAllFeedbacksByHotelId(hotelId:number):Observable<IHotelFeedbackEntity[] | IError> {
-    return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}/feedbacks`,{observe:"response"}).pipe(
-      map((resp:HttpResponse<Object>):IHotelFeedbackEntity[] | IError=>{
+  public loadingAllFeedbacksByHotelId(hotelId: number): Observable<IHotelFeedbackEntity[] | IError> {
+    return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}/feedbacks`, {observe: "response"}).pipe(
+      map((resp: HttpResponse<Object>): IHotelFeedbackEntity[] | IError => {
         if (resp.status === HttpStatusCode.Ok) {
           return resp.body as IHotelFeedbackEntity[];
-        }
-        else{
+        } else {
           return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
         }
       }),
       catchError(
-        (error:HttpErrorResponse): Observable<IError> =>of(this.getErrorMessage(error, "Failed to load room types"))
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to load room types"))
       )
     );
   }
@@ -765,7 +763,7 @@ export class HttpService {
   }
 
   addFeedback(feedback: IHotelFeedbackEntity): Observable<IHotelFeedbackEntity | IError> {
-    return this.http.post(`${this.baseUrl}/hotel/${feedback.hotelId}/addFeedback`, feedback, { observe: "response" }).pipe(
+    return this.http.post(`${this.baseUrl}/hotel/${feedback.hotelId}/addFeedback`, feedback, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IHotelFeedbackEntity | IError => {
         if (response.status === HttpStatusCode.Ok) {
           return response.body as IHotelFeedbackEntity;

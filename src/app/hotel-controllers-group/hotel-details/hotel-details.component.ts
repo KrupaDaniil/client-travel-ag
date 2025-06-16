@@ -1,9 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
-import {NgIf} from '@angular/common';
 import {StarsComponent} from '../stars/stars.component';
 import {EntityStorage} from '../../../storage/entity.storage';
-import {HotelService} from '../../../services/hotels/hotel.service';
+import {HotelService} from '../../../services/Hotels/hotel.service';
 import {CountryService} from '../../../services/country.service';
 import {ActivatedRoute} from '@angular/router';
 import {ValidationService} from '../../../services/validation.service';
@@ -16,7 +14,6 @@ import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-deta
 @Component({
   selector: 'app-hotel-details',
   imports: [
-    NgIf,
     StarsComponent,
     HotelCarouselComponent,
     HotelBookingComponent,
@@ -50,8 +47,6 @@ export class HotelDetailsComponent implements OnInit {
       }
     });
   }
-
-
 
 
 }
