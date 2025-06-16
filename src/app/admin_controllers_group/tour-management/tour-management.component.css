@@ -1,0 +1,27 @@
+.tr-img {
+  max-width: 40dvw;
+  border-radius: 30px;
+}
+
+.selected-flag:checked {
+  background-color: rgba(255, 69, 0, 0.8);
+  border-color: orangered;
+}
+
+.selected-flag:disabled {
+  opacity: 1;
+}
+
+.selected-flag:focus {
+  box-shadow: 0 0 5px #8c8c8c;
+  border-color: #e4e7ea;
+}
+
+.custom-dialog {
+  min-width: 60dvw !important;
+  max-height: 60dvh !important;
+}
+
+.custom-date {
+  width: 100%;
+}
