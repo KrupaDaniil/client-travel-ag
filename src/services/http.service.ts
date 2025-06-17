@@ -38,6 +38,8 @@ import {IRoomUpdate} from "../interfaces/hotels-block/i-room-update";
 import {IFoodUpdate} from "../interfaces/hotels-block/i-food-update";
 import {IAdminTour} from '../interfaces/tour-block/i-admin-tour';
 import {IHotelFeedbackEntity} from '../interfaces/hotels-block/i-hotel-feedback.entity';
+import {IStatisticHotel} from '../interfaces/statistic-block/i-statistic-hotel';
+import {IStatisticTour} from '../interfaces/statistic-block/i-statistic-tour';
 
 @Injectable({
   providedIn: "root"
@@ -583,6 +585,36 @@ export class HttpService {
     );
   }
 
+  public loadingAllHotelBooking(): Observable<IStatisticHotel[] | IError> {
+    return this.http.get(`${this.baseUrl}/booking-hotels`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IStatisticHotel[] | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IStatisticHotel[];
+        } else {
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> =>
+          of(this.getErrorMessage(error, "Failed to load tours booking"))
+      )
+    );
+  }
+
+  public loadingAllTourBooking(): Observable<IStatisticTour[] | IError> {
+    return this.http.get(`${this.baseUrl}/booking-tours`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IStatisticTour[] | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IStatisticTour[];
+        } else {
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> =>
+          of(this.getErrorMessage(error, "Failed to load tours booking"))
+      )
+    );
+  }
+
   // block adding // ------------------------------------------------------------
   addUser(user: INewUser): Observable<IUser | IError> {
     return this.http.post(`${this.baseUrl}/add-user`, user, {observe: "response"}).pipe(
@@ -732,6 +764,20 @@ export class HttpService {
     );
   }
 
+  addBookingHotel(hotelId: number): Observable<IStatisticHotel | IError> {
+    return this.http.get(`${this.baseUrl}/booking-up-hotel?hotelId=${hotelId}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IStatisticHotel | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IStatisticHotel
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Booking up hotel error");
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+      )
+    );
+  }
+
   addRoomType(roomType: IRoomTypeCreateEntity): Observable<IAdminRoomType | IError> {
     return this.http.post(`${this.baseUrl}/conveniences/room/add`, roomType, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IAdminRoomType | IError => {
@@ -784,6 +830,20 @@ export class HttpService {
           return response.body as IAdminTour;
         } else {
           return new ErrorMessage(HttpStatusCode.BadRequest, "Tour creation error");
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
+      )
+    );
+  }
+
+  addBookingTour(tourId: number): Observable<IStatisticTour | IError> {
+    return this.http.get(`${this.baseUrl}/booking-up-tour?tourId=${tourId}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IStatisticTour | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IStatisticTour;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Booking up tour error")
         }
       }), catchError(
         (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[0]))
@@ -1078,6 +1138,21 @@ export class HttpService {
     );
   }
 
+  rdBookingHotel(hotelId: number): Observable<IStatisticHotel | IError> {
+    return this.http.get(`${this.baseUrl}/booking-down-hotel?id=${hotelId}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IStatisticHotel | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IStatisticHotel;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Failed operation");
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> =>
+          of(this.getErrorMessage(error, "Server error when update statistics\""))
+      )
+    )
+  }
+
   deleteRoomType(id: number): Observable<boolean | IError> {
     return this.http.delete(`${this.baseUrl}/conveniences/rooms/remove/${id}`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): boolean | IError => {
@@ -1118,6 +1193,21 @@ export class HttpService {
         }
       }), catchError(
         (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[2]))
+      )
+    );
+  }
+
+  rdBookingTour(tourId: number): Observable<IStatisticTour | IError> {
+    return this.http.get(`${this.baseUrl}/booking-down-tour?id=${tourId}`, {observe: "response"}).pipe(
+      map((response: HttpResponse<Object>): IStatisticTour | IError => {
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IStatisticTour;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Failed operation");
+        }
+      }), catchError(
+        (error: HttpErrorResponse): Observable<IError> =>
+          of(this.getErrorMessage(error, "Server error when update statistics"))
       )
     );
   }

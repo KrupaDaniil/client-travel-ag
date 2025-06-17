@@ -7,6 +7,8 @@ import {IAdminFoodType} from "../interfaces/hotels-block/i-admin-food-type";
 import {IAdminTour} from '../interfaces/tour-block/i-admin-tour';
 import {IHotelFeedbackEntity} from '../interfaces/hotels-block/i-hotel-feedback.entity';
 import {IHotelDetailsEntity} from '../interfaces/hotels-block/i-hotel-details.entity';
+import {IStatisticHotel} from '../interfaces/statistic-block/i-statistic-hotel';
+import {IStatisticTour} from '../interfaces/statistic-block/i-statistic-tour';
 
 const adminHotelConfig = entityConfig({
   entity: type<IAdminHotelEntity>(),
@@ -20,9 +22,8 @@ const minCountryConfig = entityConfig({
   selectId: minCountry => minCountry.id
 });
 
-const hotelFeedbacksConfig = entityConfig(
-  {
-    entity:type<IHotelFeedbackEntity>(),
+const hotelFeedbacksConfig = entityConfig({
+    entity: type<IHotelFeedbackEntity>(),
     collection: "feedbacks",
     selectId: feedback => feedback.id
   }
@@ -47,9 +48,21 @@ const adminTourConfig = entityConfig({
 })
 
 const hotelDetailsConfig = entityConfig({
-  entity:type<IHotelDetailsEntity>(),
+  entity: type<IHotelDetailsEntity>(),
   collection: "hotelDetails",
   selectId: hotelDetails => hotelDetails.id
+})
+
+const hotelStatisticConfig = entityConfig({
+  entity: type<IStatisticHotel>(),
+  collection: "hotelStatistics",
+  selectId: hotelSt => hotelSt.id
+})
+
+const tourStatisticConfig = entityConfig({
+  entity: type<IStatisticTour>(),
+  collection: "tourStatistics",
+  selectId: tourSt => tourSt.id
 })
 export const EntityStoragePr2 = signalStore(
   {providedIn: "root"},
@@ -61,6 +74,8 @@ export const EntityStoragePr2 = signalStore(
   withEntities(adminTourConfig),
   withEntities(hotelDetailsConfig),
   withEntities(hotelFeedbacksConfig),
+  withEntities(hotelStatisticConfig),
+  withEntities(tourStatisticConfig),
   withMethods(store => ({
     setAdminHotel(adminHotel: IAdminHotelEntity): void {
       patchState(store, setEntity(adminHotel, adminHotelConfig));
@@ -80,6 +95,12 @@ export const EntityStoragePr2 = signalStore(
     setHotelDetails(hotelDetails: IHotelDetailsEntity): void {
       patchState(store, setEntity(hotelDetails, hotelDetailsConfig));
     },
+    setHotelBk(hotelSt: IStatisticHotel): void {
+      patchState(store, setEntity(hotelSt, hotelStatisticConfig));
+    },
+    setTourBk(tourSt: IStatisticTour): void {
+      patchState(store, setEntity(tourSt, tourStatisticConfig))
+    },
 
     setAllAdminHotels(adminHotels: IAdminHotelEntity[]): void {
       patchState(store, setAllEntities(adminHotels, adminHotelConfig));
@@ -96,8 +117,14 @@ export const EntityStoragePr2 = signalStore(
     setAllAdminTours(adminTours: IAdminTour[]): void {
       patchState(store, setAllEntities(adminTours, adminTourConfig));
     },
-    setAllHotelFeedbacks(hotels:IHotelFeedbackEntity[]): void {
-      patchState(store, setAllEntities(hotels,hotelFeedbacksConfig));
+    setAllHotelFeedbacks(hotels: IHotelFeedbackEntity[]): void {
+      patchState(store, setAllEntities(hotels, hotelFeedbacksConfig));
+    },
+    setAllHotelBooking(hotelBookings: IStatisticHotel[]): void {
+      patchState(store, setAllEntities(hotelBookings, hotelStatisticConfig));
+    },
+    setAllTourBooking(tourBookings: IStatisticTour[]): void {
+      patchState(store, setAllEntities(tourBookings, tourStatisticConfig))
     },
 
     removeAdminHotel(id: number): void {

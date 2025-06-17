@@ -25,7 +25,9 @@
 		"@ngrx/entity": "^19.2.1",
 		"@ngrx/signals": "^19.2.1",
 		"@ngxpert/hot-toast": "^4.2.0",
+		"apexcharts": "^4.7.0",
 		"bootstrap": "^5.3.6",
+		"ng-apexcharts": "^1.15.0",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0",
 		"zone.js": "~0.15.0"

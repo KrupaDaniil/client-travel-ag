@@ -10,6 +10,7 @@ import {HotelBookingComponent} from '../hotel-booking/hotel-booking.component';
 import {LoadingComponent} from '../../loading/loading.component';
 import {HotelAboutComponent} from '../hotel-about/hotel-about.component';
 import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-details.entity';
+import {StatisticService} from '../../../services/statistic.service';
 
 @Component({
   selector: 'app-hotel-details',
@@ -25,12 +26,12 @@ import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-deta
 })
 export class HotelDetailsComponent implements OnInit {
 
-  private readonly hotelId: number;
+  protected readonly hotelId: number;
   private store = inject(EntityStorage)
   public hotel?: IHotelDetailsEntity;
 
   constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute,
-              private check: ValidationService) {
+              private check: ValidationService, private stService: StatisticService) {
     const id = this.route.snapshot.paramMap.get("hotelId");
     this.hotelId = id ? Number(id) : 0;
   }
@@ -46,6 +47,12 @@ export class HotelDetailsComponent implements OnInit {
         console.log(this.hotel);
       }
     });
+  }
+
+  protected countUp(): void {
+    if (this.hotelId > 0) {
+      this.stService.countHBUp(this.hotelId);
+    }
   }
 
 

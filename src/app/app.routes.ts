@@ -31,6 +31,7 @@ import {
   FoodTypeManagementComponent
 } from "./admin_controllers_group/food-type-management/food-type-management.component";
 import {TourManagementComponent} from './admin_controllers_group/tour-management/tour-management.component';
+import {StatisticComponent} from './admin_controllers_group/statistic/statistic.component';
 
 export const routes: Routes = [
   {path: "", component: MainUserComponent},
@@ -63,15 +64,16 @@ export const routes: Routes = [
       {path: "room-type-management", component: RoomTypeManagementComponent},
       {path: "food-type-management", component: FoodTypeManagementComponent},
       {path: "tour-management", component: TourManagementComponent},
+      {path: "statistics", component: StatisticComponent}
     ]
   },
   {path: "authorization", component: LoginStartComponent},
   {
-    path: "Hotels/:countryId",
+    path: "hotels/:countryId",
     component: HotelsListByCityComponent
   },
   {
-    path: "Hotels/view/:hotelId",
+    path: "hotels/view/:hotelId",
     component: HotelDetailsComponent
   },
   {path: "**", component: Error404Component}

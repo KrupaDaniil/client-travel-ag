@@ -1,0 +1,33 @@
+<div class="row row-cols-2">
+  <div class="col">
+    <div class="text-center fw-semibold fs-5 my-4">Hotel statistics</div>
+    <div class="d-flex align-items-center justify-content-center">
+      @if (hotelBookingList().length > 0) {
+        <apx-chart [series]="chartOptionsHotel.series!"
+                   [chart]="chartOptionsHotel.chart!"
+                   [plotOptions]="chartOptionsHotel.plotOptions!"
+                   [labels]="chartOptionsHotel.labels!"
+        ></apx-chart>
+      } @else {
+        <span class="fw-semibold fs-6">No reservations available</span>
+      }
+
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="text-center fw-semibold fs-5 my-4">Tour statistics</div>
+    <div class="d-flex align-items-center justify-content-center">
+      @if (tourBookingList().length > 0) {
+        <apx-chart [series]="chartOptionsTour.series!"
+                   [chart]="chartOptionsTour.chart!"
+                   [plotOptions]="chartOptionsTour.plotOptions!"
+                   [labels]="chartOptionsTour.labels!"
+        ></apx-chart>
+      } @else {
+        <span class="fw-semibold fs-6">No reservations available</span>
+      }
+
+    </div>
+  </div>
+</div>

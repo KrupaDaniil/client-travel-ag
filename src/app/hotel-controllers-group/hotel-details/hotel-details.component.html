@@ -1,30 +1,29 @@
-
-@if(hotel){
+@if (hotel) {
 
   <div class="d-flex justify-content-center align-items-center flex-column">
-    <div class="row hotel-header justify-content-center p-3" >
+    <div class="row hotel-header justify-content-center p-3">
       <div class="col-12">
         <div class="row justify-content-between">
           <div class="col-lg-6 col-sm-12 hotel-top">
-            <h1>{{hotel.hotelName}}</h1>
+            <h1>{{ hotel.hotelName }}</h1>
           </div>
           <div class="col-lg-6 col-sm-12 hotel-top" style="width: fit-content;">
-            <button>Забронювати</button>
+            <button (mousedown)="countUp()">Забронювати</button>
           </div>
 
           <div class="col-lg-6 col-sm-12">
             <app-stars [rate]="hotel.rate"></app-stars>
-            <span class="feedback-amount">({{hotel.feedbacksAmount}} відгуків)</span>
+            <span class="feedback-amount">({{ hotel.feedbacksAmount }} відгуків)</span>
           </div>
           <div class="col-lg-6 col-sm-12 text-end address-block">
           <span class="address">
             <img src="/imgs/bi_geo-alt-dark.png" style="margin-right: 10px"/>
-            {{hotel.address}}
+            {{ hotel.address }}
           </span><br>
             <span>
-            #{{hotel.place}} of 0 in Lipai
+            #{{ hotel.place }} of 0 in Lipai
           </span>
-          </div >
+          </div>
         </div>
       </div>
     </div>
@@ -33,11 +32,10 @@
     <app-hotel-carousel style="margin-top:105px;margin-bottom: 70px" [images]="hotel.images"></app-hotel-carousel>
 
 
-    <app-hotel-booking class="w-100 d-flex flex-column align-items-center"></app-hotel-booking>
+    <app-hotel-booking [hotelId]="hotelId" class="w-100 d-flex flex-column align-items-center"></app-hotel-booking>
 
     <app-hotel-about style="max-width: 1213px;" class="mt-5" [hotel]="hotel"></app-hotel-about>
   </div>
-}
-@else{
+} @else {
   <app-loading></app-loading>
 }
