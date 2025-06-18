@@ -31,10 +31,18 @@
 
     <app-hotel-carousel style="margin-top:105px;margin-bottom: 70px" [images]="hotel.images"></app-hotel-carousel>
 
-
     <app-hotel-booking [hotelId]="hotelId" class="w-100 d-flex flex-column align-items-center"></app-hotel-booking>
 
-    <app-hotel-about style="max-width: 1213px;" class="mt-5" [hotel]="hotel"></app-hotel-about>
+    <app-hotel-about style="max-width: 1213px;" class="mt-5" [hotel]="hotel" (addingFeedback)="addFeedback($event)"></app-hotel-about>
+
+
+    @for (feedback of hotel.feedbacks; track feedback.id) {
+      <app-hotel-feedback [feedback]="feedback" style="max-width: 1213px;"></app-hotel-feedback>
+    }
+
+    @if (hotel.totalFeedbacks >2){
+      <a routerLink="/hotels/{{hotelId}}/feedbacks" class="btn btn-outline-primary">Більше відгуків</a>
+    }
   </div>
 } @else {
   <app-loading></app-loading>

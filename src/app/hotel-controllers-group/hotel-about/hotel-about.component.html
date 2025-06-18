@@ -7,7 +7,7 @@
       <b class="me-3" style="font-size: 25px">{{hotel.rate}}</b>
       <app-stars-rate [rating]="hotel.rate" [size]="30"></app-stars-rate>
       <span>
-        ({{hotel.feedbacks.length}} відгуків)
+        ({{hotel.totalFeedbacks}} відгуків)
       </span>
       <br>
       <span>
@@ -27,7 +27,7 @@
           </div>
           <div class="col-5">
             <div class="progress" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar bg-warning" [style.width]="item.value * 100 / 5 + '%'" style="width: 75%"></div>
+              <div class="progress-bar bg-warning" [style.width]="item.value * 100 / 5 + '%'"></div>
             </div>
           </div>
           <div class="col-1">
@@ -45,7 +45,7 @@
           </div>
           <div class="col-5">
             <div class="progress" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar bg-warning" style="width: 75%"></div>
+              <div class="progress-bar bg-warning" [style.width]="ratesAmount[$index] * 100 / 5 + '%'"></div>
             </div>
           </div>
           <div class="col-1">

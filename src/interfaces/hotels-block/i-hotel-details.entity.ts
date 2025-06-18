@@ -5,4 +5,5 @@ import {ITagEntity} from './i-tag.entity';
 export interface IHotelDetailsEntity extends IHotelEntity {
   feedbacks:IHotelFeedbackEntity[];
   tags:ITagEntity[];
+  totalFeedbacks:number;
 }
