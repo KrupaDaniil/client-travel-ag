@@ -1,5 +1,4 @@
 import {
-  AfterViewChecked,
   Component,
   computed,
   effect,
@@ -9,7 +8,7 @@ import {
   Renderer2,
   signal,
   Signal,
-  ViewChild,
+  viewChild,
   WritableSignal
 } from "@angular/core";
 import {CountryService} from "../../../services/country.service";
@@ -21,32 +20,33 @@ import {LanguageService} from "../../../services/language.service";
 import {IClimateEntity} from "../../../interfaces/country-block/i-climate.entity";
 import {ILanguageEntity} from "../../../interfaces/country-block/i-language.entity";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgOptimizedImage} from "@angular/common";
+import {NgIf, NgOptimizedImage} from "@angular/common";
 import {NgSelectModule} from "@ng-select/ng-select";
 import {ICountryRequestEntity} from "../../../interfaces/country-block/i-country-request.entity";
-import {IBlobImageEntity} from "../../../interfaces/country-block/i-blob-image.entity";
 import {ICountryRequestUpdateEntity} from "../../../interfaces/country-block/i-country-request-update.entity";
 import {ICountryCityEntity} from "../../../interfaces/country-block/i-country-city.entity";
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: "app-country-management",
   imports: [
     ReactiveFormsModule,
     NgOptimizedImage,
-    NgSelectModule
+    NgSelectModule,
+    NgIf
   ],
   providers: [CountryService, ClimateService, LanguageService, MessageService],
   templateUrl: "./country-management.component.html",
   styleUrl: "./country-management.component.css",
   standalone: true
 })
-export class CountryManagementComponent implements OnInit, AfterViewChecked {
+export class CountryManagementComponent implements OnInit {
   private readonly store = inject(EntityStorage);
-  // private snackBar;
+  private toastBar: HotToastService = inject(HotToastService);
 
   private isSelectedRow: boolean;
   loadingFailed: WritableSignal<boolean>;
-  private selectedCountry: ICountryEntity | undefined;
+  protected selectedCountry: ICountryEntity | undefined;
 
   private countryList: Signal<ICountryEntity[]> = computed(() => this.store.countriesEntities());
   readonly climateList: Signal<IClimateEntity[]> = computed(() => this.store.climatesEntities());
@@ -59,15 +59,31 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
 
   addCountryForm: FormGroup | undefined;
   editCountryForm: FormGroup | undefined;
+  searchDataForm: FormGroup | undefined;
   private flagImg: File | undefined;
+  private dfMainImage: File | undefined;
   private requestData: FormData | undefined;
   private readonly nameProperties: string[];
+  private searchList: ICountryEntity[] | undefined;
 
-  @ViewChild("addingCountryDialog") addingCountryDialog?: ElementRef<HTMLDialogElement>;
-  @ViewChild("updateCountryDialog") updateCountryDialog?: ElementRef<HTMLDialogElement>;
-  @ViewChild("descriptionDialog") descriptionDialog?: ElementRef<HTMLDialogElement>;
-  @ViewChild("countryBlock") countryBlock?: ElementRef<HTMLTableSectionElement>;
-  @ViewChild("removeCountryBtn") removeCountryBtn?: ElementRef<HTMLButtonElement>;
+
+  private addingCountryDialog: Signal<ElementRef<HTMLDialogElement> | undefined> =
+    viewChild<ElementRef<HTMLDialogElement>>("addingCountryDialog")
+
+  private updateCountryDialog: Signal<ElementRef<HTMLDialogElement> | undefined> =
+    viewChild<ElementRef<HTMLDialogElement>>("updateCountryDialog");
+
+  private descriptionDialog: Signal<ElementRef<HTMLDialogElement> | undefined> =
+    viewChild<ElementRef<HTMLDialogElement>>("descriptionDialog");
+
+  private countryBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
+    viewChild<ElementRef<HTMLTableSectionElement> | undefined>("countryBlock");
+
+  private removeCountryBtn: Signal<ElementRef<HTMLButtonElement> | undefined> =
+    viewChild<ElementRef<HTMLButtonElement>>("removeCountryBtn");
+
+  private imageCountryDialog: Signal<ElementRef<HTMLDialogElement> | undefined> =
+    viewChild<ElementRef<HTMLDialogElement>>("imageCountryDialog");
 
   constructor(
     private countryService: CountryService,
@@ -92,11 +108,13 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
       "climate",
       "capitalCityName",
       "languages",
-      "capitalCity"
+      "capitalCity",
+      "defaultImage"
     ];
   }
 
   ngOnInit(): void {
+    this.createSearchForm();
     this.countryService.setAllCountry();
 
     if (this.climateList() && this.climateList().length === 0) {
@@ -108,9 +126,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     }
 
     this.creatingAddForm();
-  }
 
-  ngAfterViewChecked(): void {
     this.onSelectTableRow();
   }
 
@@ -150,13 +166,19 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         name: new FormControl(this.selectedCountry.name),
         currency: new FormControl(this.selectedCountry.currency),
         phoneCode: new FormControl(this.selectedCountry.phoneCode),
-        flagImage: new FormControl<IBlobImageEntity | null>(this.selectedCountry.flagImage),
         description: new FormControl(this.selectedCountry.description),
         climate: new FormControl<IClimateEntity | null>(this.selectedCountry.climate, Validators.required),
         capitalCity: new FormControl(this.selectedCountry.capitalCity.name, Validators.required),
         languages: new FormControl(this.selectedCountry.languages, Validators.required)
       });
     }
+  }
+
+  private createSearchForm(): void {
+    this.searchDataForm = new FormGroup({
+      search_text: new FormControl("", Validators.required),
+      search_option: new FormControl("", Validators.required),
+    })
   }
 
   onSelectedFile(event: Event): void {
@@ -168,9 +190,19 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  onSelectedMainImage(event: Event): void {
+    const element = event.target as HTMLInputElement;
+
+    if (element && element.files && element.files.length > 0) {
+      this.dfMainImage = element.files[0];
+    } else {
+      this.dfMainImage = undefined;
+    }
+  }
+
   private onSelectTableRow(): void {
-    if (this.countryBlock?.nativeElement && !this.isSelectedRow) {
-      this.render.listen(this.countryBlock.nativeElement, "click", (e: Event) => {
+    if (this.countryBlock()?.nativeElement && !this.isSelectedRow) {
+      this.render.listen(this.countryBlock()!.nativeElement, "click", (e: Event) => {
         const t = e.target as HTMLElement;
         if (t.tagName.toLowerCase() === "td") {
           const r = t.closest("tr") as HTMLTableRowElement;
@@ -192,13 +224,13 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
             if (this.selectedCountry) {
               this.creatingEditForm();
 
-              if (this.removeCountryBtn?.nativeElement) {
-                this.render.listen(this.removeCountryBtn.nativeElement, "click", () => {
+              if (this.removeCountryBtn()?.nativeElement) {
+                this.render.listen(this.removeCountryBtn()!.nativeElement, "click", () => {
                   if (this.selectedCountry?.id) {
                     this.deleteCountry(this.selectedCountry?.id);
                     this.selectedCountry = undefined;
                     this.isSelectedRow = false;
-                    this.render.setProperty(this.countryBlock!.nativeElement, "checked", false);
+                    this.render.setProperty(this.countryBlock()!.nativeElement, "checked", false);
                   }
                 });
               }
@@ -217,6 +249,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         currency: formResult.currency,
         phoneCode: formResult.phoneCode,
         flagImage: this.flagImg,
+        defaultImage: this.dfMainImage,
         description: formResult.description,
         climate: formResult.climate,
         capitalCityName: formResult.capitalCityName,
@@ -243,6 +276,7 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
           currency: formData.currency,
           phoneCode: formData.phoneCode,
           flagImage: this.flagImg,
+          defaultImage: this.dfMainImage,
           description: formData.description,
           climate: formData.climate,
           capitalCityName: send,
@@ -263,6 +297,11 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
       this.requestData?.append(this.nameProperties[3], country.phoneCode);
       if (this.flagImg) {
         this.requestData?.append(this.nameProperties[4], country.flagImage!, country.flagImage?.name);
+        this.flagImg = undefined;
+      }
+      if (this.dfMainImage) {
+        this.requestData.append(this.nameProperties[10], country.defaultImage!, country.defaultImage?.name);
+        this.dfMainImage = undefined;
       }
       this.requestData?.append(this.nameProperties[5], country.description);
       this.requestData?.append(
@@ -275,20 +314,19 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         new Blob([JSON.stringify(country.languages)], {type: "application/json"})
       );
 
-      this.countryService.addingCountry(this.requestData).then((result: boolean): void => {
-        if (result) {
-          this.displayCountryList.set(this.countryList());
+      this.countryService.addingCountry(this.requestData).then((result: ICountryEntity | null): void => {
+        if (result !== null) {
+          const tmp: ICountryEntity[] = this.displayCountryList() || [];
+          tmp.push(result)
+          this.displayCountryList.set(tmp);
 
           this.messages.setMessage("Country created");
-          this.showInfo();
         } else {
           this.messages.setMessage("Country not created");
-          this.showInfo();
         }
       });
     } else {
       this.messages.setMessage("Missing data to send");
-      this.showInfo();
     }
   }
 
@@ -303,6 +341,11 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
       this.requestData?.append(this.nameProperties[3], country.phoneCode);
       if (this.flagImg) {
         this.requestData?.append(this.nameProperties[4], country.flagImage!, country.flagImage?.name);
+        this.flagImg = undefined;
+      }
+      if (this.dfMainImage) {
+        this.requestData.append(this.nameProperties[10], country.defaultImage!, country.defaultImage?.name);
+        this.dfMainImage = undefined;
       }
       this.requestData?.append(this.nameProperties[5], country.description);
       this.requestData?.append(
@@ -318,17 +361,30 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
         new Blob([JSON.stringify(country.languages)], {type: "application/json"})
       );
 
-      this.countryService.updateCountry(this.requestData).then((result: boolean): void => {
-        if (result) {
-          this.displayCountryList.set(this.countryList());
+      this.countryService.updateCountry(this.requestData).then((result: ICountryEntity | null): void => {
+        if (result !== null) {
+
+          this.displayCountryList.update((n: ICountryEntity[] | null): ICountryEntity[] | null => {
+            if (n !== null) {
+              const index = n.findIndex((c: ICountryEntity): boolean => c.id === result.id);
+
+              if (index !== -1) {
+                n[index] = result;
+                this.selectedCountry = result;
+              }
+            }
+
+            return n
+          });
 
           this.messages.setMessage("Country updated");
-          this.showInfo();
         } else {
           this.messages.setMessage("Country not updated");
-          this.showInfo();
         }
       });
+
+      this.dfMainImage = undefined;
+      this.flagImg = undefined;
     }
   }
 
@@ -347,57 +403,67 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
 
     if (country) {
       this.displayDescriptionCountry.set(country.description);
-      if (this.descriptionDialog?.nativeElement) {
-        this.descriptionDialog?.nativeElement.showModal();
+      if (this.descriptionDialog()?.nativeElement) {
+        this.descriptionDialog()?.nativeElement.showModal();
       }
     }
   }
 
   showMessage(): void {
     effect(() => {
-      // if (this.infoMessages() !== null) {
-      //   this.snackBar.open(this.infoMessages() as string, "close", {
-      //     verticalPosition: "bottom",
-      //     horizontalPosition: "center"
-      //   });
-      // }
+      if (this.infoMessages() !== null) {
+        this.toastBar.show(this.infoMessages()!.toString(), {
+          theme: "snackbar",
+          duration: 3500,
+          position: "bottom-center",
+          autoClose: true,
+          style: {
+            "border-radius": "30px"
+          }
+        })
+      }
     });
   }
 
-  private showInfo(): void {
-    // this.snackBar.open(this.infoMessages() as string, "close", {
-    //   verticalPosition: "bottom",
-    //   horizontalPosition: "center"
-    // });
-  }
-
   openAddCountryModal(): void {
-    if (this.addingCountryDialog?.nativeElement) {
-      this.addingCountryDialog?.nativeElement.showModal();
+    if (this.addingCountryDialog()?.nativeElement) {
+      this.addingCountryDialog()?.nativeElement.showModal();
     }
   }
 
   openUpdateCountryModal(): void {
-    if (this.updateCountryDialog?.nativeElement) {
-      this.updateCountryDialog?.nativeElement.showModal();
+    if (this.updateCountryDialog()?.nativeElement) {
+      this.updateCountryDialog()?.nativeElement.showModal();
+    }
+  }
+
+  openMainImageModal(): void {
+    if (this.imageCountryDialog()?.nativeElement) {
+      this.imageCountryDialog()?.nativeElement.showModal();
     }
   }
 
   closeAddCountryModal(): void {
-    if (this.addingCountryDialog?.nativeElement) {
-      this.addingCountryDialog?.nativeElement.close();
+    if (this.addingCountryDialog()?.nativeElement) {
+      this.addingCountryDialog()?.nativeElement.close();
     }
   }
 
   closeUpdateCountryModal(): void {
-    if (this.updateCountryDialog?.nativeElement) {
-      this.updateCountryDialog?.nativeElement.close();
+    if (this.updateCountryDialog()?.nativeElement) {
+      this.updateCountryDialog()?.nativeElement.close();
     }
   }
 
   closeDescriptionModal(): void {
-    if (this.descriptionDialog?.nativeElement) {
-      this.descriptionDialog?.nativeElement.close();
+    if (this.descriptionDialog()?.nativeElement) {
+      this.descriptionDialog()?.nativeElement.close();
+    }
+  }
+
+  closeImageModal(): void {
+    if (this.imageCountryDialog()?.nativeElement) {
+      this.imageCountryDialog()?.nativeElement.close();
     }
   }
 
@@ -405,10 +471,66 @@ export class CountryManagementComponent implements OnInit, AfterViewChecked {
     this.countryService.deleteCountry(id).then((result: boolean): void => {
       if (result) {
         this.store.removeCountry(id);
+        if (this.displayCountryList() !== null && this.displayCountryList()!.length > 0) {
+          const tmp: ICountryEntity[] = this.displayCountryList()!;
+          for (let i: number = 0; i < tmp.length; i++) {
+            if (tmp[i].id === id) {
+              tmp.splice(i, 1);
+              break;
+            }
+          }
+          this.displayCountryList.set(tmp);
+        }
         this.displayCountryList.set(this.countryList());
         this.messages.setMessage("Country deleted");
-        this.showInfo();
       }
     });
+  }
+
+  searchData(): void {
+    if (this.searchDataForm) {
+      const values = this.searchDataForm.value;
+
+      if (values && values.search_option && values.search_text) {
+        try {
+          const text: string = values.search_text as string;
+          const option: string = values.search_option as string;
+
+          if (option === "country" && text.trim() !== "") {
+            this.searchList = this.countryList().filter((vl: ICountryEntity): boolean => {
+              return vl.name.toLowerCase().includes(text.toLowerCase().trim());
+            });
+          }
+
+          if (option === "capital" && text.trim() !== "") {
+            this.searchList = this.countryList().filter((vl: ICountryEntity): boolean => {
+              return vl.capitalCity.name.toLowerCase().includes(text.toLowerCase().trim());
+            });
+          }
+
+          if (this.searchList && this.searchList.length > 0) {
+            this.displayCountryList.set(this.searchList);
+          }
+
+        } catch (e) {
+          this.toastBar.show("Something seems to be wrong here", {
+            theme: "snackbar",
+            duration: 3500,
+            position: "bottom-center",
+            autoClose: true,
+            style: {
+              "border-radius": "30px",
+              "max-width": "300px"
+            }
+          })
+        }
+      }
+    }
+  }
+
+  clearSearch(): void {
+    this.searchDataForm?.reset();
+    this.searchList = undefined;
+    this.displayCountryList.set(this.countryList());
   }
 }

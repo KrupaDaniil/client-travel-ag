@@ -21,7 +21,8 @@ import {ICountryCityEntity} from "../../../interfaces/country-block/i-country-ci
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CountryCityEntity} from "../../../models/country-city.entity";
 import {IMainCountryForCityEntity} from "../../../interfaces/country-block/i-main-country-for-city.entity";
-import {NgSelectComponent, NgSelectModule} from "@ng-select/ng-select";
+import {NgSelectModule} from "@ng-select/ng-select";
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: "app-from-to-management",
@@ -33,18 +34,17 @@ import {NgSelectComponent, NgSelectModule} from "@ng-select/ng-select";
 })
 export class FromToManagementComponent implements OnInit {
   private readonly store = inject(EntityStorage);
-  // private readonly snackBar;
+  private readonly toastBar: HotToastService = inject(HotToastService);
 
   private listFromToEntity: Signal<IFromToEntity[]> = computed(() => this.store.fromToEntitiesEntities());
   displayList: WritableSignal<IFromToEntity[] | null>;
   listFromToCountry: Signal<IFromCountryEntity[]> = computed(() => this.store.fromToCountriesEntities()); // use in ng-selects
-  infoMessages: Signal<string | null> = computed(() => this.message.message());
+  private infoMessages: Signal<string | null> = computed(() => this.message.message());
 
   fromCityList: WritableSignal<ICountryCityEntity[] | null>;
   toCityList: WritableSignal<ICountryCityEntity[] | null>;
   loadingFailed: WritableSignal<boolean>;
   private readonly localCountry: WritableSignal<IFromCountryEntity[] | null>;
-  protected cntCount: number = 0;
 
   selectedFromToEntity: IFromToEntity | undefined;
 
@@ -62,8 +62,6 @@ export class FromToManagementComponent implements OnInit {
     viewChild<ElementRef<HTMLDialogElement>>("addingFrTEntityDialog");
   private readonly modalUpdate: Signal<ElementRef<HTMLDialogElement> | undefined> =
     viewChild<ElementRef<HTMLDialogElement>>("updateFrTEntityDialog");
-  private readonly addCitiesSelect: Signal<ElementRef<NgSelectComponent> | undefined> =
-    viewChild<ElementRef<NgSelectComponent>>("addCitiesSlc");
 
   constructor(private fromToService: FromToService, private message: MessageService, private render: Renderer2) {
     this.displayList = signal<IFromToEntity[] | null>(null);
@@ -102,12 +100,18 @@ export class FromToManagementComponent implements OnInit {
 
   showMessage(): void {
     effect(() => {
-      // if (this.message.message() !== null) {
-      //   this.snackBar.open(this.message.message() as string, "close", {
-      //     verticalPosition: "bottom",
-      //     horizontalPosition: "center"
-      //   });
-      // }
+      if (this.infoMessages() !== null) {
+        this.toastBar.show(this.infoMessages()!, {
+          theme: "snackbar",
+          duration: 3500,
+          position: "bottom-center",
+          autoClose: true,
+          style: {
+            "border-radius": "30px",
+            "max-width": "300px",
+          }
+        })
+      }
     });
   }
 

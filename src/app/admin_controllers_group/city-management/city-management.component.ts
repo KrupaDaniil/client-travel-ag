@@ -46,6 +46,7 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
   private isSetIntervalFlag: boolean;
   private isSelectedRow: boolean;
   private selectedCity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | undefined;
+  private searchList: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | undefined;
 
   private cityList: Signal<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[]> = computed(() =>
     this.store.admin_citiesEntities()
@@ -65,11 +66,11 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
   @ViewChild("descriptionDialog") descriptionDialog?: ElementRef<HTMLDialogElement>;
   @ViewChild("cityBlock") cityBlock?: ElementRef<HTMLTableSectionElement>;
   @ViewChild("removeCityBtn") removeCityBtn?: ElementRef<HTMLButtonElement>;
-  @ViewChild("searchBtn") searchBtn?: ElementRef<HTMLButtonElement>;
 
   private cityImg: File | undefined;
   protected addCityForm: FormGroup | undefined;
   protected editCityForm: FormGroup | undefined;
+  protected searchDataForm: FormGroup | undefined;
 
   constructor(private cityService: CityService, private message: MessageService,
               private countryService: CountryService, private render: Renderer2) {
@@ -88,6 +89,7 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
+    this.createSearchForm();
     this.cityService.setAllAdminCities();
     this.createCityForm();
   }
@@ -121,6 +123,13 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
     });
   }
 
+  private createSearchForm(): void {
+    this.searchDataForm = new FormGroup({
+      search_text: new FormControl("", Validators.required),
+      search_option: new FormControl("", Validators.required)
+    });
+  }
+
   private createCityForm(): void {
     this.addCityForm = new FormGroup({
       name: new FormControl("", Validators.required),
@@ -149,13 +158,17 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
 
       requestData.append("country", city.country.id.toString());
 
-      this.cityService.addCityEntity(requestData).then((res: boolean): void => {
-        if (res) {
-          this.displayCityList.set(this.cityList());
-          this.closeAddCityModal();
-          this.message.setMessage("City added successfully");
-        }
-      });
+      this.cityService.addCityEntity(requestData)
+        .then((res: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null): void => {
+          if (res !== null) {
+            const tmp: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] = this.displayCityList() || [];
+            tmp.push(res);
+            this.displayCityList.set(tmp);
+
+            this.closeAddCityModal();
+            this.message.setMessage("City added successfully");
+          }
+        });
     }
   }
 
@@ -189,21 +202,43 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
       }
       data.append("country", city.country.id.toString());
 
-      this.cityService.updateCityEntity(data).then((res: boolean): void => {
-        if (res) {
-          this.displayCityList.set(this.cityList());
-          this.closeUpdateCityModal();
-          this.message.setMessage("City updated successfully");
-        }
-      });
+      this.cityService.updateCityEntity(data)
+        .then((res: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null): void => {
+          if (res !== null) {
+            this.displayCityList
+              .update((ct: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | null) => {
+                if (ct !== null) {
+                  const index: number = ct
+                    .findIndex((r: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>): boolean => r.id === res.id);
+
+                  if (index !== -1) {
+                    ct[index] = res;
+                  }
+                }
+                return ct;
+              })
+            this.closeUpdateCityModal();
+            this.message.setMessage("City updated successfully");
+          }
+        });
     }
   }
 
   private deleteCity(id: number): void {
     this.cityService.deleteCityEntity(id).then((res: boolean): void => {
       if (res) {
-        this.displayCityList.set(this.cityList());
-        this.message.setMessage("City deleted successfully");
+        if (this.displayCityList() !== null && this.displayCityList()!.length > 0) {
+          const ds: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] = this.displayCityList()!;
+          for (let i = 0; i < ds.length; i++) {
+            if (ds[i].id === id) {
+              ds.splice(i, 1);
+              break;
+            }
+          }
+
+          this.displayCityList.set(ds);
+          this.message.setMessage("City deleted successfully");
+        }
       }
     });
   }
@@ -350,4 +385,39 @@ export class CityManagementComponent implements OnInit, AfterViewChecked {
       this.cityImg = undefined;
     }
   }
+
+  searchData(): void {
+    if (this.searchDataForm) {
+      const values = this.searchDataForm.value;
+
+      if (values && values.search_text && values.search_option) {
+        const opt: string = values.search_option as string;
+        const text: string = values.search_text as string;
+        
+        if (opt === "cityName" && text.trim() !== "") {
+          this.searchList = this.cityList()
+            .filter((r: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>): boolean => {
+              return r.name.toLowerCase().includes(text.trim().toLowerCase());
+            })
+        }
+
+        if (values.search_option === "countryName") {
+          this.searchList = this.cityList()
+            .filter((r: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>): boolean => {
+              return r.country.name.toLowerCase().includes(text.trim().toLowerCase());
+            })
+        }
+
+        if (this.searchList && this.searchList.length > 0) {
+          this.displayCityList.set(this.searchList);
+        }
+      }
+    }
+  }
+
+  clearSearch(): void {
+    this.searchDataForm?.reset();
+    this.displayCityList.set(this.cityList());
+  }
+
 }

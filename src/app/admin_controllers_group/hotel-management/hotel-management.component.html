@@ -42,13 +42,7 @@
 
             <td>{{ hotel.hotelName }}</td>
             <td>
-              <div class="progress-container">
-                <div class="text-center">{{ hotel.rate }}</div>
-                <div class="progress" role="progressbar" aria-label="Hotel rating" aria-valuenow="25" aria-valuemin="1"
-                     aria-valuemax="5">
-                  <div class="progress-bar" [ngClass]="getColorRating(hotel.rate)"></div>
-                </div>
-              </div>
+              <bar-rating [(rate)]="hotel.rate" max="5" theme="movie" [readonly]="true"/>
             </td>
 
             <td>{{ hotel.address }}</td>

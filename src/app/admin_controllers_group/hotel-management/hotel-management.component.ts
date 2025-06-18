@@ -25,7 +25,7 @@ import {UserRoles} from "../../enums/user-roles";
 import {IMinUser} from "../../../interfaces/i-min-user";
 import {IRole} from "../../../interfaces/i-role";
 import {RoleService} from "../../../services/role.service";
-import {NgClass, NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common';
 import {
   NgLabelTemplateDirective,
   NgOptionComponent,
@@ -36,17 +36,18 @@ import {TagService} from '../../../services/Hotels/tag.service';
 import {CountryService} from '../../../services/country.service';
 import {CityService} from '../../../services/city.service';
 import {HotelService} from '../../../services/Hotels/hotel.service';
+import {BarRating} from 'ngx-bar-rating';
 
 @Component({
   selector: "app-hotel-management",
   imports: [
-    NgClass,
     NgOptimizedImage,
     ReactiveFormsModule,
     NgSelectComponent,
     NgOptionComponent,
     NgOptionTemplateDirective,
-    NgLabelTemplateDirective
+    NgLabelTemplateDirective,
+    BarRating
   ],
   providers: [HotelService, MessageService, UserService, RoleService, TagService, CountryService, CityService],
   templateUrl: "./hotel-management.component.html",
@@ -478,30 +479,7 @@ export class HotelManagementComponent implements OnInit {
 
     });
   }
-
-  getColorRating(rt: number): string {
-    switch (rt) {
-      case 1: {
-        return "rt-bad"
-      }
-      case 2: {
-        return "rt-min"
-      }
-      case 3: {
-        return "rt-av"
-      }
-      case 4: {
-        return "rt-ns"
-      }
-      case 5: {
-        return "rt-sp"
-      }
-      default: {
-        return ""
-      }
-    }
-  }
-
+  
   openTagsModal(): void {
     if (this.tagsModal() && this.tagsModal()?.nativeElement) {
       this.tagsModal()!.nativeElement.showModal();
