@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {StarsRateComponent} from '../stars-rate/stars-rate.component';
 import {KeyValuePipe, NgIf, NgOptimizedImage} from '@angular/common';
 import {HotelService} from '../../../services/Hotels/hotel.service';
@@ -6,6 +6,7 @@ import {RatingType} from '../../../models/enums/rating';
 import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-details.entity';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {IHotelFeedbackEntity} from '../../../interfaces/hotels-block/i-hotel-feedback.entity';
 
 
 @Component({
@@ -22,6 +23,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 })
 export class HotelAboutComponent implements OnInit {
   @Input() hotel?: IHotelDetailsEntity;
+  @Output() addingFeedback: EventEmitter<IHotelFeedbackEntity> = new EventEmitter();
 
   public createFeedback: FormGroup = new FormGroup({
     text: new FormControl('', [Validators.required]),
@@ -100,6 +102,7 @@ export class HotelAboutComponent implements OnInit {
           if (this.closeModalButton) {
             this.isLoadingFeedback = false;
             this.closeModalButton.nativeElement.click();
+            this.addingFeedback.emit(res as IHotelFeedbackEntity);
           }
         });
       }

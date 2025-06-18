@@ -1,51 +1,63 @@
-<div class="d-flex justify-content-center align-items-center flex-column">
-    <div class="mat-card-baner" style="background-image: url('/imgs/image (1).jpg')">
-      <h3 class="mat-card-title">{{country?.name}}</h3>
-    </div>
+@if (country){
 
-  <p class="city-description">
+  <div class="d-flex justify-content-center align-items-center flex-column">
 
-  </p>
 
-  <div class="fact-block d-flex justify-content-center align-items-center" *ngIf="country">
-    <div class="content">
-      <h3>
-        Відпочинок в {{country.name}}
-      </h3>
-      {{country.description}}
-    </div>
-  </div>
-
-  <div class="form-search d-flex justify-content-center flex-column">
-    <h3>Введіть дати, щоб знайти найкращі ціни</h3>
-    <form>
-      <div class="row">
-        <div class="col-12">
-          <input placeholder="Або введіть назву готелю" class="form-control hotel-name"/>
-        </div>
-        <div class="col-lg-4 col-sm-12 mb-3">
-          <input type="date" class="form-select form-control-sm w-100" placeholder="Заселення"/>
-        </div>
-        <div class="col-lg-4 col-sm-12 mb-3">
-          <input type="date" class="form-select form-control-sm" placeholder="Виселення"/>
-        </div>
-        <div class="col-lg-4 col-sm-12 mb-3">
-          <input type="number" class="form-control form-control-sm" placeholder="Кількість"/>
-        </div>
-        <div class="col-6 button">
-          <button type="button" class="btn">
-            Шукати
-          </button>
-        </div>
-        <div class="col-6 button" >
-          <button type="button" class="btn dark">
-            Скинути фільтри
-          </button>
-        </div>
+    @if (country.defaultImage){
+      <div class="mat-card-baner" [style.background-image]="'url('+country.defaultImage+')'">
+        <h3 class="mat-card-title">{{country.name}}</h3>
+      </div>
+    }@else{
+      <div class="mat-card-baner" style="background-image: url('/imgs/image (1).jpg')">
+        <h3 class="mat-card-title">{{country.name}}</h3>
       </div>
 
-    </form>
-  </div>
+    }
+
+
+    <p class="city-description">
+
+    </p>
+
+    <div class="fact-block d-flex justify-content-center align-items-center">
+      <div class="content">
+        <h3>
+          Відпочинок в {{country.name}}
+        </h3>
+        {{country.description}}
+      </div>
+    </div>
+
+    <div class="form-search d-flex justify-content-center flex-column">
+      <h3>Введіть дати, щоб знайти найкращі ціни</h3>
+      <form>
+        <div class="row">
+          <div class="col-12">
+            <input placeholder="Або введіть назву готелю" class="form-control hotel-name"/>
+          </div>
+          <div class="col-lg-4 col-sm-12 mb-3">
+            <input type="date" class="form-select form-control-sm w-100" placeholder="Заселення"/>
+          </div>
+          <div class="col-lg-4 col-sm-12 mb-3">
+            <input type="date" class="form-select form-control-sm" placeholder="Виселення"/>
+          </div>
+          <div class="col-lg-4 col-sm-12 mb-3">
+            <input type="number" class="form-control form-control-sm" placeholder="Кількість"/>
+          </div>
+          <div class="col-6 button">
+            <button type="button" class="btn">
+              Шукати
+            </button>
+          </div>
+          <div class="col-6 button" >
+            <button type="button" class="btn dark">
+              Скинути фільтри
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
 
 
     <div class="carousel-container" *ngIf="visibleHotels!=null">
@@ -72,14 +84,19 @@
 
 
 
-  @for (hotel of topHotels();track $index){
-    <app-hotel-card style="margin-top: 90px;" [hotel]="hotel" [country]="country">
-    </app-hotel-card>
-  }
+    @for (hotel of topHotels();track $index){
+      <app-hotel-card style="margin-top: 90px;" [hotel]="hotel" [country]="country">
+      </app-hotel-card>
+    }
 
-  <button class="btn btn-outline-light mt-5 mb-5">Усі готелі</button>
+    <button class="btn btn-outline-light mt-5 mb-5">Усі готелі</button>
 
-</div>
+  </div>
 
+}
+
+@else{
+  <app-loading></app-loading>
+}
 
 

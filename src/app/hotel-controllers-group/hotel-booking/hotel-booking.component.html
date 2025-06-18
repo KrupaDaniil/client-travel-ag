@@ -8,20 +8,20 @@
 
       <div class="data-container">
         <div class="custom-date">
-          <button [owlDateTimeTrigger]="brDt">
+          <button [owlDateTimeTrigger]="checkin">
             <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
           </button>
-          <input type="text" formControlName="checkin" [owlDateTime]="brDt" placeholder="Заселення" readonly>
+          <input type="text" formControlName="checkin" [owlDateTime]="checkin" placeholder="Заселення" readonly>
 
-          <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
+          <owl-date-time #checkin [pickerType]="'calendar'"></owl-date-time>
         </div>
         <div class="custom-date">
-          <button [owlDateTimeTrigger]="brDt">
+          <button [owlDateTimeTrigger]="checkout">
             <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
           </button>
-          <input type="text" formControlName="checkout" [owlDateTime]="brDt" placeholder="Виселення" readonly>
+          <input type="text" formControlName="checkout" [owlDateTime]="checkout" placeholder="Виселення" readonly>
 
-          <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
+          <owl-date-time #checkout [pickerType]="'calendar'"></owl-date-time>
         </div>
         <div class="amount custom-date">
           <img ngSrc="/icons/amount.svg" width="11" height="24" alt="amount"/>

@@ -9,9 +9,12 @@ export interface ICountryEntity {
   currency: string;
   phoneCode: string;
   flagImage: IBlobImageEntity;
+  defaultImage: IBlobImageEntity;
   description: string;
   climate: IClimateEntity;
   capitalCity: ICountryCityEntity;
   languages: ILanguageEntity[];
   hotelsAmount:number;
+
+
 }

@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit, Signal} from '@angular/core';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
 import {ActivatedRoute} from '@angular/router';
 import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
@@ -7,6 +7,7 @@ import {EntityStorage} from '../../../storage/entity.storage';
 import {ICountryEntity} from '../../../interfaces/country-block/i-country.entity';
 import {CountryService} from '../../../services/country.service';
 import {HotelService} from '../../../services/Hotels/hotel.service';
+import {LoadingComponent} from '../../loading/loading.component';
 
 @Component({
   selector: 'app-Hotels-list-by-city',
@@ -14,7 +15,9 @@ import {HotelService} from '../../../services/Hotels/hotel.service';
     NgForOf,
     NgClass,
     HotelCardComponent,
-    NgIf
+    NgIf,
+    NgStyle,
+    LoadingComponent
   ],
   templateUrl: './hotels-list-by-city.component.html',
   styleUrl: './hotels-list-by-city.component.css'
