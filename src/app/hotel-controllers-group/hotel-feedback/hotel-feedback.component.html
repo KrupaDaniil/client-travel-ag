@@ -1,0 +1,44 @@
+
+
+<div class="feedback-container d-grid mt-3 mb-4" *ngIf="feedback">
+  <div class="user-block d-flex justify-content-center align-items-center flex-column">
+    <div class="user-picture">
+
+    </div>
+    @if (user) {
+      <b>{{user.firstName +" "+ user.lastName}}</b>
+    }@else{
+      <b>Шукаю користувача...</b>
+    }
+
+  </div>
+  <div class="details-block">
+    <app-stars-rate [rating]="feedback.totalRating"></app-stars-rate>
+    <h3>Чудовий готель з видом на море.</h3>
+    <p>
+      {{feedback.text}}
+    </p>
+
+
+    <div class="d-grid feedback-rates gap-2">
+      @for (item of avgRates | keyvalue;track $index){
+        <div class="d-grid align-items-center" style="grid-template-columns: 2fr 3fr 1fr">
+          <b>{{item.key}}</b>
+          <div class="rate w-100">
+            <div class="progress" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-warning" [style.width]="item.value * 100 / 5 + '%'"></div>
+            </div>
+          </div>
+          <span class="ms-3">
+            {{item.value}}
+          </span>
+
+
+        </div>
+
+      }
+    </div>
+
+  </div>
+
+</div>
