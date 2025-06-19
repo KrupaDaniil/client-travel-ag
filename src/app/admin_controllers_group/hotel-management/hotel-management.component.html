@@ -22,7 +22,7 @@
       </form>
     </div>
   </div>
-  
+
   <div class="col">
     <div class="d-flex align-items-center justify-content-end">
       <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddHotelModal()">Add</button>
@@ -48,7 +48,7 @@
     </tr>
     </thead>
     <tbody class="table-group-divider" #hotelsBlock>
-      @if (displayHotels()) {
+      @if (displayHotels() && displayHotels()!.length > 0) {
         @for (hotel of displayHotels(); track hotel.id; let i = $index) {
           <tr [attr.data-hotel-id]="hotel.id">
             <th scope="row">

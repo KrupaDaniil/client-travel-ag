@@ -441,6 +441,7 @@ export class HttpService {
     return this.http.get<Object>(`${this.baseUrl}/hotel/all-to-admin`, {observe: "response"}).pipe(
       map((response: HttpResponse<Object>): IAdminHotelEntity[] | IError => {
         if (response.status === HttpStatusCode.Ok) {
+          console.log(response.body)
           return response.body as IAdminHotelEntity[];
         } else {
           return new ErrorMessage(response.status, "Failed to upload Hotels");

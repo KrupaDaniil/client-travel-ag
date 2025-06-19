@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit, Signal} from '@angular/core';
-import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
 import {ActivatedRoute} from '@angular/router';
 import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
@@ -16,7 +16,6 @@ import {LoadingComponent} from '../../loading/loading.component';
     NgClass,
     HotelCardComponent,
     NgIf,
-    NgStyle,
     LoadingComponent
   ],
   templateUrl: './hotels-list-by-city.component.html',
