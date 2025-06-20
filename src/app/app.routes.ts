@@ -32,6 +32,7 @@ import {
 } from "./admin_controllers_group/food-type-management/food-type-management.component";
 import {TourManagementComponent} from './admin_controllers_group/tour-management/tour-management.component';
 import {StatisticComponent} from './admin_controllers_group/statistic/statistic.component';
+import {HotelAllFeedbacksComponent} from './hotel-controllers-group/hotel-all-feedbacks/hotel-all-feedbacks.component';
 
 export const routes: Routes = [
   {path: "", component: MainUserComponent},
@@ -75,6 +76,10 @@ export const routes: Routes = [
   {
     path: "hotels/view/:hotelId",
     component: HotelDetailsComponent
+  },
+  {
+    path: "hotels/:id/feedbacks",
+    component: HotelAllFeedbacksComponent
   },
   {path: "**", component: Error404Component}
 ];

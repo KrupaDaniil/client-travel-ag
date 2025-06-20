@@ -10,6 +10,7 @@ import {ValidationService} from "../validation.service";
 import {firstValueFrom, map, Observable, of} from "rxjs";
 import {IHotelFeedbackEntity} from '../../interfaces/hotels-block/i-hotel-feedback.entity';
 import {IHotelDetailsEntity} from '../../interfaces/hotels-block/i-hotel-details.entity';
+import {IHotelRatesEntity} from '../../interfaces/hotels-block/i-hotel-rates.entity';
 
 @Injectable({
   providedIn: "root"
@@ -39,11 +40,20 @@ export class HotelService {
     });
   }
 
-  public getFeedbacksByHotelId(hotelId: number): void {
-    this.http.loadingAllFeedbacksByHotelId(hotelId).subscribe(res => {
-      console.log(res);
-      this.storePr2.setAllHotelFeedbacks(res as IHotelFeedbackEntity[]);
-    });
+  public getFeedbacksByHotelId(hotelId: number){
+    return this.http.loadingAllFeedbacksByHotelId(hotelId);
+  }
+
+  public getRateByHotelI(hotelId:number){
+    this.http.loadingRateByHotelId(hotelId).subscribe((res:IHotelRatesEntity | IError) => {
+      if(this.check.isError(res)){
+        this.message.setMessage((res as IError).message);
+      }
+      else{
+        this.message.setMessage(null);
+        this.storePr2.setHotelRate(res as IHotelRatesEntity);
+      }
+    })
   }
 
   getAllHotelToAdmin(): void {
@@ -142,7 +152,7 @@ export class HotelService {
     });
   }
 
-  public getHotelById(hotelId: number): Observable<IHotelDetailsEntity | undefined> {
+  public getHotelById(hotelId: number, feedbacksToLoad:number=2): Observable<IHotelDetailsEntity | undefined> {
     let tmp: IHotelDetailsEntity | undefined = this.storePr2.hotelDetailsEntities()
       .find((hotel: IHotelDetailsEntity): boolean => hotel.id === hotelId);
 
@@ -151,7 +161,7 @@ export class HotelService {
       return of(tmp);
     }
 
-    return this.http.loadingHotelById(hotelId).pipe(
+    return this.http.loadingHotelById(hotelId,feedbacksToLoad).pipe(
       map((item: IHotelEntity | IError): IHotelDetailsEntity | undefined => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);

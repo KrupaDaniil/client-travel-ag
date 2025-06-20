@@ -2,14 +2,11 @@
 
 <div class="feedback-container d-grid mt-3 mb-4" *ngIf="feedback">
   <div class="user-block d-flex justify-content-center align-items-center flex-column">
-    <div class="user-picture">
+    <div class="user-picture d-flex justify-content-center align-items-center">
+      <img src="/icons/user-icon-svgrepo-com.svg" style="width: 70%">
 
     </div>
-    @if (user) {
-      <b>{{user.firstName +" "+ user.lastName}}</b>
-    }@else{
-      <b>Шукаю користувача...</b>
-    }
+    <b>{{feedback.username}}</b>
 
   </div>
   <div class="details-block">

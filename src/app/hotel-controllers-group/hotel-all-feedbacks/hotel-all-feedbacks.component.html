@@ -1,0 +1,39 @@
+@if (hotel && feedbacksToShow()){
+  <div class="d-flex justify-content-center align-items-center flex-column" >
+    <app-hotel-about style="max-width: 1213px; margin-bottom:100px;" [hotel]="hotel" class="mt-4"></app-hotel-about>
+
+    @if(!isLoadingFeedbacks){
+      @for (feedback of feedbacksToShow(); track feedback.id) {
+        <app-hotel-feedback style="max-width: 1213px;" class="w-100"  [feedback]="feedback"></app-hotel-feedback>
+      }
+    }@else{
+      <p class="text-center" style="height:10vh;">Loading feedbacks...</p>
+    }
+
+
+    <nav aria-label="Page navigation example mt-5">
+      <ul class="pagination">
+        <li class="page-item">
+          <button class="page-link" (click)="toPage(currentPage-1)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </button>
+        </li>
+        @for (item of [].constructor(totalPages); track $index) {
+          <li class="page-item" [ngClass]="$index==currentPage ? 'active' : ''"><button class="page-link" (click)="toPage($index)">{{$index+1}}</button></li>
+        }
+        <li class="page-item">
+          <button class="page-link" (click)="toPage(currentPage+1)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+
+}
+@else{
+  <app-loading></app-loading>
+}
+
+

@@ -1,12 +1,24 @@
-import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  Signal,
+  ViewChild
+} from '@angular/core';
 import {StarsRateComponent} from '../stars-rate/stars-rate.component';
 import {KeyValuePipe, NgIf, NgOptimizedImage} from '@angular/common';
 import {HotelService} from '../../../services/Hotels/hotel.service';
 import {RatingType} from '../../../models/enums/rating';
 import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-details.entity';
-import {EntityStorage} from '../../../storage/entity.storage';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {IHotelFeedbackEntity} from '../../../interfaces/hotels-block/i-hotel-feedback.entity';
+import {IHotelRatesEntity} from '../../../interfaces/hotels-block/i-hotel-rates.entity';
+import {EntityStoragePr2} from '../../../storage/entity.storage.pr2';
 
 
 @Component({
@@ -35,18 +47,39 @@ export class HotelAboutComponent implements OnInit {
     priceRating: new FormControl('', [Validators.required, Validators.max(5), Validators.min(0)])
   })
 
-  public avgRates: Map<string, number> = new Map([
-    ['Локація', 0],
-    ['Кімнати', 0],
-    ['Ціна', 0],
-    ['Чистота', 0],
-    ['Обслуговуванная', 0],
-    ['Якість сну', 0],
-  ]);
 
-  public ratesAmount: number[] = new Array(5).fill(0);
+  get avgRates(){
+    if(this.rate){
+      return new Map([
+        ['Локація', this.rate.locationRating],
+        ['Кімнати', this.rate.roomsRating],
+        ['Ціна', this.rate.priceRating],
+        ['Чистота', this.rate.cleanRating],
+        ['Обслуговуванная', this.rate.serviceRating],
+        ['Якість сну', this.rate.sleepRating],
+      ])
+    }
+    return undefined;
 
-  private store = inject(EntityStorage);
+  }
+  // public avgRates: Map<string, number> = new Map([
+  //   ['Локація', 0],
+  //   ['Кімнати', 0],
+  //   ['Ціна', 0],
+  //   ['Чистота', 0],
+  //   ['Обслуговуванная', 0],
+  //   ['Якість сну', 0],
+  // ]);
+
+
+  private store = inject(EntityStoragePr2);
+  readonly rates:Signal<IHotelRatesEntity[]> = computed(()=>this.store.hotelRatesEntities())
+  // public rate:WritableSignal<IHotelRatesEntity|null> = signal<IHotelRatesEntity|null>(null);
+
+
+  get rate(){
+    return this.rates().find(x => x.hotelId == this.hotel!.id);
+  }
 
   @ViewChild("closeModalButton") closeModalButton?: ElementRef
 
@@ -56,34 +89,45 @@ export class HotelAboutComponent implements OnInit {
 
   }
 
-  private setAvgmarks() {
-    if (this.hotel && this.hotel.feedbacks.length > 0) {
-      console.log(this.hotel.feedbacks.reduce((sum, item) => sum + item.locationRating, 0) / this.hotel.feedbacks.length);
-      this.avgRates.set('Локація', Math.floor(this.hotel.feedbacks.reduce((sum, item) => sum + item.locationRating, 0) / this.hotel.feedbacks.length * 10) / 10);
-      this.avgRates.set('Кімнати', Math.floor(this.hotel.feedbacks.reduce((sum, item) => sum + item.roomsRating, 0) / this.hotel.feedbacks.length * 10) / 10);
-      this.avgRates.set('Ціна', Math.floor(this.hotel.feedbacks.reduce((sum, item) => sum + item.priceRating, 0) / this.hotel.feedbacks.length * 10) / 10);
-      this.avgRates.set('Чистота', Math.floor(this.hotel.feedbacks.reduce((sum, item) => sum + item.cleanRating, 0) / this.hotel.feedbacks.length * 10) / 10);
-      this.avgRates.set('Обслуговуванная', Math.floor(this.hotel.feedbacks.reduce((sum, item) => sum + item.serviceRating, 0) / this.hotel.feedbacks.length * 10) / 10);
-      this.avgRates.set('Якість сну', Math.floor(this.hotel.feedbacks.reduce((sum, item) => sum + item.sleepRating, 0) / this.hotel.feedbacks.length * 10) / 10);
-    }
-  }
-
-  private setFeedbacksAmount() {
-    if (this.hotel && this.hotel.feedbacks.length > 0) {
-      this.hotel.feedbacks.flatMap(x => x.totalRating).forEach(mark => {
-        let index = mark < 1 ? 0 : Math.min(Math.floor(mark), 5) - 1;
-        this.ratesAmount[index]++;
-      });
-      this.ratesAmount = this.ratesAmount.reverse();
-      console.log(this.ratesAmount);
-    }
-  }
 
   ngOnInit(): void {
-    this.setAvgmarks();
-    this.setFeedbacksAmount();
+    this.initRates();
   }
 
+  // private setAvgmarks() {
+  //   if (this.rate) {
+  //     this.avgRates.set('Локація', this.rate.locationRating);
+  //     this.avgRates.set('Кімнати', this.rate.roomsRating);
+  //     this.avgRates.set('Ціна', this.rate.priceRating);
+  //     this.avgRates.set('Чистота', this.rate.cleanRating);
+  //     this.avgRates.set('Обслуговуванная', this.rate.serviceRating);
+  //     this.avgRates.set('Якість сну', this.rate.sleepRating);
+  //   }
+  // }
+
+
+
+  private initRates(){
+    if (this.hotel){
+      let rate = this.rates().find(x=>x.hotelId==this.hotel!.id);
+      if(this.rates().length === 0 || !rate){
+        this.service.getRateByHotelI(this.hotel.id);
+        rate = this.rates().find(x=>x.hotelId==this.hotel!.id);
+        if(rate){
+          // this.rate.set(rate);
+        }
+
+      }
+      else{
+        // this.rate.set(rate);
+      }
+      // this.setAvgmarks();
+    }
+    else{
+      return;
+    }
+
+  }
 
   get ratingKeys(): string[] {
     return Object.keys(RatingType).filter(k => isNaN(Number(k)));
