@@ -21,13 +21,13 @@
         </a>
       </div>
 
-      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUserMenu"
+      <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasUserMenu"
            aria-labelledby="offcanvasUserMenu">
         <div class="offcanvas-header">
           <div class="row w-100">
             <div class="col">
               @if (isLogin()) {
-                <div class="offcanvas-title is-user" id="offcanvasUserMenuLabel">{{ username() }}</div>
+                <div class="offcanvas-title is-user fst-italic" id="offcanvasUserMenuLabel">{{ username() }}</div>
               }
             </div>
             <div class="col">
@@ -41,29 +41,22 @@
         </div>
         <div class="offcanvas-body">
           @if (isLogin()) {
-            <div class="row row-cols-1 row-gap-3 user-menu-item">
-              <a class="col menu-item" routerLink="booked-tours" data-bs-dismiss="offcanvas">Booked tours</a>
-              <a class="col menu-item" routerLink="user-tours" data-bs-dismiss="offcanvas">Completed tours</a>
-              <a class="col menu-item" routerLink="user-information" data-bs-dismiss="offcanvas">User
-                information</a>
-            </div>
-            <div class="logout-container">
-              <button class="link-button" (click)="onLogout()" data-bs-dismiss="offcanvas">Вихід</button>
+            <div class="d-flex justify-content-center align-items-center flex-column">
+              <a class="btn link-button mb-3 w-75" routerLink="booked-tours" data-bs-dismiss="offcanvas">Moї бронювання</a>
+              <a class="btn link-button mb-3 w-75" routerLink="user-information" data-bs-dismiss="offcanvas">Про користувача</a>
+              <button class="btn link-button my-4 w-75" (click)="onLogout()" data-bs-dismiss="offcanvas">Вихід</button>
             </div>
           } @else {
-            <div class="row row-cols-1 row-gap-3 user-menu-item">
-              <span class="col disabled-item">Booked tours</span>
-              <span class="col disabled-item">Completed tours</span>
-              <span class="col disabled-item">User information</span>
-            </div>
-            <div class="logout-container">
-              <a class="link-button" routerLink="/authorization" data-bs-dismiss="offcanvas">Увійти</a>
+            <div class="d-flex justify-content-center align-items-center flex-column">
+              <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Moї бронювання</a>
+              <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Про користувача</a>
+              <a class="btn link-button my-4 w-75" routerLink="/authorization" data-bs-dismiss="offcanvas">Увійти</a>
             </div>
           }
         </div>
       </div>
 
-      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+      <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasNavbar"
            aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
           <div class="row w-100">
@@ -83,13 +76,13 @@
 
         </div>
         <div class="offcanvas-body">
-          <div class="row row-cols-1 row-gap-3 menu-links">
-            <a class="col menu-item" routerLink="">Тури</a>
-            <a class="col menu-item" routerLink="">Новини</a>
-            <a class="col menu-item" routerLink="">Країни</a>
-            <a class="col menu-item" routerLink="">Питання та відповіді</a>
-            <a class="col menu-item" routerLink="">Відгуки</a>
-            <a class="col menu-item" routerLink="">Контакти</a>
+          <div class="d-flex align-items-center justify-content-center flex-column">
+            <a class="btn link-button w-75 mt-5 mb-4" routerLink="">Тури</a>
+            <a class="btn link-button w-75 mb-4" routerLink="">Новини</a>
+            <a class="btn link-button w-75 mb-4" routerLink="">Країни</a>
+            <a class="btn link-button w-75 mb-4" routerLink="">Питання та відповіді</a>
+            <a class="btn link-button w-75 mb-4" routerLink="">Відгуки</a>
+            <a class="btn link-button w-75 mb-4" routerLink="">Контакти</a>
           </div>
         </div>
       </div>

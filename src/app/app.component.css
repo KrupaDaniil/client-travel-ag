@@ -75,14 +75,12 @@
   font-size: 18px;
   padding: 10px;
   font-weight: 500;
+  border: 1px solid #D9913C;
+  border-radius: 30px;
 }
 
 .menu-item:hover {
   text-decoration: underline #D9913C;
-}
-
-.user-menu-item {
-  margin-left: 97px;
 }
 
 .disabled-item {
@@ -102,7 +100,6 @@
   border: 1px solid #D9913C;
   color: #D9913C;
   font-size: 16px;
-  margin-right: 80px;
 }
 
 .link-button:hover {
@@ -123,9 +120,9 @@
 }
 
 .is-user {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 22px;
-  margin-left: 97px;
+  margin-left: 60px;
 }
 
 .close {
@@ -143,11 +140,11 @@
 }
 
 .menu-logo {
-  margin-left: 97px;
+  margin-left: 60px;
 }
 
 .mg-cls {
-  margin-left: 126px;
+  margin-left: 140px;
 }
 
 .menu-links {

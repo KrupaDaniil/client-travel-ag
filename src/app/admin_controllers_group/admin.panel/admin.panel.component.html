@@ -2,45 +2,66 @@
   <div class="d-flex align-items-center justify-content-center flex-column my-3">
     <div class="my-3 text-center fw-semibold fs-4">Control panel</div>
     <ul class="nav nav-tabs justify-content-center">
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="user-management">Users</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="role-management">Roles</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="climate-management">Climates</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="language-management">Languages</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="country-management">Countries</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="city-management">Cities</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="from-to-management">From - To</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="tag-management">Tags</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="hotel-management">Hotels</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="room-type-management">Room Type</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="food-type-management">Food Type</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="tour-management">Tours</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-black" routerLink="statistics">Statistics</a>
-      </li>
+      @if ((isAdmin && isManager) || (isAdmin && !isManager)) {
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="user-management">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="role-management">Roles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="climate-management">Climates</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="language-management">Languages</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="country-management">Countries</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="city-management">Cities</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="from-to-management">From - To</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="tag-management">Tags</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="hotel-management">Hotels</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="room-type-management">Room Type</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="food-type-management">Food Type</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="tour-management">Tours</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="statistics">Statistics</a>
+        </li>
+      }
+
+      @if (isManager && !isAdmin) {
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="hotel-management">Hotels</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="room-type-management">Room Type</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="food-type-management">Food Type</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="tour-management">Tours</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" routerLink="statistics">Statistics</a>
+        </li>
+      }
+
     </ul>
   </div>
 

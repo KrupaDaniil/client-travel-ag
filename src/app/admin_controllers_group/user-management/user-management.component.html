@@ -213,8 +213,15 @@
       }
     </dialog>
   } @else {
-    <div class="d-flex align-items-center justify-content-center mt-3 fs-4">
-      There seem to be no users. Please add them
+    <div class="d-flex align-items-center justify-content-center mt-3 flex-column">
+      @if (this.loadingFailed()) {
+        <span class="fs-4">List is empty</span>
+      } @else {
+        <div class="fw-semibold fs-5 my-3">Loading list...</div>
+        <div class="spinner-border text-secondary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      }
     </div>
   }
 }

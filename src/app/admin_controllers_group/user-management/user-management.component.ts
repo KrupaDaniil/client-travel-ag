@@ -36,11 +36,13 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 	private readonly defaultRole: string;
 	private initAddForm: boolean;
 	private isSelectedRow: boolean;
+	private timerId: number | undefined;
 	private searchList: IUser[] | undefined;
 	userList: Signal<IUser[]> = computed(() => this.store.usersEntities());
 	userRoles: Signal<IRole[]> = computed(() => this.store.rolesEntities());
 	errorMessage: Signal<string | null> = computed(() => this.messageService.message());
 	displayContent: WritableSignal<IUser[] | null> = signal<IUser[] | null>(null);
+	loadingFailed: WritableSignal<boolean> = signal<boolean>(false);
 	addUserForm: FormGroup | undefined;
 	editUserForm: FormGroup | undefined;
 	searchDataForm: FormGroup | undefined;
@@ -113,13 +115,19 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 
 	private initDisplayBlock(): void {
 		effect(() => {
-			const users: IUser[] = this.userList();
+			if (this.displayContent() === null || this.displayContent()?.length === 0) {
+				this.displayContent.set(this.userList());
+				this.loadingFailed.set(false);
 
-			if (this.displayContent() === null) {
-				if (users && users.length > 0) {
-					this.displayContent.set(users);
+				if (this.timerId) {
+					window.clearTimeout(this.timerId);
+					this.timerId = undefined;
 				}
 			}
+
+			this.timerId = window.setTimeout((): void => {
+				this.loadingFailed.set(true);
+			}, 30000);
 		});
 	}
 
