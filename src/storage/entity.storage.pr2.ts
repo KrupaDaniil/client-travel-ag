@@ -9,6 +9,7 @@ import {IHotelFeedbackEntity} from '../interfaces/hotels-block/i-hotel-feedback.
 import {IHotelDetailsEntity} from '../interfaces/hotels-block/i-hotel-details.entity';
 import {IStatisticHotel} from '../interfaces/statistic-block/i-statistic-hotel';
 import {IStatisticTour} from '../interfaces/statistic-block/i-statistic-tour';
+import {IHotelRatesEntity} from '../interfaces/hotels-block/i-hotel-rates.entity';
 
 const adminHotelConfig = entityConfig({
   entity: type<IAdminHotelEntity>(),
@@ -64,6 +65,13 @@ const tourStatisticConfig = entityConfig({
   collection: "tourStatistics",
   selectId: tourSt => tourSt.id
 })
+
+const hotelRatesConfig = entityConfig({
+  entity: type<IHotelRatesEntity>(),
+  collection: "hotelRates",
+  selectId: hotelRrates => hotelRrates.hotelId
+})
+
 export const EntityStoragePr2 = signalStore(
   {providedIn: "root"},
 
@@ -76,6 +84,7 @@ export const EntityStoragePr2 = signalStore(
   withEntities(hotelFeedbacksConfig),
   withEntities(hotelStatisticConfig),
   withEntities(tourStatisticConfig),
+  withEntities(hotelRatesConfig),
   withMethods(store => ({
     setAdminHotel(adminHotel: IAdminHotelEntity): void {
       patchState(store, setEntity(adminHotel, adminHotelConfig));
@@ -101,6 +110,9 @@ export const EntityStoragePr2 = signalStore(
     setTourBk(tourSt: IStatisticTour): void {
       patchState(store, setEntity(tourSt, tourStatisticConfig))
     },
+    setHotelRate(rate:IHotelRatesEntity):void{
+      patchState(store, setEntity(rate, hotelRatesConfig));
+    },
 
     setAllAdminHotels(adminHotels: IAdminHotelEntity[]): void {
       patchState(store, setAllEntities(adminHotels, adminHotelConfig));
@@ -125,6 +137,9 @@ export const EntityStoragePr2 = signalStore(
     },
     setAllTourBooking(tourBookings: IStatisticTour[]): void {
       patchState(store, setAllEntities(tourBookings, tourStatisticConfig))
+    },
+    setAllRates(rates:IHotelRatesEntity[]):void{
+      patchState(store, setAllEntities(rates, hotelRatesConfig))
     },
 
     removeAdminHotel(id: number): void {

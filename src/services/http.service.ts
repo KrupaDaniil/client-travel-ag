@@ -40,6 +40,7 @@ import { IAdminTour } from "../interfaces/tour-block/i-admin-tour";
 import { IHotelFeedbackEntity } from "../interfaces/hotels-block/i-hotel-feedback.entity";
 import { IStatisticHotel } from "../interfaces/statistic-block/i-statistic-hotel";
 import { IStatisticTour } from "../interfaces/statistic-block/i-statistic-tour";
+import {IHotelRatesEntity} from '../interfaces/hotels-block/i-hotel-rates.entity';
 
 @Injectable({
 	providedIn: "root"
@@ -311,7 +312,20 @@ export class HttpService {
 		);
 	}
 
-	loadingAllAdminCities(): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
+	loadingRateByHotelId(hotelId:number):Observable<IHotelRatesEntity | IError>{
+    return this.http.get(`${this.baseUrl}/hotel/${hotelId}/ratings`, {observe: "response"}).pipe(
+      map((resp:HttpResponse<Object>):IHotelRatesEntity|IError=>{
+        if (resp.status === HttpStatusCode.Ok) {
+          return resp.body as IHotelRatesEntity;
+        }else{
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[0]);
+        }
+      }),
+      catchError((error: HttpErrorResponse): Observable<IError> => {
+        return of(this.getErrorMessage(error, "Data loading error"));
+      })
+    )
+  }loadingAllAdminCities(): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
 		return this.http.get<Object>(`${this.baseUrl}/admin-cities`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError => {
 				if (response.status === HttpStatusCode.Ok) {
@@ -467,8 +481,8 @@ export class HttpService {
 		);
 	}
 
-	public loadingHotelById(hotelId: number) {
-		return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}`, { observe: "response" }).pipe(
+	public loadingHotelById(hotelId: number, feedbacksAmount:number = 2) {
+		return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}?amount=${feedbacksAmount}`, { observe: "response" }).pipe(
 			map((resp: HttpResponse<Object>): IHotelEntity | IError => {
 				if (resp.status === 200) {
 					return resp.body as IHotelEntity;

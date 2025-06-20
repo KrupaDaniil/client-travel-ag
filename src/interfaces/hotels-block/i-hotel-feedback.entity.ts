@@ -3,7 +3,7 @@ export interface IHotelFeedbackEntity {
   date:string;
   text:string;
   hotelId:number;
-  userId:number;
+  username:number;
 
   cleanRating:number;
   locationRating:number;

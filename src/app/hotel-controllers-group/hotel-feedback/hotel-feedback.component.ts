@@ -40,14 +40,7 @@ export class HotelFeedbackComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.feedback) {
-      this.userService.loadingUserById(this.feedback.userId).subscribe(res=>{
-        if(res!=undefined){
-          console.log(res);
-          this.user = res;
-        }
-      });
-    }
+
 
   }
 
