@@ -1,10 +1,28 @@
 <div class="row my-3">
-  <div class="col">
-    <div class="d-flex align-items-center justify-content">
-      <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3">Search</button>
+  <div class="col g-cn">
+    <div class="d-flex align-items-center">
+      <form *ngIf="searchDataForm" [formGroup]="searchDataForm!">
+        <div class="searchBlock">
+          <input class="form-control form-control-sm" type="text" aria-label="search input"
+                 formControlName="search_text">
+          <select class="form-select form-select-sm" formControlName="search_option"
+                  aria-label="select search option">
+            <option selected hidden="hidden" disabled>search by...</option>
+            <option value="hotelName">Hotel name</option>
+            <option value="cityName">City name</option>
+            <option value="countryName">Country name</option>
+          </select>
+          <button type="button" class="btn btn-sm" (click)="searchData()">
+            <img ngSrc="/icons/search_adm_org.svg" width="20" height="20" alt="search icon">
+          </button>
+          <button type="button" class="btn btn-sm" (click)="clearSearch()">
+            <img ngSrc="/icons/clear_close.png" width="20" height="20" alt="clear icon">
+          </button>
+        </div>
+      </form>
     </div>
-
   </div>
+
   <div class="col">
     <div class="d-flex align-items-center justify-content-end">
       <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddHotelModal()">Add</button>
@@ -30,7 +48,7 @@
     </tr>
     </thead>
     <tbody class="table-group-divider" #hotelsBlock>
-      @if (displayHotels()) {
+      @if (displayHotels() && displayHotels()!.length > 0) {
         @for (hotel of displayHotels(); track hotel.id; let i = $index) {
           <tr [attr.data-hotel-id]="hotel.id">
             <th scope="row">
@@ -42,13 +60,7 @@
 
             <td>{{ hotel.hotelName }}</td>
             <td>
-              <div class="progress-container">
-                <div class="text-center">{{ hotel.rate }}</div>
-                <div class="progress" role="progressbar" aria-label="Hotel rating" aria-valuenow="25" aria-valuemin="1"
-                     aria-valuemax="5">
-                  <div class="progress-bar" [ngClass]="getColorRating(hotel.rate)"></div>
-                </div>
-              </div>
+              <bar-rating [(rate)]="hotel.rate" max="5" theme="movie" [readonly]="true"/>
             </td>
 
             <td>{{ hotel.address }}</td>

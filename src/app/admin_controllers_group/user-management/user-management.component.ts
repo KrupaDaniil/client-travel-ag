@@ -274,7 +274,7 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 									this.displayContent.update(u => {
 										if (u) {
 											const index = u.findIndex((user: IUser) => user.id === updateUser.id);
-											console.log(index);
+
 											if (index !== -1) {
 												u[index] = updateUser;
 											}
@@ -338,10 +338,10 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 						for (let i = 0; i < tmpArr.length; i++) {
 							if (tmpArr[i].id === id) {
 								tmpArr.splice(i, 1);
-								this.displayContent.set(tmpArr);
 								break;
 							}
 						}
+						this.displayContent.set(tmpArr);
 					}
 				}
 			}
@@ -362,30 +362,31 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
 	searchUser(): void {
 		const formValue = this.searchDataForm?.value;
 
-		if (formValue) {
+		if (formValue && formValue.search_text && formValue.search_option) {
 			const option: string = formValue.search_option;
+			const text: string = formValue.search_text;
+			if (text.trim() !== "") {
+				if (option === "username") {
+					this.searchList = this.userList().filter((user: IUser) =>
+						user.username.toLowerCase().includes(text.toLowerCase())
+					);
+				}
 
-			if (option === "username") {
-				this.searchList = this.userList().filter((user: IUser) => {
-					return formValue.search_text ? user.username.includes(formValue.search_text) : true;
-				});
-			}
+				if (option === "email") {
+					this.searchList = this.userList().filter((user: IUser) =>
+						user.email.toLowerCase().includes(text.toLowerCase())
+					);
+				}
 
-			if (option === "email") {
-				this.searchList = this.userList().filter((user: IUser) => {
-					return formValue.search_text ? user.email.includes(formValue.search_text) : true;
-				});
-			}
-
-			if (this.searchList && this.searchList.length > 0) {
-				this.displayContent.set(this.searchList);
+				if (this.searchList && this.searchList.length > 0) {
+					this.displayContent.set(this.searchList);
+				}
 			}
 		}
 	}
 
 	clearSearch(): void {
 		this.searchDataForm?.reset();
-		this.searchList = [];
 		this.searchList = undefined;
 		this.displayContent.set(this.userList());
 	}

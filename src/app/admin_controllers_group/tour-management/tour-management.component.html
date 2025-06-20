@@ -1,10 +1,28 @@
 <div class="row my-3">
-  <div class="col">
-    <div class="d-flex align-items-center justify-content">
-      <button class="btn btn-sm btn-outline-success rounded-5 mx-2 px-3">Search</button>
+  <div class="col g-cn">
+    <div class="d-flex align-items-center">
+      <form *ngIf="searchDataForm" [formGroup]="searchDataForm">
+        <div class="searchBlock">
+          <input class="form-control form-control-sm" type="text" aria-label="search input"
+                 formControlName="search_text">
+          <select class="form-select form-select-sm" formControlName="search_option"
+                  aria-label="select search option">
+            <option selected hidden="hidden" disabled>search by...</option>
+            <option value="tourName">Tour name</option>
+            <option value="cityName">City name</option>
+            <option value="countryName">Country name</option>
+          </select>
+          <button type="button" class="btn btn-sm" (click)="searchData()">
+            <img ngSrc="/icons/search_adm_org.svg" width="20" height="20" alt="search icon">
+          </button>
+          <button type="button" class="btn btn-sm" (click)="clearSearch()">
+            <img ngSrc="/icons/clear_close.png" width="20" height="20" alt="clear icon">
+          </button>
+        </div>
+      </form>
     </div>
-
   </div>
+
   <div class="col">
     <div class="d-flex align-items-center justify-content-end">
       <button class="btn btn-sm btn-outline-success me-2 rounded-5 px-4" (click)="openAddTourModal()">Add</button>

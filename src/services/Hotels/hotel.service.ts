@@ -56,17 +56,18 @@ export class HotelService {
     })
   }
 
-  getAllHotelToAdmin(): void {
-    this.http.loadingAllHotelToAdmin().subscribe({
-      next: (item: IAdminHotelEntity[] | IError): void => {
+  getAllHotelToAdmin(): Observable<IAdminHotelEntity[] | null> {
+    return this.http.loadingAllHotelToAdmin().pipe(
+      map((item: IAdminHotelEntity[] | IError): IAdminHotelEntity[] | null => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
+          return null
         } else {
           this.message.setMessage(null);
-          this.storePr2.setAllAdminHotels(item as IAdminHotelEntity[]);
+          return item as IAdminHotelEntity[]
         }
-      }
-    });
+
+      }));
   }
 
   createFeedback(feedback: IHotelFeedbackEntity): Observable<IHotelFeedbackEntity | IError> {
@@ -106,13 +107,13 @@ export class HotelService {
     );
   }
 
-  async getAdminHotelById(hotelId: number): Promise<IAdminHotelEntity | undefined> {
+  async getAdminHotelById(hotelId: number): Promise<IAdminHotelEntity | null> {
     return await firstValueFrom(
       this.http.loadingHotelByIdToAdmin(hotelId).pipe(
-        map((item: IAdminHotelEntity | IError): IAdminHotelEntity | undefined => {
+        map((item: IAdminHotelEntity | IError): IAdminHotelEntity | null => {
           if (this.check.isError(item)) {
             this.message.setMessage((item as IError).message);
-            return undefined;
+            return null;
           } else {
             this.message.setMessage(null);
             return item as IAdminHotelEntity;
@@ -124,32 +125,34 @@ export class HotelService {
 
   setIHotelEntityToStore(hotelId: number): void {
     this.http.loadingHotelById(hotelId).subscribe({
-        next: ((item: IHotelEntity | IError): void => {
-          if (this.check.isError(item)) {
-            this.message.setMessage((item as IError).message);
-          } else {
-            this.message.setMessage(null);
-            this.store.setHotel(item as IHotelEntity);
-          }
-        })
-      }
-    );
-  }
-
-  removeHotel(id: number): void {
-    this.http.deleteHotel(id).subscribe({
-      next: (item: boolean | IError): void => {
+      next: (item: IHotelEntity | IError): void => {
         if (this.check.isError(item)) {
           this.message.setMessage((item as IError).message);
+        } else {
+          this.message.setMessage(null);
+          this.store.setHotel(item as IHotelEntity);
+        }
+      }
+    });
+  }
+
+  removeHotel(id: number): Observable<boolean> {
+    return this.http.deleteHotel(id).pipe(
+      map((item: boolean | IError): boolean => {
+        if (this.check.isError(item)) {
+          this.message.setMessage((item as IError).message);
+          return false;
         } else {
           if (item) {
             this.message.setMessage("Hotel deleted successfully");
             this.storePr2.removeAdminHotel(id);
             this.store.removeHotel(id);
+            return true;
           }
+          return false;
         }
-      }
-    });
+      })
+    );
   }
 
   public getHotelById(hotelId: number, feedbacksToLoad:number=2): Observable<IHotelDetailsEntity | undefined> {

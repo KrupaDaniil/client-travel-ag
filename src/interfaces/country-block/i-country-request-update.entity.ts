@@ -8,6 +8,7 @@ export interface ICountryRequestUpdateEntity {
   currency: string;
   phoneCode: string;
   flagImage: File | undefined;
+  defaultImage: File | undefined;
   description: string;
   climate: IClimateEntity;
   capitalCityName: ICountryCityEntity;

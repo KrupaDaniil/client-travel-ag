@@ -48,25 +48,29 @@ export class CityService {
     );
   }
 
-  async addCityEntity(newCity: FormData): Promise<boolean> {
+  async addCityEntity(newCity: FormData): Promise<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null> {
     return await firstValueFrom(
       this.http_s
         .addCity(newCity)
         .pipe(
-          map((entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError): boolean =>
-            this.setCity(entity)
+          map((
+              entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
+            ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null =>
+              this.setCity(entity)
           )
         )
     );
   }
 
-  async updateCityEntity(updateCity: FormData): Promise<boolean> {
+  async updateCityEntity(updateCity: FormData): Promise<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null> {
     return await firstValueFrom(
       this.http_s
         .updateCity(updateCity)
         .pipe(
-          map((entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError): boolean =>
-            this.setCity(entity)
+          map((
+              entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
+            ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null =>
+              this.setCity(entity)
           )
         )
     );
@@ -89,14 +93,16 @@ export class CityService {
     );
   }
 
-  private setCity(city: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError): boolean {
+  private setCity(
+    city: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
+  ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null {
     if (this.check.isError(city)) {
       this.messages.setMessage((city as IError).message);
-      return false;
+      return null;
     } else {
       this.messages.setMessage(null);
       this.store.setAdminCity(city as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>);
-      return true;
+      return city as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>;
     }
   }
 }

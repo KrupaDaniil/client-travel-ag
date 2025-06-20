@@ -14,7 +14,5 @@ export interface ICountryEntity {
   climate: IClimateEntity;
   capitalCity: ICountryCityEntity;
   languages: ILanguageEntity[];
-  hotelsAmount:number;
-
-
+  hotelsAmount: number;
 }

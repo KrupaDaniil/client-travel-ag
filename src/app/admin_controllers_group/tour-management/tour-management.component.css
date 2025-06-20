@@ -25,3 +25,8 @@
 .custom-date {
   width: 100%;
 }
+
+.g-cn input:focus {
+  box-shadow: none;
+  border-color: #e4e7ea;
+}

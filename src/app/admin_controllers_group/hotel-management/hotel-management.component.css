@@ -1,48 +1,3 @@
-.progress-container {
-  display: flex;
-  flex-direction: column;
-  padding: 0 20px 0 20px;
-}
-
-.progress {
-  min-width: 90px;
-  width: 100%;
-  height: 0.6rem;
-  padding: 0;
-  margin: 0;
-  background-color: lightgray;
-}
-
-.progress-bar {
-  padding: 0;
-  margin: 0;
-}
-
-.rt-bad {
-  background: linear-gradient(0deg, rgba(255, 195, 181, 0.9) 0%, rgba(186, 63, 63, 1) 40%, rgba(196, 0, 0, 1) 60%, rgba(255, 195, 181, 0.9) 100%);
-  width: 20%;
-}
-
-.rt-min {
-  background: linear-gradient(0deg, rgba(184, 255, 254, 0.9) 0%, rgba(123, 179, 161, 1) 40%, rgba(123, 179, 161, 1) 60%, rgba(184, 255, 254, 0.9) 100%);
-  width: 40%;
-}
-
-.rt-av {
-  background: linear-gradient(0deg, rgba(156, 199, 255, 0.9) 0%, rgba(29, 121, 242, 1) 40%, rgba(0, 85, 196, 1) 60%, rgba(156, 199, 255, 0.9) 100%);
-  width: 60%;
-}
-
-.rt-ns {
-  background: linear-gradient(0deg, rgba(10, 252, 42, 0.9) 0%, rgba(68, 158, 80, 1) 40%, rgba(68, 158, 80, 1) 60%, rgba(10, 252, 42, 0.9) 100%);
-  width: 80%;
-}
-
-.rt-sp {
-  background: linear-gradient(0deg, rgba(255, 231, 15, 0.9) 0%, rgba(242, 166, 0, 1) 40%, rgba(242, 166, 0, 1) 60%, rgba(255, 231, 15, 0.9) 100%);
-  width: 100%;
-}
-
 .carousel-admin-container {
   display: flex;
   align-items: center;
@@ -82,4 +37,9 @@
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.g-cn input:focus {
+  box-shadow: none;
+  border-color: #e4e7ea;
 }

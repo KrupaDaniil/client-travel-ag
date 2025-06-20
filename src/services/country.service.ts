@@ -76,22 +76,22 @@ export class CountryService {
     })
   }
 
-  async addingCountry(country: FormData): Promise<boolean> {
+  async addingCountry(country: FormData): Promise<ICountryEntity | null> {
     return await firstValueFrom(
       this.http_s.addCountry(country).pipe(
         map(
           async (
             res: ICountryEntity | IError
-          ): Promise<boolean> => {
+          ): Promise<ICountryEntity | null> => {
             if (this.check.isError(res)) {
               this.message.setMessage((res as IError).message);
-              return false;
+              return null;
             } else {
               this.message.setMessage(null);
               const newCountry: ICountryEntity = res as ICountryEntity;
               this.setMinCountryById(newCountry.id);
               this.store.setCountry(newCountry);
-              return true;
+              return newCountry;
             }
           }
         )
@@ -99,22 +99,22 @@ export class CountryService {
     );
   }
 
-  async updateCountry(country: FormData): Promise<boolean> {
+  async updateCountry(country: FormData): Promise<ICountryEntity | null> {
     return await firstValueFrom(
       this.http_s.updateCountry(country).pipe(
         map(
           async (
             res: ICountryEntity | IError
-          ): Promise<boolean> => {
+          ): Promise<ICountryEntity | null> => {
             if (this.check.isError(res)) {
               this.message.setMessage((res as IError).message);
-              return false;
+              return null;
             } else {
               this.message.setMessage(null);
               const updatedCountry: ICountryEntity = res as ICountryEntity;
               this.setMinCountryById(updatedCountry.id);
               this.store.setCountry(updatedCountry);
-              return true;
+              return updatedCountry;
             }
           }
         )

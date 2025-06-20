@@ -10,35 +10,30 @@ import {
   Signal,
   viewChild,
   WritableSignal
-} from '@angular/core';
-import {EntityStoragePr2} from '../../../storage/entity.storage.pr2';
-import {HotToastService} from '@ngxpert/hot-toast';
-import {TourService} from '../../../services/tour.service';
-import {MessageService} from '../../../services/message.service';
-import {IAdminTour} from '../../../interfaces/tour-block/i-admin-tour';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {IMinCountryEntity} from '../../../interfaces/country-block/i-min-country.entity';
-import {IMinCityEntity} from '../../../interfaces/country-block/i-min-city.entity';
-import {IMinHotel} from '../../../interfaces/hotels-block/i-min-hotel';
-import {IMinUser} from '../../../interfaces/i-min-user';
-import {IDisplayMinUserEntity} from '../../../interfaces/tour-block/i-display-min-user.entity';
-import {EntityStorage} from '../../../storage/entity.storage';
-import {UserRoles} from '../../enums/user-roles';
-import {CommonModule, DatePipe} from '@angular/common';
-import {OwlDateTimeModule} from '@danielmoncada/angular-datetime-picker';
-import {NgSelectComponent} from '@ng-select/ng-select';
+} from "@angular/core";
+import {EntityStoragePr2} from "../../../storage/entity.storage.pr2";
+import {HotToastService} from "@ngxpert/hot-toast";
+import {TourService} from "../../../services/tour.service";
+import {MessageService} from "../../../services/message.service";
+import {IAdminTour} from "../../../interfaces/tour-block/i-admin-tour";
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {IMinCountryEntity} from "../../../interfaces/country-block/i-min-country.entity";
+import {IMinCityEntity} from "../../../interfaces/country-block/i-min-city.entity";
+import {IMinHotel} from "../../../interfaces/hotels-block/i-min-hotel";
+import {IMinUser} from "../../../interfaces/i-min-user";
+import {IDisplayMinUserEntity} from "../../../interfaces/tour-block/i-display-min-user.entity";
+import {EntityStorage} from "../../../storage/entity.storage";
+import {UserRoles} from "../../enums/user-roles";
+import {CommonModule, DatePipe, NgOptimizedImage} from "@angular/common";
+import {OwlDateTimeModule} from "@danielmoncada/angular-datetime-picker";
+import {NgSelectComponent} from "@ng-select/ng-select";
 
 @Component({
-  selector: 'app-tour-management',
-  imports: [
-    ReactiveFormsModule,
-    OwlDateTimeModule,
-    NgSelectComponent,
-    CommonModule
-  ],
+  selector: "app-tour-management",
+  imports: [ReactiveFormsModule, OwlDateTimeModule, NgSelectComponent, CommonModule, NgOptimizedImage],
   providers: [TourService, MessageService, DatePipe],
-  templateUrl: './tour-management.component.html',
-  styleUrl: './tour-management.component.css'
+  templateUrl: "./tour-management.component.html",
+  styleUrl: "./tour-management.component.css"
 })
 export class TourManagementComponent implements OnInit {
   private readonly store = inject(EntityStorage);
@@ -47,12 +42,13 @@ export class TourManagementComponent implements OnInit {
 
   private tourList: Signal<IAdminTour[]> = computed((): IAdminTour[] => this.storePr2.adminToursEntities());
   protected displayList: WritableSignal<IAdminTour[] | null> = signal<IAdminTour[] | null>(null);
-  private localMessages: Signal<string | null> = computed((): string | null => this.massage.message())
+  private localMessages: Signal<string | null> = computed((): string | null => this.massage.message());
   protected localCountyList: WritableSignal<IMinCountryEntity[] | null> = signal<IMinCountryEntity[] | null>(null);
   protected localCityLis: WritableSignal<IMinCityEntity[] | null> = signal<IMinCityEntity[] | null>(null);
   protected localHotelList: WritableSignal<IMinHotel[] | null> = signal<IMinHotel[] | null>(null);
-  protected localManagerList: WritableSignal<IDisplayMinUserEntity[] | null> =
-    signal<IDisplayMinUserEntity[] | null>(null);
+  protected localManagerList: WritableSignal<IDisplayMinUserEntity[] | null> = signal<IDisplayMinUserEntity[] | null>(
+    null
+  );
 
   private isSelectedRow: boolean;
   protected selectedId: number | undefined;
@@ -66,6 +62,7 @@ export class TourManagementComponent implements OnInit {
 
   protected addTourForm: FormGroup | undefined;
   protected editTourForm: FormGroup | undefined;
+  protected searchDataForm: FormGroup | undefined;
   protected mainImageTour: File | undefined;
 
   private addModal: Signal<ElementRef<HTMLDialogElement> | undefined> =
@@ -81,8 +78,12 @@ export class TourManagementComponent implements OnInit {
   private tourBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
     viewChild<ElementRef<HTMLTableSectionElement>>("tourBlock");
 
-  constructor(private tourService: TourService, private massage: MessageService, private render: Renderer2,
-              private dp: DatePipe) {
+  constructor(
+    private tourService: TourService,
+    private massage: MessageService,
+    private render: Renderer2,
+    private dp: DatePipe
+  ) {
     this.isSelectedRow = false;
     this.isAdmin = false;
     this.isManager = false;
@@ -94,6 +95,7 @@ export class TourManagementComponent implements OnInit {
     this.loadingTours();
     this.onSelectedRow();
     this.initLocalLists();
+    this.createSearchForm();
     this.setCurrentUser();
     this.createAddForm();
   }
@@ -108,9 +110,9 @@ export class TourManagementComponent implements OnInit {
         if (role === UserRoles.MANAGER) {
           this.isManager = true;
         }
-      })
+      });
     } else {
-      window.location.href = "/login"
+      window.location.href = "/login";
     }
 
     if (!this.isAdmin && !this.isManager) {
@@ -136,14 +138,23 @@ export class TourManagementComponent implements OnInit {
     this.tourService.loadingManagerList().subscribe({
       next: (items: IMinUser[] | null): void => {
         if (items !== null) {
-          this.localManagerList.set(items.map((res: IMinUser): IDisplayMinUserEntity => {
-            const fName: string = res.firstName + ' ' + res.lastName;
-            return {id: res.id, fullName: fName, username: res.username} as IDisplayMinUserEntity;
-          }));
+          this.localManagerList.set(
+            items.map((res: IMinUser): IDisplayMinUserEntity => {
+              const fName: string = res.firstName + " " + res.lastName;
+              return {id: res.id, fullName: fName, username: res.username} as IDisplayMinUserEntity;
+            })
+          );
 
           console.log(this.localManagerList());
         }
       }
+    });
+  }
+
+  private createSearchForm(): void {
+    this.searchDataForm = new FormGroup({
+      search_text: new FormControl("", Validators.required),
+      search_option: new FormControl("", Validators.required)
     });
   }
 
@@ -200,7 +211,7 @@ export class TourManagementComponent implements OnInit {
           this.isLoadingCity.set(false);
         }
       }
-    })
+    });
   }
 
   protected initHotels(city: IMinCityEntity): void {
@@ -214,21 +225,21 @@ export class TourManagementComponent implements OnInit {
           this.isLoadingHotel.set(false);
         }
       }
-    })
+    });
   }
 
   private addItemsToDisplayList(): void {
     effect(() => {
       if (this.displayList() === null && this.tourList().length > 0) {
         this.displayList.set(this.tourList());
-        this.isLoadingFailed.set(false)
+        this.isLoadingFailed.set(false);
         if (this.timerId) {
           window.clearTimeout(this.timerId);
         }
       } else {
         this.timerId = window.setTimeout(() => {
           this.isLoadingFailed.set(true);
-        }, 30000)
+        }, 30000);
       }
     });
   }
@@ -244,13 +255,13 @@ export class TourManagementComponent implements OnInit {
       cityId: new FormControl<IMinCityEntity | null>(null, Validators.required),
       hotelId: new FormControl<IMinHotel | null>(null, Validators.required),
       manager: new FormControl<IDisplayMinUserEntity | null>(null, Validators.required)
-    })
+    });
 
     const mn: IDisplayMinUserEntity | null = this.getCurrentManager();
 
     if (this.isAdmin && this.isManager) {
       if (mn !== null) {
-        this.addTourForm.get("manager")?.setValue(mn)
+        this.addTourForm.get("manager")?.setValue(mn);
       }
     }
 
@@ -279,15 +290,14 @@ export class TourManagementComponent implements OnInit {
         dateEnd: new FormControl(this.selectedTour.dateEnd, Validators.required),
         hotelId: new FormControl(this.selectedTour.hotel.id, Validators.required),
         manager: new FormControl(this.selectedTour.manager.username, Validators.required)
-      })
+      });
 
       if (this.isManager && !this.isAdmin) {
         this.editTourForm.get("manager")?.disable();
       }
     } else {
-      this.toast.warning("There are no necessary data")
+      this.toast.warning("There are no necessary data");
     }
-
   }
 
   protected selectedFile(event: Event): void {
@@ -312,6 +322,7 @@ export class TourManagementComponent implements OnInit {
         data.append("dateEnd", values.dateEnd);
         if (this.mainImageTour) {
           data.append("mainImage", this.mainImageTour);
+          this.mainImageTour = undefined;
         }
         data.append("countryId", values.countryId.toString());
         data.append("cityId", values.cityId.toString());
@@ -319,12 +330,16 @@ export class TourManagementComponent implements OnInit {
         data.append("managerUsername", values.manager);
 
         this.tourService.addTour(data).subscribe({
-          next: (item: boolean): void => {
-            if (item) {
-              this.displayList.set(this.tourList());
+          next: (item: IAdminTour | null): void => {
+            if (item !== null) {
+              const tmp: IAdminTour[] = this.displayList() || [];
+
+              tmp.push(item);
+
+              this.displayList.set(tmp);
             }
           }
-        })
+        });
       }
     }
   }
@@ -343,6 +358,7 @@ export class TourManagementComponent implements OnInit {
         data.append("dateEnd", values.dateEnd);
         if (this.mainImageTour) {
           data.append("mainImage", this.mainImageTour);
+          this.mainImageTour = undefined;
         }
         data.append("hotelId", values.hotelId);
         data.append("managerUsername", values.manager);
@@ -350,24 +366,42 @@ export class TourManagementComponent implements OnInit {
         this.tourService.updateTour(data).subscribe({
           next: (item: IAdminTour | null): void => {
             if (item !== null) {
-              this.displayList.set(this.tourList());
+              this.displayList.update((r: IAdminTour[] | null): IAdminTour[] | null => {
+                if (r !== null) {
+                  const index: number = r.findIndex((t: IAdminTour): boolean => t.id === item.id);
+
+                  if (index !== -1) {
+                    r[index] = item;
+                  }
+                }
+
+                return r;
+              });
+
               this.selectedTour = item;
             }
           }
-        })
+        });
       }
     }
   }
 
   private deleteTour(id: number): void {
     this.tourService.deleteTour(id).subscribe({
-      next: (res: boolean) => {
-        if (res) {
-          this.displayList.set(this.tourList());
+      next: (res: boolean): void => {
+        if (res && this.displayList() !== null) {
+          const tmp: IAdminTour[] = this.displayList()!;
+          const index: number = tmp.findIndex((t: IAdminTour): boolean => t.id === id);
+
+          if (index !== -1) {
+            tmp.splice(index, 1);
+          }
+
+          this.displayList.set(tmp);
           this.toast.success("The tour has been deleted", this.getOption());
         }
       }
-    })
+    });
   }
 
   private getOption(): Object {
@@ -380,7 +414,7 @@ export class TourManagementComponent implements OnInit {
       style: {
         "border-radius": "30px"
       }
-    }
+    };
   }
 
   private getCurrentManager(): IDisplayMinUserEntity | null {
@@ -391,7 +425,7 @@ export class TourManagementComponent implements OnInit {
         currentManager = manager;
         return;
       }
-    })
+    });
 
     return currentManager;
   }
@@ -399,6 +433,48 @@ export class TourManagementComponent implements OnInit {
   private convertManager(manager: IMinUser): IDisplayMinUserEntity {
     const fName: string = manager.firstName + " " + manager.lastName;
     return {id: manager.id, fullName: fName, username: manager.username} as IDisplayMinUserEntity;
+  }
+
+  protected searchData(): void {
+    if (this.searchDataForm) {
+      const values = this.searchDataForm.value;
+
+      if (values && values.search_text && values.search_option) {
+        const text: string = values.search_text as string;
+        const opt: string = values.search_option as string;
+
+        if (text.trim() !== "") {
+          let tour_List: IAdminTour[] = [];
+
+          if (opt === "tourName") {
+            tour_List = this.tourList().filter((t: IAdminTour): boolean =>
+              t.name.toLowerCase().includes(text.toLowerCase())
+            );
+          }
+
+          if (opt === "cityName") {
+            tour_List = this.tourList().filter((t: IAdminTour): boolean =>
+              t.city.name.toLowerCase().includes(text.toLowerCase())
+            );
+          }
+
+          if (opt === "countryName") {
+            tour_List = this.tourList().filter((t: IAdminTour): boolean =>
+              t.country.name.toLowerCase().includes(text.toLowerCase())
+            );
+          }
+
+          if (tour_List.length > 0) {
+            this.displayList.set(tour_List);
+          }
+        }
+      }
+    }
+  }
+
+  protected clearSearch(): void {
+    this.searchDataForm?.reset();
+    this.displayList.set(this.tourList());
   }
 
   protected openAddTourModal(): void {
@@ -452,7 +528,7 @@ export class TourManagementComponent implements OnInit {
   private showMessage(): void {
     effect(() => {
       if (this.localMessages() !== null) {
-        this.toast.show(this.localMessages()!, this.getOption())
+        this.toast.show(this.localMessages()!, this.getOption());
       }
     });
   }
