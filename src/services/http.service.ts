@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpResponse, HttpStatusCode } from "@angular/common/http";
 import { IUserReg } from "../interfaces/user-auth/i-user-reg";
 import { catchError, map, Observable, of } from "rxjs";
+
 import { IUserLogin } from "../interfaces/user-auth/i-user-login";
 import { IError } from "../interfaces/i-error";
 import { AuthService } from "./auth.service";

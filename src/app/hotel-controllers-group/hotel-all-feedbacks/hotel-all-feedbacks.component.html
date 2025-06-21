@@ -2,6 +2,10 @@
   <div class="d-flex justify-content-center align-items-center flex-column" >
     <app-hotel-about style="max-width: 1213px; margin-bottom:100px;" [hotel]="hotel" class="mt-4"></app-hotel-about>
 
+    <form>
+      <select></select>
+    </form>
+
     @if(!isLoadingFeedbacks){
       @for (feedback of feedbacksToShow(); track feedback.id) {
         <app-hotel-feedback style="max-width: 1213px;" class="w-100"  [feedback]="feedback"></app-hotel-feedback>

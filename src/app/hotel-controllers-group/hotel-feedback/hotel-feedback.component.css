@@ -29,3 +29,20 @@
 .feedback-rates{
   grid-template-columns: repeat(2,auto);
 }
+
+
+@media  (max-width: 576px) {
+  .feedback-container{
+    grid-template-columns: unset;
+  }
+
+  .feedback-rates{
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  .feedback-rates>div{
+    grid-template-columns: 3fr 2fr 1fr !important;
+
+  }
+}

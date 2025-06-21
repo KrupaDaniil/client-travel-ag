@@ -37,7 +37,7 @@
 
 
     @for (feedback of hotel.feedbacks; track feedback.id) {
-      <app-hotel-feedback [feedback]="feedback" style="max-width: 1213px;"></app-hotel-feedback>
+      <app-hotel-feedback [feedback]="feedback" class="w-100" style="max-width: 1213px;"></app-hotel-feedback>
     }
 
     @if (hotel.totalFeedbacks >2){

@@ -1,9 +1,10 @@
 import {Component, Input} from '@angular/core';
 import {StarsComponent} from '../stars/stars.component';
 import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
-import {NgIf} from '@angular/common';
+
 import {ICountryEntity} from '../../../interfaces/country-block/i-country.entity';
 import {Router, RouterLink} from '@angular/router';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-hotel-card',
