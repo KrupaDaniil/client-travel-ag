@@ -4,7 +4,7 @@
   </h3>
 
   <div class="booking-container">
-    <form [formGroup]="bookForm">
+    <form [formGroup]="bookForm" id="bookingForm">
 
       <div class="data-container">
         <div class="custom-date">
@@ -36,20 +36,41 @@
           <img ngSrc="/icons/room.svg" width="30" height="30" alt="amount"/>
           <select formControlName="roomType" class="form-select">
             <option value="-1" selected>Номер</option>
-          </select>
-        </div>
-        <div class="from custom-date">
-          <img ngSrc="/icons/from.svg" width="30" height="30" alt="amount"/>
-          <select formControlName="to" class="form-select">
-            <option value="-1" selected>Звідки</option>
+            @if (roomTypes.length>0){
+              @for (room of roomTypes;track $index){
+                <option value="{{room.id}}">{{room.name}}</option>
+              }
+            }
           </select>
         </div>
         <div class="to custom-date">
-          <img ngSrc="/icons/to.svg" width="30" height="30" alt="amount"/>
-          <select formControlName="from" class="form-select">
-            <option value="-1" selected>Куди</option>
+          <img ngSrc="/icons/solar_chef-hat-linear.svg" width="30" height="30" alt="amount"/>
+          <select formControlName="foodType" class="form-select">
+            <option value="-1" selected>Харчування</option>
+            @if (foodTypes.length>0){
+              @for (food of foodTypes;track $index){
+                <option value="{{food.id}}">{{food.name}}</option>
+              }
+            }
           </select>
         </div>
+
+        <div class="from custom-date">
+          <img ngSrc="/icons/from.svg" width="30" height="30" alt="amount"/>
+          <select formControlName="from" class="form-select">
+            <option value="-1" selected>Звідки</option>
+            @if (citiesFrom.length>0){
+              @for (cityGroup of getCategorizedCities | keyvalue; track $index ) {
+                <optgroup label="{{cityGroup.key}}">
+                  @for (city of cityGroup.value; track $index) {
+                    <option value="{{city.cityId}}">{{city.cityName}}</option>
+                  }
+                </optgroup>
+              }
+            }
+          </select>
+        </div>
+
       </div>
 
 
@@ -62,8 +83,66 @@
           <span>Безвіз</span>
         </div>
         <b>1234 грн</b>
-        <input type="submit" value="Забронювати" (mousedown)="countApp()"/>
+        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#bookingModal" >
+          Забронювати
+        </button>
+
       </div>
+
+
+
+      <div class="modal fade" id="bookingModal" #bookingModal tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="bookingModalLabel">Бронювання</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column">
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Ім`я</label>
+                <input type="text" id="clientName" class="form-control" formControlName="clientName" form="bookingForm"/>
+              </div>
+
+              <div class="mb-3">
+                <label for="clientSurname" class="form-label">Прізвище</label>
+                <input type="text" id="clientSurname" class="form-control" formControlName="clientSurname" form="bookingForm"/>
+              </div>
+
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Номер телефону</label>
+                <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber" form="bookingForm"/>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+              <button type="button" class="btn btn-outline-primary" (mousedown)="countApp()" (click)="bookHotel()">Забронювати</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </form>
   </div>
 </div>
+
+
+
+<button type="button" class="d-none" id="successToast" #successToast></button>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="..." class="rounded me-2" alt="...">
+      <strong class="me-auto">Помилка</strong>
+      <small>11 mins ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div>
+

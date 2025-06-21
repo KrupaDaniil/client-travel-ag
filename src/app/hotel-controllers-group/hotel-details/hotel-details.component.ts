@@ -14,6 +14,9 @@ import {StatisticService} from '../../../services/statistic.service';
 import {HotelFeedbackComponent} from '../hotel-feedback/hotel-feedback.component';
 import {IHotelFeedbackEntity} from '../../../interfaces/hotels-block/i-hotel-feedback.entity';
 import {UserService} from '../../../services/user.service';
+import {NgOptimizedImage} from '@angular/common';
+import {OwlDateTimeModule} from '@danielmoncada/angular-datetime-picker';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-hotel-details',
@@ -25,6 +28,8 @@ import {UserService} from '../../../services/user.service';
     HotelAboutComponent,
     HotelFeedbackComponent,
     RouterLink,
+    OwlDateTimeModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './hotel-details.component.html',
   styleUrl: './hotel-details.component.css'
@@ -39,6 +44,7 @@ export class HotelDetailsComponent implements OnInit {
               private check: ValidationService, private stService: StatisticService, private userService: UserService) {
     const id = this.route.snapshot.paramMap.get("hotelId");
     this.hotelId = id ? Number(id) : 0;
+    console.log("main", this.hotelId);
   }
 
   ngOnInit(): void {

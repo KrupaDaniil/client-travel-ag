@@ -71,4 +71,8 @@ export class FromToService {
 			}
 		}
 	}
+
+  public getFromCountries(toCountryId:number){
+    return this.http_s.loadingFromCountries(toCountryId);
+  }
 }

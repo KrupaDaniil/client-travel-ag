@@ -7,10 +7,11 @@ import { MessageService } from "../message.service";
 import { IAdminHotelEntity } from "../../interfaces/hotels-block/i-admin-hotel.entity";
 import { IError } from "../../interfaces/i-error";
 import { ValidationService } from "../validation.service";
-import { firstValueFrom, map, Observable, of } from "rxjs";
+import {catchError, firstValueFrom, map, Observable, of} from "rxjs";
 import { IHotelFeedbackEntity } from '../../interfaces/hotels-block/i-hotel-feedback.entity';
 import { IHotelDetailsEntity } from '../../interfaces/hotels-block/i-hotel-details.entity';
 import {IHotelRatesEntity} from '../../interfaces/hotels-block/i-hotel-rates.entity';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 @Injectable({
 	providedIn: "root"
@@ -177,4 +178,20 @@ export class HotelService {
 			})
 		);
 	}
+
+  getFoodTypesByHotelId(hotelId: number) {
+    return this.http.loadingFoodTypesByHotelId(hotelId);
+  }
+
+  getRoomTypesByHotelId(hotelId: number) {
+    return this.http.loadingRoomTypesByHotelId(hotelId);
+  }
+
+  bookHotel(hotelData:FormData){
+    return this.http.addBookingHotelAdv(hotelData).pipe(
+      map(res=>{
+        return res;
+      })
+    );
+  }
 }

@@ -9,4 +9,7 @@ export interface IHotelEntity {
   address:string;
   feedbacksAmount:number;
   place:number;
+
+  cityId:number;
+  cityName:string;
 }

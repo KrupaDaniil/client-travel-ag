@@ -42,6 +42,8 @@ import { IHotelFeedbackEntity } from "../interfaces/hotels-block/i-hotel-feedbac
 import { IStatisticHotel } from "../interfaces/statistic-block/i-statistic-hotel";
 import { IStatisticTour } from "../interfaces/statistic-block/i-statistic-tour";
 import {IHotelRatesEntity} from '../interfaces/hotels-block/i-hotel-rates.entity';
+import {ICityBookingEntity} from '../interfaces/country-block/i-city-booking.entity';
+import {IAdventure} from '../interfaces/hotels-block/i-adventure.entity';
 
 @Injectable({
 	providedIn: "root"
@@ -872,6 +874,17 @@ export class HttpService {
 		);
 	}
 
+  addBookingHotelAdv(adv:FormData){
+    return this.http.post(`${this.baseUrl}/hotel/book`,adv,{observe: "response" }).pipe(
+      map((resp: HttpResponse<Object>): number | IError => {
+        if (resp.status === HttpStatusCode.Ok) {
+          return resp.body as number;
+        } else {
+          return new ErrorMessage(HttpStatusCode.BadRequest, "User update error");
+        }
+      }),
+    );
+  }
 	// block update // ------------------------------------------------------------
 	updateUser(user: IUser): Observable<boolean | IError> {
 		return this.http.post(`${this.baseUrl}/update-user`, user, { observe: "response" }).pipe(
@@ -1269,4 +1282,46 @@ export class HttpService {
 			return new ErrorMessage(error.status, message);
 		}
 	}
+
+  loadingFoodTypesByHotelId(hotelId: number) {
+    return this.http.get<Object>(`${this.baseUrl}/conveniences/${hotelId}/food`,{observe:"response"}).pipe(
+      map((response:HttpResponse<Object>):IAdminFoodType[]|IError=>{
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IAdminFoodType[];
+        }else{
+          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
+        }
+      }),
+      catchError((error: HttpErrorResponse): Observable<IError> =>
+        of(this.getErrorMessage(error, "Server error when getting food types")))
+    );
+
+  }
+
+  loadingRoomTypesByHotelId(hotelId: number) {
+    return this.http.get<Object>(`${this.baseUrl}/conveniences/${hotelId}/rooms`,{observe:"response"}).pipe(
+      map((response:HttpResponse<Object>):IAdminRoomType[]|IError=>{
+        if (response.status === HttpStatusCode.Ok) {
+          return response.body as IAdminRoomType[];
+        }else{
+          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
+        }
+      }),
+      catchError((error: HttpErrorResponse): Observable<IError> =>
+        of(this.getErrorMessage(error, "Server error when getting food types")))
+    );
+
+  }
+
+  loadingFromCountries(toCountryId: number) {
+    return this.http.get(`${this.baseUrl}/api/countries/get/from/${toCountryId}`,{observe:"response"}).pipe(
+      map((resp:HttpResponse<Object>):ICityBookingEntity[]|IError=>{
+        if (resp.status === HttpStatusCode.Ok) {
+          return resp.body as ICityBookingEntity[];
+        }else{
+          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[0]);
+        }
+      })
+    );
+  }
 }
