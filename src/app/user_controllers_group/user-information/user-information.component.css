@@ -9,18 +9,9 @@
   height: 4rem;
 }
 
-.user-info-card-container {
+.user-info-card {
   width: 50dvw;
   min-width: 402px;
-  border-radius: 50px;
-  background-color: #8DBECD;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 60px;
-}
-
-.user-info-card {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -28,6 +19,10 @@
   margin: 24px;
   background: white;
   border-radius: 50px;
+  margin-top: 60px;
+  padding: 0 60px;
+  border: 1px solid #8DBECD;
+  box-shadow: 0 0 7px #90b6c2;
 }
 
 .user-info-card-header {

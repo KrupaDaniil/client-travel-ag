@@ -312,3 +312,11 @@ body {
 .custom-date > input::placeholder {
   color: #8DBECD;
 }
+
+.br-movie.br-readonly .br-active {
+  opacity: 1 !important;
+}
+.br-movie {
+  --br-width: 25px !important;
+  --_br-active-color: #49c3c7;
+}

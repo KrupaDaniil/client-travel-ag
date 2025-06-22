@@ -1,42 +1,40 @@
 <div class="d-flex justify-content-center">
   @if (formData) {
     <form [formGroup]="formData">
-      <div class="user-info-card-container">
-        <div class="user-info-card">
-          <div class="user-info-card-header">Інформація про користувача</div>
-          <div class="user-info-card-body">
+      <div class="user-info-card">
+        <div class="user-info-card-header">Інформація про користувача</div>
+        <div class="user-info-card-body">
 
-            <input type="hidden" formControlName="username">
+          <input type="hidden" formControlName="username">
 
-            <div id="item_body_1">
-              <label for="u_name" class="form-label">Ім'я</label>
-              <input type="text" id="u_name" class="form-control form-control-sm" formControlName="firstName">
+          <div id="item_body_1">
+            <label for="u_name" class="form-label">Ім'я</label>
+            <input type="text" id="u_name" class="form-control form-control-sm" formControlName="firstName">
+          </div>
+
+          <div id="item_body_2">
+            <label for="u_surname" class="form-label">Прізвище</label>
+            <input type="text" id="u_surname" class="form-control form-control-sm" formControlName="lastName">
+          </div>
+
+          <div id="item_body_3">
+            <label for="u_email" class="form-label">Email</label>
+            <input type="text" id="u_email" class="form-control form-control-sm" formControlName="email">
+          </div>
+
+          <div id="item_body_4">
+            <label for="u_birthday" class="form-label">Дата народження</label>
+            <div class="custom-date">
+              <input type="text" formControlName="birthday" [owlDateTime]="brDt" placeholder="дд.мм.рррр" readonly>
+              <button [owlDateTimeTrigger]="brDt">
+                <img ngSrc="/icons/calendar-ico.svg" width="20" height="20" alt="Calendar">
+              </button>
+              <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
             </div>
+          </div>
 
-            <div id="item_body_2">
-              <label for="u_surname" class="form-label">Прізвище</label>
-              <input type="text" id="u_surname" class="form-control form-control-sm" formControlName="lastName">
-            </div>
-
-            <div id="item_body_3">
-              <label for="u_email" class="form-label">Email</label>
-              <input type="text" id="u_email" class="form-control form-control-sm" formControlName="email">
-            </div>
-
-            <div id="item_body_4">
-              <label for="u_birthday" class="form-label">Дата народження</label>
-              <div class="custom-date">
-                <input type="text" formControlName="birthday" [owlDateTime]="brDt" placeholder="дд.мм.рррр" readonly>
-                <button [owlDateTimeTrigger]="brDt">
-                  <img ngSrc="/icons/calendar-ico.svg" width="20" height="20" alt="Calendar">
-                </button>
-                <owl-date-time #brDt [pickerType]="'calendar'"></owl-date-time>
-              </div>
-            </div>
-
-            <div class="user_button_container">
-              <button (click)="updateUserInfo()">Зберегти</button>
-            </div>
+          <div class="user_button_container">
+            <button (click)="updateUserInfo()">Зберегти</button>
           </div>
         </div>
       </div>
