@@ -2,11 +2,11 @@
 
   @for (img of images; track $index) {
     @if($index<9){
-      <div class="hotel-image-card" [ngClass]="[$index==0 ? 'big' : '', $index==images.length-1 ? 'last' : '']">
+      <div class="hotel-image-card" [ngClass]="[$index==0 ? 'big' : '', $index==images.length-1 ? 'last' : '']" (click)="openModal()">
         <div class="hotel-image" [style.background-image]="'url('+img.url+')'"></div>
       </div>
     } @else if($index==9) {
-      <div class="hotel-image-card" [ngClass]="[$index==images.length-1 ? 'last' : '']">
+      <div class="hotel-image-card" [ngClass]="[$index==images.length-1 ? 'last' : '']" (click)="openModal()">
         <div class="cover" *ngIf="$index!=images.length">
           <span class="cover-text d-lg-block d-none">
             + {{images.length-10}}
@@ -22,10 +22,43 @@
   }
   @if(images.length<9){
     @for (img of Array(9-images.length+1); track $index) {
-      <div class="hotel-image-card">
+      <div class="hotel-image-card" (click)="openModal()">
         <div class="hotel-image blank"></div>
       </div>
     }
   }
 
 </div>
+
+
+<button type="button" #modal class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<div class="modal fade" id="exampleModal"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 70vw">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="carouselExample" class="carousel slide">
+          <div class="carousel-inner">
+            @for (img  of images; track img.id) {
+              <div class="carousel-item active">
+                <img src="{{img.url}}" class="d-block w-100" alt="...">
+              </div>
+            }
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
