@@ -41,9 +41,11 @@ import { IAdminTour } from "../interfaces/tour-block/i-admin-tour";
 import { IHotelFeedbackEntity } from "../interfaces/hotels-block/i-hotel-feedback.entity";
 import { IStatisticHotel } from "../interfaces/statistic-block/i-statistic-hotel";
 import { IStatisticTour } from "../interfaces/statistic-block/i-statistic-tour";
-import {IHotelRatesEntity} from '../interfaces/hotels-block/i-hotel-rates.entity';
-import {ICityBookingEntity} from '../interfaces/country-block/i-city-booking.entity';
-import {IAdventure} from '../interfaces/hotels-block/i-adventure.entity';
+import { IHotelRatesEntity } from "../interfaces/hotels-block/i-hotel-rates.entity";
+import { ICityBookingEntity } from "../interfaces/country-block/i-city-booking.entity";
+import { IAdventure } from "../interfaces/hotels-block/i-adventure.entity";
+import { ICardTour } from "../interfaces/tour-block/i-card-tour";
+import { ITourDetail } from "../interfaces/tour-block/i-tour-detail";
 
 @Injectable({
 	providedIn: "root"
@@ -315,20 +317,21 @@ export class HttpService {
 		);
 	}
 
-	loadingRateByHotelId(hotelId:number):Observable<IHotelRatesEntity | IError>{
-    return this.http.get(`${this.baseUrl}/hotel/${hotelId}/ratings`, {observe: "response"}).pipe(
-      map((resp:HttpResponse<Object>):IHotelRatesEntity|IError=>{
-        if (resp.status === HttpStatusCode.Ok) {
-          return resp.body as IHotelRatesEntity;
-        }else{
-          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[0]);
-        }
-      }),
-      catchError((error: HttpErrorResponse): Observable<IError> => {
-        return of(this.getErrorMessage(error, "Data loading error"));
-      })
-    )
-  }loadingAllAdminCities(): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
+	loadingRateByHotelId(hotelId: number): Observable<IHotelRatesEntity | IError> {
+		return this.http.get(`${this.baseUrl}/hotel/${hotelId}/ratings`, { observe: "response" }).pipe(
+			map((resp: HttpResponse<Object>): IHotelRatesEntity | IError => {
+				if (resp.status === HttpStatusCode.Ok) {
+					return resp.body as IHotelRatesEntity;
+				} else {
+					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[0]);
+				}
+			}),
+			catchError((error: HttpErrorResponse): Observable<IError> => {
+				return of(this.getErrorMessage(error, "Data loading error"));
+			})
+		);
+	}
+	loadingAllAdminCities(): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
 		return this.http.get<Object>(`${this.baseUrl}/admin-cities`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError => {
 				if (response.status === HttpStatusCode.Ok) {
@@ -484,19 +487,21 @@ export class HttpService {
 		);
 	}
 
-	public loadingHotelById(hotelId: number, feedbacksAmount:number = 2) {
-		return this.http.get<Object>(`${this.baseUrl}/hotel/${hotelId}?amount=${feedbacksAmount}`, { observe: "response" }).pipe(
-			map((resp: HttpResponse<Object>): IHotelEntity | IError => {
-				if (resp.status === 200) {
-					return resp.body as IHotelEntity;
-				} else {
-					return new ErrorMessage(resp.status, "Hotel not found");
-				}
-			}),
-			catchError(
-				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
-			)
-		);
+	public loadingHotelById(hotelId: number, feedbacksAmount: number = 2) {
+		return this.http
+			.get<Object>(`${this.baseUrl}/hotel/${hotelId}?amount=${feedbacksAmount}`, { observe: "response" })
+			.pipe(
+				map((resp: HttpResponse<Object>): IHotelEntity | IError => {
+					if (resp.status === 200) {
+						return resp.body as IHotelEntity;
+					} else {
+						return new ErrorMessage(resp.status, "Hotel not found");
+					}
+				}),
+				catchError(
+					(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
+				)
+			);
 	}
 
 	public loadingAllMinHotel(): Observable<IMinHotel[] | IError> {
@@ -589,6 +594,21 @@ export class HttpService {
 		);
 	}
 
+	public loadingAllToursToClient(): Observable<ICardTour[] | IError> {
+		return this.http.get(`${this.baseUrl}/tours`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): ICardTour[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as ICardTour[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Error loading tours"))
+			)
+		);
+	}
+
 	public loadingTourToAdmin(id: number): Observable<IAdminTour | IError> {
 		return this.http.get(`${this.baseUrl}/tour/${id}`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): IAdminTour | IError => {
@@ -598,6 +618,22 @@ export class HttpService {
 					return new ErrorMessage(HttpStatusCode.BadRequest, "Failed to load tour");
 				}
 			})
+		);
+	}
+
+	public loadingDetailTourToClient(id: number): Observable<ITourDetail | IError> {
+		return this.http.get(`${this.baseUrl}/client/tour/${id}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): ITourDetail | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as ITourDetail;
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Error loading tour details");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Server error loading tour details"))
+			)
 		);
 	}
 
@@ -874,17 +910,17 @@ export class HttpService {
 		);
 	}
 
-  addBookingHotelAdv(adv:FormData){
-    return this.http.post(`${this.baseUrl}/hotel/book`,adv,{observe: "response" }).pipe(
-      map((resp: HttpResponse<Object>): number | IError => {
-        if (resp.status === HttpStatusCode.Ok) {
-          return resp.body as number;
-        } else {
-          return new ErrorMessage(HttpStatusCode.BadRequest, "User update error");
-        }
-      }),
-    );
-  }
+	addBookingHotelAdv(adv: FormData) {
+		return this.http.post(`${this.baseUrl}/hotel/book`, adv, { observe: "response" }).pipe(
+			map((resp: HttpResponse<Object>): number | IError => {
+				if (resp.status === HttpStatusCode.Ok) {
+					return resp.body as number;
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "User update error");
+				}
+			})
+		);
+	}
 	// block update // ------------------------------------------------------------
 	updateUser(user: IUser): Observable<boolean | IError> {
 		return this.http.post(`${this.baseUrl}/update-user`, user, { observe: "response" }).pipe(
@@ -1283,45 +1319,47 @@ export class HttpService {
 		}
 	}
 
-  loadingFoodTypesByHotelId(hotelId: number) {
-    return this.http.get<Object>(`${this.baseUrl}/conveniences/${hotelId}/food`,{observe:"response"}).pipe(
-      map((response:HttpResponse<Object>):IAdminFoodType[]|IError=>{
-        if (response.status === HttpStatusCode.Ok) {
-          return response.body as IAdminFoodType[];
-        }else{
-          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
-        }
-      }),
-      catchError((error: HttpErrorResponse): Observable<IError> =>
-        of(this.getErrorMessage(error, "Server error when getting food types")))
-    );
+	loadingFoodTypesByHotelId(hotelId: number) {
+		return this.http.get<Object>(`${this.baseUrl}/conveniences/${hotelId}/food`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IAdminFoodType[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IAdminFoodType[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Server error when getting food types"))
+			)
+		);
+	}
 
-  }
+	loadingRoomTypesByHotelId(hotelId: number) {
+		return this.http.get<Object>(`${this.baseUrl}/conveniences/${hotelId}/rooms`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IAdminRoomType[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IAdminRoomType[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Server error when getting food types"))
+			)
+		);
+	}
 
-  loadingRoomTypesByHotelId(hotelId: number) {
-    return this.http.get<Object>(`${this.baseUrl}/conveniences/${hotelId}/rooms`,{observe:"response"}).pipe(
-      map((response:HttpResponse<Object>):IAdminRoomType[]|IError=>{
-        if (response.status === HttpStatusCode.Ok) {
-          return response.body as IAdminRoomType[];
-        }else{
-          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[3]);
-        }
-      }),
-      catchError((error: HttpErrorResponse): Observable<IError> =>
-        of(this.getErrorMessage(error, "Server error when getting food types")))
-    );
-
-  }
-
-  loadingFromCountries(toCountryId: number) {
-    return this.http.get(`${this.baseUrl}/api/countries/get/from/${toCountryId}`,{observe:"response"}).pipe(
-      map((resp:HttpResponse<Object>):ICityBookingEntity[]|IError=>{
-        if (resp.status === HttpStatusCode.Ok) {
-          return resp.body as ICityBookingEntity[];
-        }else{
-          return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[0]);
-        }
-      })
-    );
-  }
+	loadingFromCountries(toCountryId: number) {
+		return this.http.get(`${this.baseUrl}/api/countries/get/from/${toCountryId}`, { observe: "response" }).pipe(
+			map((resp: HttpResponse<Object>): ICityBookingEntity[] | IError => {
+				if (resp.status === HttpStatusCode.Ok) {
+					return resp.body as ICityBookingEntity[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, this.errorDefaultMessage[0]);
+				}
+			})
+		);
+	}
 }
