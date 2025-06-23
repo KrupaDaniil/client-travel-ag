@@ -44,13 +44,16 @@
             <div class="d-flex justify-content-center align-items-center flex-column">
               <a class="btn link-button mb-3 w-75" routerLink="booked-tours" data-bs-dismiss="offcanvas">Moї бронювання</a>
               <a class="btn link-button mb-3 w-75" routerLink="user-information" data-bs-dismiss="offcanvas">Про користувача</a>
+              @if (checkUserRole()) {
+                <a class="btn link-button mb-3 w-75" routerLink="admin-panel" data-bs-dismiss="offcanvas">Панель керування</a>
+              }
               <button class="btn link-button my-4 w-75" (click)="onLogout()" data-bs-dismiss="offcanvas">Вихід</button>
             </div>
           } @else {
             <div class="d-flex justify-content-center align-items-center flex-column">
               <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Moї бронювання</a>
               <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Про користувача</a>
-              <a class="btn link-button my-4 w-75" routerLink="/authorization" data-bs-dismiss="offcanvas">Увійти</a>
+              <a class="btn link-button my-4 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Увійти</a>
             </div>
           }
         </div>
@@ -77,12 +80,12 @@
         </div>
         <div class="offcanvas-body">
           <div class="d-flex align-items-center justify-content-center flex-column">
-            <a class="btn link-button w-75 mt-5 mb-4" routerLink="">Тури</a>
-            <a class="btn link-button w-75 mb-4" routerLink="">Новини</a>
-            <a class="btn link-button w-75 mb-4" routerLink="">Країни</a>
-            <a class="btn link-button w-75 mb-4" routerLink="">Питання та відповіді</a>
-            <a class="btn link-button w-75 mb-4" routerLink="">Відгуки</a>
-            <a class="btn link-button w-75 mb-4" routerLink="">Контакти</a>
+            <a class="btn link-button w-75 mt-5 mb-4" routerLink="tours" data-bs-dismiss="offcanvas">Тури</a>
+            <a class="btn link-button w-75 mb-4" routerLink="" data-bs-dismiss="offcanvas">Новини</a>
+            <a class="btn link-button w-75 mb-4" routerLink="" data-bs-dismiss="offcanvas">Країни</a>
+            <a class="btn link-button w-75 mb-4" routerLink="" data-bs-dismiss="offcanvas">Питання та відповіді</a>
+            <a class="btn link-button w-75 mb-4" routerLink="" data-bs-dismiss="offcanvas">Відгуки</a>
+            <a class="btn link-button w-75 mb-4" routerLink="" data-bs-dismiss="offcanvas">Контакти</a>
           </div>
         </div>
       </div>
