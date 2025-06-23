@@ -1,7 +1,7 @@
 import {Component, computed, inject, OnInit, Signal} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {HotelCardComponent} from '../hotel-card/hotel-card.component';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {ICountryEntity} from '../../../interfaces/country-block/i-country.entity';
@@ -16,7 +16,8 @@ import {LoadingComponent} from '../../loading/loading.component';
     NgClass,
     HotelCardComponent,
     NgIf,
-    LoadingComponent
+    LoadingComponent,
+    RouterLink
   ],
   templateUrl: './hotels-list-by-city.component.html',
   styleUrl: './hotels-list-by-city.component.css'

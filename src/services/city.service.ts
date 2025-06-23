@@ -9,12 +9,17 @@ import {IMainCountryForCityEntity} from "../interfaces/country-block/i-main-coun
 import {IBlobImageEntity} from "../interfaces/country-block/i-blob-image.entity";
 import {IError} from "../interfaces/i-error";
 import {IMinCityEntity} from '../interfaces/country-block/i-min-city.entity';
+import {IMinCityCountryEntity} from '../interfaces/country-block/i-min-city-country.entity';
+import {EntityStoragePr2} from '../storage/entity.storage.pr2';
+import {HttpResponse, HttpStatusCode} from '@angular/common/http';
+import {ErrorMessage} from '../models/error-message';
 
 @Injectable({
   providedIn: "root"
 })
 export class CityService {
   private readonly store = inject(EntityStorage);
+  private readonly storepr2 = inject(EntityStoragePr2);
 
   constructor(private http_s: HttpService, private messages: MessageService, private check: ValidationService) {
   }
@@ -30,6 +35,30 @@ export class CityService {
         }
       }
     });
+  }
+
+  setAllMinCityCountry(){
+    return this.http_s.loadingAllMinCityCountries().pipe(
+      map((items: IMinCityCountryEntity[] | IError): IMinCityCountryEntity[] | IError => {
+        if (this.check.isError(items)) {
+          this.messages.setMessage((items as IError).message);
+          return new ErrorMessage(HttpStatusCode.NoContent, "Can'r load cities");
+        }
+        else{
+          this.messages.setMessage(null);
+          this.storepr2.setAllMinCityCountries(items as IMinCityCountryEntity[]);
+          return items as IMinCityCountryEntity[];
+        }
+      })
+    );
+
+    // if (this.check.isError(cities)) {
+    //   this.messages.setMessage((cities as IError).message);
+    // }
+    // else{
+    //   this.messages.setMessage(null);
+    //   this.storepr2.setAllMinCityCountries(cities as IMinCityCountryEntity[]);
+    // }
   }
 
   async getAllCountryCities(id: number): Promise<IMinCityEntity[] | undefined> {
@@ -105,4 +134,6 @@ export class CityService {
       return city as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>;
     }
   }
+
+
 }

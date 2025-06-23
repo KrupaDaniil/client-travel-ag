@@ -39,6 +39,7 @@ export class HotelAboutComponent implements OnInit {
 
   public createFeedback: FormGroup = new FormGroup({
     text: new FormControl('', [Validators.required]),
+    title: new FormControl('', [Validators.required]),
     locationRating: new FormControl('', [Validators.required, Validators.max(5), Validators.min(0)]),
     roomsRating: new FormControl('', [Validators.required, Validators.max(5), Validators.min(0)]),
     cleanRating: new FormControl('', [Validators.required, Validators.max(5), Validators.min(0)]),
@@ -142,7 +143,7 @@ export class HotelAboutComponent implements OnInit {
         result.hotelId = this.hotel.id;
         result.date = new Date();
         this.isLoadingFeedback = true;
-        this.service.createFeedback(this.createFeedback.value).subscribe(res => {
+        this.service.createFeedback(result).subscribe(res => {
           if (this.closeModalButton) {
             this.isLoadingFeedback = false;
             this.closeModalButton.nativeElement.click();

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {StarsComponent} from '../stars/stars.component';
 import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 
@@ -16,10 +16,15 @@ import {NgIf} from '@angular/common';
   templateUrl: './hotel-card.component.html',
   styleUrl: './hotel-card.component.css'
 })
-export class HotelCardComponent {
+export class HotelCardComponent implements OnInit {
   @Input() hotel?:IHotelEntity;
-  @Input() country?:ICountryEntity;
+  constructor() {
 
+  }
+
+  ngOnInit(): void {
+    console.log(this.hotel);
+  }
 
 
 }

@@ -94,14 +94,9 @@ export class HotelAllFeedbacksComponent implements OnInit {
     }
   }
 
-  public previousPage(){
-    if(this.currentPage > 1){
-      this.currentPage--;
-    }
-  }
-
   get feedbacksOnPage(){
-    console.log(this.currentPage * this.itemsPerPage,this.itemsPerPage);
     return this.feedbacks().slice(this.currentPage * this.itemsPerPage,this.currentPage * this.itemsPerPage+this.itemsPerPage);
   }
+
+
 }

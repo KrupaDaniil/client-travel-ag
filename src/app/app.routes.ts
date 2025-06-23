@@ -29,6 +29,7 @@ import { authAdminPanelGuard } from "../guards/authAdminPanel.guard";
 import { onlyAdminGuard } from "../guards/only-admin.guard";
 import { HotelAllFeedbacksComponent } from "./hotel-controllers-group/hotel-all-feedbacks/hotel-all-feedbacks.component";
 import { MainToursComponent } from "./user_controllers_group/main-tours/main-tours.component";
+import {HotelAllComponent} from './hotel-controllers-group/hotel-all/hotel-all.component';
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -74,6 +75,10 @@ export const routes: Routes = [
 		path: "hotels/view/:hotelId",
 		component: HotelDetailsComponent
 	},
+  {
+    path: "hotels",
+    component:HotelAllComponent
+  },
 	{ path: "hotels/:id/feedbacks", component: HotelAllFeedbacksComponent },
 	{ path: "**", component: Error404Component }
 ];

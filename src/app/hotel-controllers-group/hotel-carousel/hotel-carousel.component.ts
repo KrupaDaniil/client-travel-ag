@@ -21,13 +21,16 @@ export class HotelCarouselComponent {
 
   protected readonly Array = Array;
 
+  public clickedItem:number = -1;
+
   constructor() {
 
   }
 
-  openModal() {
+  openModal(imgId:number) {
     this.modal?.nativeElement.click();
-    console.log("OPen");
+    this.clickedItem = imgId;
+
   }
 
 

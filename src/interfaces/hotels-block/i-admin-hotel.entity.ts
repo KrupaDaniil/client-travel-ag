@@ -9,10 +9,13 @@ export interface IAdminHotelEntity {
 	hotelName: string;
 	rate: number;
 	description: string;
+  images: IHotelImage[];
 	address: string;
-	images: IHotelImage[];
+
 	tags: ITagEntity[];
 	country: IMinCountryEntity;
 	city: IMinCityEntity;
 	manager: IMinUser;
+
+  feedbacksAmount: number;
 }

@@ -173,11 +173,21 @@
               }
             </div>
 
+            <div class="text-area">
+              <label class="form-label" for="title">Заголовок</label>
+              <input type="text" formControlName="title" id="title" class="form-control"/>
+              @if(createFeedback.get("title")?.invalid && createFeedback.get("title")?.touched){
+                @if(createFeedback.get("title")?.hasError("required")){
+                  <div class="me-1 error-message">The field cannot be empty</div>
+                }
+              }
+            </div>
+
             <div class="text-area mb-3">
               <label for="text" class="form-label">Ваш коментар:</label>
               <textarea cols="4" id="text" class="form-control w-100" formControlName="text">
 
-            </textarea>
+              </textarea>
 
               @if(createFeedback.get("text")?.invalid && createFeedback.get("text")?.touched){
                 @if(createFeedback.get("text")?.hasError("required")){

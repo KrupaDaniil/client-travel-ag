@@ -2,11 +2,11 @@
 
   @for (img of images; track $index) {
     @if($index<9){
-      <div class="hotel-image-card" [ngClass]="[$index==0 ? 'big' : '', $index==images.length-1 ? 'last' : '']" (click)="openModal()">
+      <div class="hotel-image-card" [ngClass]="[$index==0 ? 'big' : '', $index==images.length-1 ? 'last' : '']" (click)="openModal(img.id)">
         <div class="hotel-image" [style.background-image]="'url('+img.url+')'"></div>
       </div>
     } @else if($index==9) {
-      <div class="hotel-image-card" [ngClass]="[$index==images.length-1 ? 'last' : '']" (click)="openModal()">
+      <div class="hotel-image-card" [ngClass]="[$index==images.length-1 ? 'last' : '']" (click)="openModal(img.id)">
         <div class="cover" *ngIf="$index!=images.length">
           <span class="cover-text d-lg-block d-none">
             + {{images.length-10}}
@@ -22,7 +22,7 @@
   }
   @if(images.length<9){
     @for (img of Array(9-images.length+1); track $index) {
-      <div class="hotel-image-card" (click)="openModal()">
+      <div class="hotel-image-card" (click)="openModal(img.id)">
         <div class="hotel-image blank"></div>
       </div>
     }
@@ -41,8 +41,8 @@
       <div class="modal-body">
         <div id="carouselExample" class="carousel slide">
           <div class="carousel-inner">
-            @for (img  of images; track img.id) {
-              <div class="carousel-item active">
+            @for (img  of images; track $index) {
+              <div class="carousel-item" [ngClass]="img.id == clickedItem ? 'active' : ''">
                 <img src="{{img.url}}" class="d-block w-100" alt="...">
               </div>
             }

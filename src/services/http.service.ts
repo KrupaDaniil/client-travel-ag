@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse, HttpResponse, HttpStatusCode } from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse, HttpStatusCode} from "@angular/common/http";
 import { IUserReg } from "../interfaces/user-auth/i-user-reg";
 import { catchError, map, Observable, of } from "rxjs";
 
@@ -46,6 +46,7 @@ import { ICityBookingEntity } from "../interfaces/country-block/i-city-booking.e
 import { IAdventure } from "../interfaces/hotels-block/i-adventure.entity";
 import { ICardTour } from "../interfaces/tour-block/i-card-tour";
 import { ITourDetail } from "../interfaces/tour-block/i-tour-detail";
+import {IMinCityCountryEntity} from '../interfaces/country-block/i-min-city-country.entity';
 
 @Injectable({
 	providedIn: "root"
@@ -471,6 +472,22 @@ export class HttpService {
 			)
 		);
 	}
+
+  loadingAllMinCityCountries(): Observable<IMinCityCountryEntity[] | IError> {
+    return this.http.get(`${this.baseUrl}/cities/min`,{observe:"response"}).pipe(
+      map((resp:HttpResponse<Object>):IMinCityCountryEntity[] | IError=>{
+        if (resp.status === HttpStatusCode.Ok) {
+          return resp.body as IMinCityCountryEntity[];
+        }
+        else {
+          return new ErrorMessage(HttpStatusCode.NotFound, "Failed to upload cities");
+        }
+      }),
+      catchError(
+        (error:HttpErrorResponse):Observable<IError>=>of(this.getErrorMessage(error, "Data loading error"))
+      )
+    );
+  }
 
 	loadingHotelByIdToAdmin(hotelId: number): Observable<IAdminHotelEntity | IError> {
 		return this.http.get(`${this.baseUrl}/hotel/admin/${hotelId}`, { observe: "response" }).pipe(
@@ -1362,4 +1379,30 @@ export class HttpService {
 			})
 		);
 	}
+
+  loadingHotelsByParameters(countries: number[], minRate: number, maxRate: number, name: string) {
+    let params = new HttpParams();
+    params.set("minRate",minRate);
+    params.set("maxRate",maxRate);
+    params.set("name",name);
+    if(countries)
+      countries.forEach(country => {params.append("cityIds",country)});
+
+    let url = `${this.baseUrl}/hotel/search?name=${name}&minRate=${minRate}&maxRate=${maxRate}`;
+    if(countries)
+      countries.forEach(el=>url+=`&cityIds=${el}`);
+
+    return this.http.get(url,{observe: "response"}).pipe(
+      map((resp:HttpResponse<Object>):IHotelEntity[] | IError=>{
+
+        if(resp.status === HttpStatusCode.Ok) {
+          return resp.body as IHotelEntity[];
+        }
+        else{
+          console.log("error");
+          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+        }
+      })
+    )
+  }
 }

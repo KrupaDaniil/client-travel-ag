@@ -7,9 +7,10 @@ export interface IHotelEntity {
   description:string;
   images:IHotelImage[];
   address:string;
+
+
   feedbacksAmount:number;
   place:number;
-
   cityId:number;
   cityName:string;
 }

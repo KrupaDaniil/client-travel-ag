@@ -85,11 +85,11 @@
 
 
     @for (hotel of topHotels();track $index){
-      <app-hotel-card style="margin-top: 90px;" [hotel]="hotel" [country]="country">
+      <app-hotel-card style="margin-top: 90px;" [hotel]="hotel">
       </app-hotel-card>
     }
 
-    <button class="btn btn-outline-light mt-5 mb-5">Усі готелі</button>
+    <button class="btn btn-outline-light mt-5 mb-5" routerLink="/hotels?coutryId={{countryId}}">Усі готелі</button>
 
   </div>
 

@@ -197,4 +197,21 @@ export class HotelService {
     })
     );
   }
+
+  loadingHotelsByParameters(countries:number[], minRate:number, maxRate:number, name:string){
+    return this.http.loadingHotelsByParameters(countries, minRate, maxRate, name).pipe(
+      map(res=>{
+        if(!this.check.isHttpError(res as IError)){
+          return res as IHotelEntity[];
+        }
+        else{
+          return null;
+        }
+
+      }),
+      catchError((error:IError)=>{
+        return of(null);
+      })
+    );
+  }
 }
