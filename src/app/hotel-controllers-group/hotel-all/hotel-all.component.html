@@ -1,0 +1,68 @@
+@if (this.filteredHotels()) {
+
+  <div #top></div>
+  <div class="d-flex flex-column justify-content-center">
+    <div class="d-grid flex-column justify-content-center">
+
+      <form class="p-4 d-grid gap-3 align-items-center"  [formGroup]="filter" style="grid-template-columns: 1fr 1fr 1fr 0.5fr 0.2fr;position: sticky;top:1px;background-color:#fff;z-index: 1">
+        <div class="mb-3">
+          <label class="form-label" for="name">Назва:</label>
+          <input type="text" class="form-control" formControlName="name" id="name"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="rate">Рейтинг:</label>
+          <div class="d-flex gap-1">
+            <input type="number" class="form-control" formControlName="minRate" placeholder="Від" id="rate" min="0" max="5"/>
+            <input type="number" class="form-control" formControlName="maxRate" placeholder="До" min="0" max="5"/>
+          </div>
+
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Міста: </label>
+          <ng-select class="ng-select-ngCs" [multiple]="true" notFoundText="Cities are missing"
+                     formControlName="cityIds" placeholder="Select cities" groupBy="countryName"
+          [items]="cities()" bindValue="cityId" bindLabel="cityName">
+
+          </ng-select>
+
+        </div>
+
+        <div class="mb-3 align-self-end">
+          <button type="button" class="btn btn-outline-primary" (click)="loadFilters()">Застосувати</button>
+        </div>
+        <div class="mb-3 align-self-end">
+          <button class="btn btn-outline-danger" (click)="clearData()">X</button>
+        </div>
+      </form>
+      @for (hotel of hotelsOnPage;track $index){
+        <app-hotel-card class="mt-5" [hotel]="hotel"></app-hotel-card>
+      }
+
+    </div>
+    <nav aria-label="Page navigation" class="mt-5 mb-5 align-self-center">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        @for (page of Array(maxPages); track $index){
+          <li class="page-item" [ngClass]="$index==currentPage ? 'active' : ''"><button class="page-link" (click)="goToPage($index)">{{$index+1}}</button></li>
+        }
+
+
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+
+}
+@else{
+  <app-loading></app-loading>
+}
