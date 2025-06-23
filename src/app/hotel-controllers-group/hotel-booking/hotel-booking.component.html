@@ -7,82 +7,132 @@
     <form [formGroup]="bookForm" id="bookingForm">
 
       <div class="data-container">
-        <div class="custom-date">
-          <button [owlDateTimeTrigger]="checkin">
-            <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
-          </button>
-          <input type="text" formControlName="checkin" [owlDateTime]="checkin" placeholder="Заселення" readonly>
 
-          <owl-date-time #checkin [pickerType]="'calendar'"></owl-date-time>
-        </div>
-        <div class="custom-date">
-          <button [owlDateTimeTrigger]="checkout">
-            <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
-          </button>
-          <input type="text" formControlName="checkout" [owlDateTime]="checkout" placeholder="Виселення" readonly>
+        <div class="d-flex flex-column">
+          <div class="custom-date">
+            <button [owlDateTimeTrigger]="checkin">
+              <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
+            </button>
+            <input type="text" formControlName="checkin" [owlDateTime]="checkin" placeholder="Заселення" readonly #checkinInp>
+            <owl-date-time #checkin [pickerType]="'calendar'"></owl-date-time>
+          </div>
+          @if (bookForm.get("checkin")?.touched && bookForm.get("checkin")?.invalid) {
+            @if (bookForm.get("checkin")?.hasError("required")) {
+              <i class="text-danger mt-2">Поле обов`язкове</i>
+            }
+          }
 
-          <owl-date-time #checkout [pickerType]="'calendar'"></owl-date-time>
-        </div>
-        <div class="amount custom-date">
-          <img ngSrc="/icons/amount.svg" width="11" height="24" alt="amount"/>
-          <select formControlName="amount" class="form-select">
-            <option value="-1" selected>Кількість</option>
-            @for (num of Array(9); track $index) {
-              <option value="{{$index+1}}">{{ $index + 1 }}</option>
-            }
-          </select>
-        </div>
-        <div class="roomtype custom-date">
-          <img ngSrc="/icons/room.svg" width="30" height="30" alt="amount"/>
-          <select formControlName="roomType" class="form-select">
-            <option value="-1" selected>Номер</option>
-            @if (roomTypes.length>0){
-              @for (room of roomTypes;track $index){
-                <option value="{{room.id}}">{{room.name}}</option>
-              }
-            }
-          </select>
-        </div>
-        <div class="to custom-date">
-          <img ngSrc="/icons/solar_chef-hat-linear.svg" width="30" height="30" alt="amount"/>
-          <select formControlName="foodType" class="form-select">
-            <option value="-1" selected>Харчування</option>
-            @if (foodTypes.length>0){
-              @for (food of foodTypes;track $index){
-                <option value="{{food.id}}">{{food.name}}</option>
-              }
-            }
-          </select>
         </div>
 
-        <div class="from custom-date">
-          <img ngSrc="/icons/from.svg" width="30" height="30" alt="amount"/>
-          <select formControlName="from" class="form-select">
-            <option value="-1" selected>Звідки</option>
-            @if (citiesFrom.length>0){
-              @for (cityGroup of getCategorizedCities | keyvalue; track $index ) {
-                <optgroup label="{{cityGroup.key}}">
-                  @for (city of cityGroup.value; track $index) {
-                    <option value="{{city.cityId}}">{{city.cityName}}</option>
-                  }
-                </optgroup>
-              }
+        <div class="d-flex flex-column">
+          <div class="custom-date">
+            <button [owlDateTimeTrigger]="checkout">
+              <img ngSrc="/icons/calendar-dark.png" width="20" height="20" alt="Calendar">
+            </button>
+            <input type="text" formControlName="checkout" [owlDateTime]="checkout" placeholder="Виселення" readonly #checkoutInp >
+
+            <owl-date-time #checkout [pickerType]="'calendar'" ></owl-date-time>
+          </div>
+          @if (bookForm.get("checkout")?.touched && bookForm.get("checkout")?.invalid) {
+            @if (bookForm.get("checkout")?.hasError("required")) {
+              <i class="text-danger mt-2">Поле обов`язкове</i>
             }
-          </select>
+          }
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="amount custom-date">
+            <img ngSrc="/icons/amount.svg" width="11" height="24" alt="amount"/>
+            <select formControlName="amount" class="form-select" >
+              <option value="-1" selected>Кількість</option>
+              @for (num of Array(9); track $index) {
+                <option value="{{$index+1}}">{{ $index + 1 }}</option>
+              }
+            </select>
+          </div>
+          @if (bookForm.get("amount")?.touched && bookForm.get("amount")?.invalid) {
+            @if (bookForm.get("amount")?.hasError("required")) {
+              <i class="text-danger mt-2">Поле обов`язкове</i>
+            }
+          }
+        </div>
+        <div class="d-flex flex-column">
+          <div class="roomtype custom-date">
+            <img ngSrc="/icons/room.svg" width="30" height="30" alt="amount"/>
+            <select formControlName="roomType" class="form-select" #roomInp >
+              <option value="-1" selected>Номер</option>
+              @if (roomTypes.length>0){
+                @for (room of roomTypes;track $index){
+                  <option value="{{room.id}}">{{room.name}}</option>
+                }
+              }
+            </select>
+          </div>
+          @if (bookForm.get("roomType")?.touched && bookForm.get("roomType")?.invalid) {
+            @if (bookForm.get("roomType")?.hasError("required")) {
+              <i class="text-danger mt-2">Поле обов`язкове</i>
+            }
+            @if (bookForm.get("roomType")?.hasError("min")) {
+              <i class="text-danger mt-2">Недопустиме значення</i>
+            }
+          }
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="to custom-date">
+            <img ngSrc="/icons/solar_chef-hat-linear.svg" width="30" height="30" alt="amount"/>
+            <select formControlName="foodType" class="form-select" #foodInp>
+              <option value="-1" selected disabled>Харчування</option>
+              @if (foodTypes.length>0){
+                @for (food of foodTypes;track $index){
+                  <option value="{{food.id}}">{{food.name}}</option>
+                }
+              }
+            </select>
+          </div>
+          @if (bookForm.get("foodType")?.touched && bookForm.get("foodType")?.invalid) {
+            @if (bookForm.get("foodType")?.hasError("required")) {
+              <i class="text-danger mt-2">Поле обов`язкове</i>
+            }
+            @if (bookForm.get("foodType")?.hasError("min")) {
+              <i class="text-danger mt-2">Недопустиме значення</i>
+            }
+          }
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="from custom-date">
+            <img ngSrc="/icons/from.svg" width="30" height="30" alt="amount"/>
+            <select formControlName="from" class="form-select">
+              <option value="-1" selected>Звідки</option>
+              @if (citiesFrom.length>0){
+                @for (cityGroup of getCategorizedCities | keyvalue; track $index ) {
+                  <optgroup label="{{cityGroup.key}}">
+                    @for (city of cityGroup.value; track $index) {
+                      <option value="{{city.cityId}}">{{city.cityName}}</option>
+                    }
+                  </optgroup>
+                }
+              }
+            </select>
+          </div>
+          @if (bookForm.get("from")?.touched && bookForm.get("from")?.invalid) {
+            @if (bookForm.get("from")?.hasError("required")) {
+              <i class="text-danger mt-2">Поле обов`язкове</i>
+            }
+            @if (bookForm.get("from")?.hasError("min")) {
+              <i class="text-danger mt-2">Недопустиме значення</i>
+            }
+          }
         </div>
 
       </div>
 
 
       <div class="result-container">
-        <b>Включно:</b>
-        <div class="options-container">
-          <span>Сніданок</span>
-          <span>Трансфер</span>
-          <span>Страхування</span>
-          <span>Безвіз</span>
-        </div>
-        <b>1234 грн</b>
+        <b>Орієнтовна вартість:</b>
+
+        <b>{{countSum}}</b>
         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#bookingModal" >
           Забронювати
         </button>
@@ -111,7 +161,7 @@
 
               <div class="mb-3">
                 <label for="phoneNumber" class="form-label">Номер телефону</label>
-                <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber" form="bookingForm"/>
+                <input type="tel" id="phoneNumber" class="form-control" formControlName="phoneNumber" form="bookingForm"/>
               </div>
 
             </div>
@@ -130,19 +180,5 @@
 
 
 
-<button type="button" class="d-none" id="successToast" #successToast></button>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-      <img src="..." class="rounded me-2" alt="...">
-      <strong class="me-auto">Помилка</strong>
-      <small>11 mins ago</small>
-      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-      Hello, world! This is a toast message.
-    </div>
-  </div>
-</div>
 

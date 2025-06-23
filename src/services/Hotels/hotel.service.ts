@@ -191,7 +191,10 @@ export class HotelService {
     return this.http.addBookingHotelAdv(hotelData).pipe(
       map(res=>{
         return res;
-      })
+      }),
+      catchError((error:IError)=>{
+        return of(error as IError);
+    })
     );
   }
 }

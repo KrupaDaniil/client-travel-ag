@@ -11,7 +11,8 @@ import {IHotelDetailsEntity} from '../../../interfaces/hotels-block/i-hotel-deta
 import {IAdminRoomType} from '../../../interfaces/hotels-block/i-admin-room-type';
 import {FromToService} from '../../../services/from-to.service';
 import {ICityBookingEntity} from '../../../interfaces/country-block/i-city-booking.entity';
-import {catchError, map} from 'rxjs';
+import {Toast} from 'bootstrap';
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: 'app-hotel-booking',
@@ -31,9 +32,9 @@ export class HotelBookingComponent implements OnInit {
     checkin: new FormControl('', [Validators.required]),
     checkout: new FormControl('', [Validators.required]),
     amount: new FormControl('', [Validators.required]),
-    roomType: new FormControl('', [Validators.required]),
-    foodType: new FormControl('', [Validators.required]),
-    from: new FormControl(0, [Validators.required]),
+    roomType: new FormControl('', [Validators.required, Validators.min(1)]),
+    foodType: new FormControl('', [Validators.required, Validators.min(1)]),
+    from: new FormControl(0, [Validators.required,Validators.min(1)]),
     clientName: new FormControl('', [Validators.required]),
     clientSurname: new FormControl('', [Validators.required]),
     phoneNumber: new FormControl('', [Validators.required]),
@@ -45,13 +46,22 @@ export class HotelBookingComponent implements OnInit {
 
   @Input() hotel?: IHotelDetailsEntity;
 
-  @ViewChild("successToast") successToast?:ElementRef<HTMLButtonElement>;
+  @ViewChild("checkinInp") checkinInp?:ElementRef;
+  @ViewChild("checkoutInp") checkoutInp?:ElementRef;
+  @ViewChild("foodInp") foodInp?:ElementRef;
+  @ViewChild("roomInp") roomInp?:ElementRef;
+
+
 
   public foodTypes: IAdminFoodType[] = [];
   public roomTypes: IAdminRoomType[] = [];
   public citiesFrom: ICityBookingEntity[] = [];
 
-  constructor(private stService: StatisticService, private hotelService:HotelService, private check:ValidationService, private fromToService:FromToService) {
+  constructor(private stService: StatisticService,
+              private hotelService:HotelService,
+              private check:ValidationService,
+              private fromToService:FromToService,
+              private toast:HotToastService) {
 
 
   }
@@ -59,21 +69,30 @@ export class HotelBookingComponent implements OnInit {
   protected countApp(): void {
     if (this.hotel && this.hotel.id > 0) {
       this.stService.countHBUp(this.hotel.id);
-
     }
   }
 
   public bookHotel():void{
-    if(this.hotel) {
-      let data = this.bookForm.value;
-      data.hotelId = this.hotel.id;
+    if(this.bookForm.valid){
+      if(this.hotel) {
+        let data = this.bookForm.value;
+        data.hotelId = this.hotel.id;
 
-      this.hotelService.bookHotel(this.bookForm.value).subscribe(
-        res => {
-          console.log(res);
-        }
-      );
+        this.hotelService.bookHotel(this.bookForm.value).subscribe(
+          res => {
+            if(this.check.isHttpError(res as IError)){
+              this.showErrorMessage("Помилка при бронюванні готелю!");
+            }
+            else{
+              console.log("OK", res);
+            }
+
+
+          }
+        );
+      }
     }
+
   }
 
   private initFoodTypes(){
@@ -120,6 +139,14 @@ export class HotelBookingComponent implements OnInit {
     this.initFoodTypes();
     this.initRoomTypes();
     this.initCitiesFrom();
+
+    // this.bookForm.get("checkin")!.valueChanges.subscribe(val=>{
+    //   this.countSum();
+    // })
+    //
+    // this.bookForm.get("checkout")!.valueChanges.subscribe(val=>{
+    //   this.countSum();
+    // })
   }
 
   get getCategorizedCities(){
@@ -135,4 +162,44 @@ export class HotelBookingComponent implements OnInit {
     return countryMap;
   }
 
+  private showErrorMessage(message:string): void {
+    this.toast.show(`${message}`, {
+      theme: "snackbar",
+      duration: 5000,
+      autoClose: true,
+      position: "bottom-left"
+    })
+
+  }
+
+  get countSum(){
+    let food = this.foodInp?.nativeElement.value;
+    let room = this.roomInp?.nativeElement.value;
+    let from = this.checkinInp?.nativeElement.value;
+    let to = this.checkoutInp?.nativeElement.value;
+    let sum = 0;
+    if(food)
+      sum+=this.foodTypes.find(x=>x.id==food) ? this.foodTypes.find(x=>x.id==food)!.price : 0;
+    if(room)
+      sum+=this.roomTypes.find(x=>x.id==room) ? this.roomTypes.find(x=>x.id==room)!.price : 0;
+
+    if(from&&to){
+      return sum * (
+        (this.parseDate(to).getTime()-this.parseDate(from).getTime())
+        /(1000 * 60 * 60 * 24)
+
+
+      )
+    }
+
+    return "-";
+
+
+  }
+
+  parseDate(str:any) {
+    const [day, month, year] = str.split('.');
+    // Month in JS Date is zero-based, so subtract 1
+    return new Date(year, month - 1, day);
+  }
 }
