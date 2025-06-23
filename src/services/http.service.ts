@@ -880,7 +880,7 @@ export class HttpService {
         if (resp.status === HttpStatusCode.Ok) {
           return resp.body as number;
         } else {
-          return new ErrorMessage(HttpStatusCode.BadRequest, "User update error");
+          return new ErrorMessage(HttpStatusCode.BadRequest, "Hotel booking error!");
         }
       }),
     );
