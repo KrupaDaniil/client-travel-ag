@@ -1,0 +1,30 @@
+@if(isLoadingData()) {
+    <div class="row row-cols-3 g-3 my-3">
+        @for (tour of allTours(); track $index) {
+            <div class="col">
+                <div class="card rounded-3">
+                    <img src="{{tour.imageUrl}}" alt="{{tour.name}}" class="card-img-top">
+                    <div class="card-body">
+                        <div class="card-title fs-4 fw-semibold">{{tour.name}}</div>
+                        <div class="card-text mb-3">
+                            <span class="me-2">Доступно</span>
+                            <span class="border-bottom pe-2">{{tour.dateStart}}</span>
+                            <span class="vr"></span>
+                            <span class="border-bottom ps-2">{{tour.dateEnd}}</span>
+                        </div>
+                        <div class="row align-items-center mb-3">
+                            <div class="col">
+                                <a href="#" class="link-success link-offset-2 link-offset-3-hover 
+                                link-underline link-underline-opacity-0 link-underline-opacity-75-hover">детальніше ></a>
+                            </div>
+                            <div class="col fw-semibold fs-5 text-end">${{tour.price}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+} @else {
+    <app-loading></app-loading>
+}

@@ -9,7 +9,6 @@ import { MainUserComponent } from "./user_controllers_group/main.user/main.user.
 import { AdminPanelComponent } from "./admin_controllers_group/admin.panel/admin.panel.component";
 import { UserManagementComponent } from "./admin_controllers_group/user-management/user-management.component";
 import { RoleManagementComponent } from "./admin_controllers_group/role-management/role-management.component";
-import { UserCompletedToursComponent } from "./user_controllers_group/user-completed-tours/user-completed-tours.component";
 import { BookedToursComponent } from "./user_controllers_group/booked-tours/booked-tours.component";
 import { UserInformationComponent } from "./user_controllers_group/user-information/user-information.component";
 import { CountryManagementComponent } from "./admin_controllers_group/country-management/country-management.component";
@@ -28,7 +27,8 @@ import { TourManagementComponent } from "./admin_controllers_group/tour-manageme
 import { StatisticComponent } from "./admin_controllers_group/statistic/statistic.component";
 import { authAdminPanelGuard } from "../guards/authAdminPanel.guard";
 import { onlyAdminGuard } from "../guards/only-admin.guard";
-import {HotelAllFeedbacksComponent} from './hotel-controllers-group/hotel-all-feedbacks/hotel-all-feedbacks.component';
+import { HotelAllFeedbacksComponent } from "./hotel-controllers-group/hotel-all-feedbacks/hotel-all-feedbacks.component";
+import { MainToursComponent } from "./user_controllers_group/main-tours/main-tours.component";
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -40,7 +40,7 @@ export const routes: Routes = [
 		path: "successful-registration",
 		component: SuccessfulRegistrationComponent
 	},
-	{ path: "user-tours", component: UserCompletedToursComponent },
+	{ path: "tours", component: MainToursComponent },
 	{ path: "booked-tours", component: BookedToursComponent },
 	{ path: "user-information", component: UserInformationComponent },
 	{
@@ -74,8 +74,6 @@ export const routes: Routes = [
 		path: "hotels/view/:hotelId",
 		component: HotelDetailsComponent
 	},
-	{ path: "hotels/:id/feedbacks",
-    component: HotelAllFeedbacksComponent
-  },
-  {path: "**", component: Error404Component }
+	{ path: "hotels/:id/feedbacks", component: HotelAllFeedbacksComponent },
+	{ path: "**", component: Error404Component }
 ];

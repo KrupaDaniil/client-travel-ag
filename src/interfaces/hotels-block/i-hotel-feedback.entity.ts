@@ -1,6 +1,7 @@
 export interface IHotelFeedbackEntity {
   id:number;
   date:string;
+  title:string;
   text:string;
   hotelId:number;
   username:number;

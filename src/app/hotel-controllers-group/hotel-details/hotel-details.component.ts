@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {StarsComponent} from '../stars/stars.component';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {HotelService} from '../../../services/Hotels/hotel.service';
@@ -40,6 +40,8 @@ export class HotelDetailsComponent implements OnInit {
   private store = inject(EntityStorage)
   public hotel?: IHotelDetailsEntity;
 
+  @ViewChild('bookingComponent') section!: ElementRef;
+
   constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute,
               private check: ValidationService, private stService: StatisticService, private userService: UserService) {
     const id = this.route.snapshot.paramMap.get("hotelId");
@@ -73,6 +75,10 @@ export class HotelDetailsComponent implements OnInit {
         this.hotel.feedbacks.push(event);
       this.hotel.totalFeedbacks++;
     }
+  }
+
+  scrollToSection(){
+    this.section.nativeElement.scrollIntoView({behavior: 'smooth'});
   }
 
 }

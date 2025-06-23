@@ -5,13 +5,15 @@ import { MessageService } from "./message.service";
 import { ValidationService } from "./validation.service";
 import { IAdminTour } from "../interfaces/tour-block/i-admin-tour";
 import { IError } from "../interfaces/i-error";
-import { map, Observable, of, switchMap } from "rxjs";
+import { firstValueFrom, map, Observable, of, switchMap } from "rxjs";
 import { IMinCountryEntity } from "../interfaces/country-block/i-min-country.entity";
 import { IMinCityEntity } from "../interfaces/country-block/i-min-city.entity";
 import { IMinHotel } from "../interfaces/hotels-block/i-min-hotel";
 import { IMinUser } from "../interfaces/i-min-user";
 import { UserRoles } from "../app/enums/user-roles";
 import { IRole } from "../interfaces/i-role";
+import { ICardTour } from "../interfaces/tour-block/i-card-tour";
+import { ITourDetail } from "../interfaces/tour-block/i-tour-detail";
 
 @Injectable({
 	providedIn: "root"
@@ -32,6 +34,35 @@ export class TourService {
 				}
 			}
 		});
+	}
+
+	async setAllClientTour(): Promise<boolean> {
+		return await firstValueFrom(
+			this.http_s.loadingAllToursToClient().pipe(
+				map((item: ICardTour[] | IError): boolean => {
+					if (this.check.isError(item)) {
+						return false;
+					} else {
+						this.storePr2.setAllClientTour(item as ICardTour[]);
+						return true;
+					}
+				})
+			)
+		);
+	}
+
+	async getDetailTour(id: number): Promise<ITourDetail | undefined> {
+		return await firstValueFrom(
+			this.http_s.loadingDetailTourToClient(id).pipe(
+				map((item: ITourDetail | IError): ITourDetail | undefined => {
+					if (this.check.isError(item)) {
+						return undefined;
+					} else {
+						return item as ITourDetail;
+					}
+				})
+			)
+		);
 	}
 
 	addTour(tour: FormData): Observable<IAdminTour | null> {
@@ -74,6 +105,7 @@ export class TourService {
 					if (item) {
 						this.message.setMessage(null);
 						this.storePr2.removeAdminTour(id);
+						this.storePr2.removeClientTour(id);
 						return true;
 					}
 					return false;
