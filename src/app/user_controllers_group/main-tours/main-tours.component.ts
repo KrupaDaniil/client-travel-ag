@@ -5,10 +5,11 @@ import { EntityStoragePr2 } from "../../../storage/entity.storage.pr2";
 import { TourService } from "../../../services/tour.service";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { RouterLink } from "@angular/router";
 
 @Component({
 	selector: "app-main-tours",
-	imports: [LoadingComponent, ReactiveFormsModule, CommonModule],
+	imports: [LoadingComponent, ReactiveFormsModule, CommonModule, RouterLink],
 	providers: [TourService],
 	templateUrl: "./main-tours.component.html",
 	styleUrl: "./main-tours.component.css"

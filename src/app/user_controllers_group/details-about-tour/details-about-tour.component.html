@@ -1,0 +1,42 @@
+@if (tourInfo()) {
+    <div class="d-flex justify-content-center flex-column mt-4 mb-3">
+        <div class="fw-semibold fs-5 ms-4 mb-2">{{tourInfo()?.name}}</div>
+        <div class="text-secondary ms-4">
+            <span class="me-2">Доступно</span>
+            <span>{{convertDate(tourInfo()!.dateStart)}}</span>
+            <span class="mx-2 vr"></span>
+            <span>{{convertDate(tourInfo()!.dateEnd)}}</span>
+        </div>
+    </div>
+    <div class="ds-img-cn mb-3">
+        <img src="{{tourInfo()?.mainImage}}" alt="{{tourInfo()?.name}}" class="tr-img">
+        <div class="row mb-3">
+            <div class="lh-base mb-3">{{tourInfo()?.description}}</div>
+            <div class="col d-flex align-items-center">
+                <span class="me-2">Country:</span>
+                <span class="me-2">{{tourInfo()?.country?.name}}</span>
+                <img src="{{tourInfo()!.country!.flagImage}}" alt="c-img" class="country-flag">
+            </div>
+            <div class="col d-flex align-items-center">
+                <span class="me-2">City:</span>
+                <span class="me-2">{{tourInfo()?.city?.name}}</span>
+            </div>
+            <div class="col d-flex align-items-center">
+                <span class="me-2">Готель:</span>
+                <span class="me-2 text-truncate">{{tourInfo()?.hotel?.hotelName}}</span>
+                <bar-rating *ngIf="tourInfo()?.hotel?.rate" [(rate)]="tourInfo()!.hotel!.rate" [max]="5" [readonly]="true"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end">
+        <span class="me-3 fs-5 fw-semibold">${{tourInfo()?.price}}</span>
+        <div class="btn link-button me-3">Забронювати</div>
+    </div>
+} @else {
+    @if (errorLoading()) {
+        <div class="fw-semibold text-center fs-5 mt-5">Схоже щось пішло не так...</div>
+    } @else {
+        <app-loading></app-loading>
+    }
+}

@@ -1,137 +1,135 @@
-import {Component, ElementRef, OnInit, Signal, signal, viewChild, WritableSignal} from '@angular/core';
-import {UserService} from '../../services/user.service';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
-import {IUserLogin} from '../../interfaces/user-auth/i-user-login';
-import {AuthService} from '../../services/auth.service';
-import {MessageService} from '../../services/message.service';
-import {NgOptimizedImage} from '@angular/common';
-import {ILoginError} from '../../interfaces/i-login-error';
-import {IError} from '../../interfaces/i-error';
-import {ValidationService} from '../../services/validation.service';
-import {Oauth2Service} from '../../services/oauth2.service';
-import {HotToastService} from '@ngxpert/hot-toast';
+import { Component, ElementRef, OnInit, Signal, signal, viewChild, WritableSignal } from "@angular/core";
+import { UserService } from "../../services/user.service";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { IUserLogin } from "../../interfaces/user-auth/i-user-login";
+import { AuthService } from "../../services/auth.service";
+import { MessageService } from "../../services/message.service";
+import { NgOptimizedImage } from "@angular/common";
+import { ILoginError } from "../../interfaces/i-login-error";
+import { IError } from "../../interfaces/i-error";
+import { ValidationService } from "../../services/validation.service";
+import { Oauth2Service } from "../../services/oauth2.service";
+import { HotToastService } from "@ngxpert/hot-toast";
 
 @Component({
-  selector: 'app-login',
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    NgOptimizedImage,
-  ],
-  providers: [UserService, AuthService, MessageService, ValidationService, Oauth2Service],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+	selector: "app-login",
+	imports: [FormsModule, ReactiveFormsModule, NgOptimizedImage],
+	providers: [UserService, AuthService, MessageService, ValidationService, Oauth2Service],
+	templateUrl: "./login.component.html",
+	styleUrl: "./login.component.css"
 })
 export class LoginComponent implements OnInit {
-  private isEmpty: RegExp | undefined;
-  loginForm: FormGroup | undefined;
-  readonly errorMessage: string[];
-  protected invalidUsername: WritableSignal<string | null>;
-  protected invalidPassword: WritableSignal<string | null>;
+	private isEmpty: RegExp | undefined;
+	loginForm: FormGroup | undefined;
+	readonly errorMessage: string[];
+	protected invalidUsername: WritableSignal<string | null>;
+	protected invalidPassword: WritableSignal<string | null>;
 
-  private SHPInput: Signal<ElementRef<HTMLInputElement> | undefined> =
-    viewChild<ElementRef<HTMLInputElement>>("passInp");
-  private SHPImg: Signal<ElementRef<HTMLImageElement> | undefined> =
-    viewChild<ElementRef<HTMLImageElement>>("SHImg");
+	private SHPInput: Signal<ElementRef<HTMLInputElement> | undefined> =
+		viewChild<ElementRef<HTMLInputElement>>("passInp");
+	private SHPImg: Signal<ElementRef<HTMLImageElement> | undefined> = viewChild<ElementRef<HTMLImageElement>>("SHImg");
 
+	constructor(
+		private userService: UserService,
+		private messageService: MessageService,
+		private check: ValidationService,
+		private oauth2: Oauth2Service,
+		private toast: HotToastService
+	) {
+		this.errorMessage = ["Required field;", "Cannot be empty;"];
+		this.invalidUsername = signal<string | null>(null);
+		this.invalidPassword = signal<string | null>(null);
+	}
 
-  constructor(private userService: UserService, private messageService: MessageService,
-              private check: ValidationService, private oauth2: Oauth2Service, private toast: HotToastService) {
-    this.errorMessage = ['Required field;', 'Cannot be empty;'];
-    this.invalidUsername = signal<string | null>(null);
-    this.invalidPassword = signal<string | null>(null);
-  }
+	ngOnInit() {
+		this.isEmpty = new RegExp("^\\S*$");
+		this.loginForm = new FormGroup({
+			login: new FormControl("", {
+				validators: [Validators.required, Validators.pattern(this.isEmpty)]
+			}),
+			password: new FormControl("", {
+				validators: [Validators.required, Validators.pattern(this.isEmpty)]
+			})
+		});
 
-  ngOnInit() {
-    this.isEmpty = new RegExp('^\\S*$');
-    this.loginForm = new FormGroup({
-      login: new FormControl('', {
-        validators: [Validators.required, Validators.pattern(this.isEmpty)],
-      }),
-      password: new FormControl('', {
-        validators: [Validators.required, Validators.pattern(this.isEmpty)],
-      }),
-    });
+		if (!this.userService.singInOAuth2()) {
+			this.showErrorMessage();
+		}
+	}
 
-    if (!this.userService.singInOAuth2()) {
-      this.showErrorMessage();
-    }
-  }
+	onSubmit(): void {
+		if (this.loginForm && this.loginForm.valid) {
+			const _login: string = this.loginForm.get("login")?.value;
+			const _password: string = this.loginForm.get("password")?.value;
 
+			const loginData: IUserLogin = {
+				username: _login,
+				password: _password
+			};
 
-  onSubmit(): void {
-    if (this.loginForm && this.loginForm.valid) {
-      const _login: string = this.loginForm.get('login')?.value;
-      const _password: string = this.loginForm.get('password')?.value;
+			this.userService.singIn(loginData).subscribe({
+				next: (res: void | ILoginError | IError): void => {
+					if (this.check.isError(res)) {
+						this.messageService.setMessage((res as IError).message);
+						this.showErrorMessage();
+					}
 
-      const loginData: IUserLogin = {
-        username: _login,
-        password: _password,
-      };
+					if (this.check.isLoginError(res)) {
+						const loginError: ILoginError = res as ILoginError;
 
-      this.userService.singIn(loginData).subscribe({
-        next: (res: void | ILoginError | IError): void => {
-          if (this.check.isError(res)) {
-            this.messageService.setMessage((res as IError).message);
-            this.showErrorMessage();
-          }
+						if (loginError.usernameError) {
+							this.invalidUsername.set(loginError.usernameError + ";");
+							setTimeout(() => {
+								this.invalidUsername.set(null);
+							}, 5000);
+						} else {
+							this.invalidUsername.set(null);
+						}
 
-          if (this.check.isLoginError(res)) {
-            const loginError: ILoginError = res as ILoginError;
+						if (loginError.passwordError) {
+							this.invalidPassword.set(loginError.passwordError + ";");
+							setTimeout(() => {
+								this.invalidPassword.set(null);
+							}, 5000);
+						} else {
+							this.invalidPassword.set(null);
+						}
+					}
+				}
+			});
+		}
+	}
 
-            if (loginError.usernameError) {
-              this.invalidUsername.set(loginError.usernameError + ";");
-              setTimeout(() => {
-                this.invalidUsername.set(null);
-              }, 5000)
-            } else {
-              this.invalidUsername.set(null);
-            }
+	singInGoogle(): void {
+		this.oauth2.withGoogle();
+	}
 
-            if (loginError.passwordError) {
-              this.invalidPassword.set(loginError.passwordError + ";");
-              setTimeout(() => {
-                this.invalidPassword.set(null);
-              }, 5000)
-            } else {
-              this.invalidPassword.set(null);
-            }
-          }
-        },
-      });
-    }
-  }
+	singInGitHub(): void {
+		this.oauth2.withGitHub();
+	}
 
-  singInGoogle(): void {
-    this.oauth2.withGoogle();
-  }
+	withRegistration(): void {
+		window.location.href = "/registration";
+	}
 
-  singInGitHub(): void {
-    this.oauth2.withGitHub();
-  }
+	private showErrorMessage(): void {
+		if (this.messageService.message() !== null) {
+			this.toast.show(`${this.messageService.message()}`, {
+				theme: "snackbar",
+				duration: 5000,
+				autoClose: true,
+				position: "bottom-center"
+			});
+		}
+	}
 
-  withRegistration(): void {
-    window.location.href = "/registration";
-  }
-
-  private showErrorMessage(): void {
-    if (this.messageService.message() !== null) {
-      this.toast.show(`${this.messageService.message()}`, {
-        theme: "snackbar",
-        duration: 5000,
-        autoClose: true,
-        position: "bottom-left"
-      })
-    }
-  }
-
-  protected onSHBtnClick(): void {
-    if (this.SHPInput()?.nativeElement?.getAttribute("type") === "password") {
-      this.SHPInput()?.nativeElement.setAttribute("type", "text");
-      this.SHPImg()?.nativeElement.setAttribute("src", "/icons/password-show-icon.svg");
-    } else {
-      this.SHPInput()?.nativeElement.setAttribute("type", "password");
-      this.SHPImg()?.nativeElement.setAttribute("src", "/icons/password-hide-icon.svg");
-    }
-  }
+	protected onSHBtnClick(): void {
+		if (this.SHPInput()?.nativeElement?.getAttribute("type") === "password") {
+			this.SHPInput()?.nativeElement.setAttribute("type", "text");
+			this.SHPImg()?.nativeElement.setAttribute("src", "/icons/password-show-icon.svg");
+		} else {
+			this.SHPInput()?.nativeElement.setAttribute("type", "password");
+			this.SHPImg()?.nativeElement.setAttribute("src", "/icons/password-hide-icon.svg");
+		}
+	}
 }

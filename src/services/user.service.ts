@@ -38,7 +38,13 @@ export class UserService {
 			switchMap((item: IUserStartData | ILoginError | IError): Observable<void | ILoginError | IError> => {
 				if (this.check.isUser(item)) {
 					this.store.addUserStartData(item as IUserStartData);
-					this.router.navigate(["/"]).then();
+					const lastURL: string | null = localStorage.getItem("lastURL");
+					if (lastURL && lastURL.trim() !== "") {
+						this.router.navigateByUrl(lastURL);
+						localStorage.setItem("lastUrl", "");
+					} else {
+						this.router.navigate(["/"]).then();
+					}
 				}
 				if (this.check.isLoginError(item)) {
 					return of(item as ILoginError);

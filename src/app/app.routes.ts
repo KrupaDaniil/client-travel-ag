@@ -29,7 +29,8 @@ import { authAdminPanelGuard } from "../guards/authAdminPanel.guard";
 import { onlyAdminGuard } from "../guards/only-admin.guard";
 import { HotelAllFeedbacksComponent } from "./hotel-controllers-group/hotel-all-feedbacks/hotel-all-feedbacks.component";
 import { MainToursComponent } from "./user_controllers_group/main-tours/main-tours.component";
-import {HotelAllComponent} from './hotel-controllers-group/hotel-all/hotel-all.component';
+import { HotelAllComponent } from "./hotel-controllers-group/hotel-all/hotel-all.component";
+import { DetailsAboutTourComponent } from "./user_controllers_group/details-about-tour/details-about-tour.component";
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -37,10 +38,7 @@ export const routes: Routes = [
 	{ path: "registration", component: RegistrationComponent },
 	{ path: "forbidden", component: Error401Component },
 	{ path: "error-data", component: Error400Component },
-	{
-		path: "successful-registration",
-		component: SuccessfulRegistrationComponent
-	},
+	{ path: "successful-registration", component: SuccessfulRegistrationComponent },
 	{ path: "tours", component: MainToursComponent },
 	{ path: "booked-tours", component: BookedToursComponent },
 	{ path: "user-information", component: UserInformationComponent },
@@ -75,10 +73,11 @@ export const routes: Routes = [
 		path: "hotels/view/:hotelId",
 		component: HotelDetailsComponent
 	},
-  {
-    path: "hotels",
-    component:HotelAllComponent
-  },
+	{
+		path: "hotels",
+		component: HotelAllComponent
+	},
 	{ path: "hotels/:id/feedbacks", component: HotelAllFeedbacksComponent },
+	{ path: "tour/detail/:id", component: DetailsAboutTourComponent },
 	{ path: "**", component: Error404Component }
 ];
