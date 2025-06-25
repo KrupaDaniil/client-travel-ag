@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse, HttpStatusCode} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse, HttpStatusCode } from "@angular/common/http";
 import { IUserReg } from "../interfaces/user-auth/i-user-reg";
 import { catchError, map, Observable, of } from "rxjs";
 
@@ -46,7 +46,9 @@ import { ICityBookingEntity } from "../interfaces/country-block/i-city-booking.e
 import { IAdventure } from "../interfaces/hotels-block/i-adventure.entity";
 import { ICardTour } from "../interfaces/tour-block/i-card-tour";
 import { ITourDetail } from "../interfaces/tour-block/i-tour-detail";
-import {IMinCityCountryEntity} from '../interfaces/country-block/i-min-city-country.entity';
+import { IMinCityCountryEntity } from "../interfaces/country-block/i-min-city-country.entity";
+import { IOrderTour } from "../interfaces/tour-block/i-order-tour";
+import { ICreateOrderTour } from "../interfaces/tour-block/i-create-order-tour";
 
 @Injectable({
 	providedIn: "root"
@@ -473,21 +475,20 @@ export class HttpService {
 		);
 	}
 
-  loadingAllMinCityCountries(): Observable<IMinCityCountryEntity[] | IError> {
-    return this.http.get(`${this.baseUrl}/cities/min`,{observe:"response"}).pipe(
-      map((resp:HttpResponse<Object>):IMinCityCountryEntity[] | IError=>{
-        if (resp.status === HttpStatusCode.Ok) {
-          return resp.body as IMinCityCountryEntity[];
-        }
-        else {
-          return new ErrorMessage(HttpStatusCode.NotFound, "Failed to upload cities");
-        }
-      }),
-      catchError(
-        (error:HttpErrorResponse):Observable<IError>=>of(this.getErrorMessage(error, "Data loading error"))
-      )
-    );
-  }
+	loadingAllMinCityCountries(): Observable<IMinCityCountryEntity[] | IError> {
+		return this.http.get(`${this.baseUrl}/cities/min`, { observe: "response" }).pipe(
+			map((resp: HttpResponse<Object>): IMinCityCountryEntity[] | IError => {
+				if (resp.status === HttpStatusCode.Ok) {
+					return resp.body as IMinCityCountryEntity[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.NotFound, "Failed to upload cities");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Data loading error"))
+			)
+		);
+	}
 
 	loadingHotelByIdToAdmin(hotelId: number): Observable<IAdminHotelEntity | IError> {
 		return this.http.get(`${this.baseUrl}/hotel/admin/${hotelId}`, { observe: "response" }).pipe(
@@ -682,6 +683,21 @@ export class HttpService {
 			catchError(
 				(error: HttpErrorResponse): Observable<IError> =>
 					of(this.getErrorMessage(error, "Failed to load tours booking"))
+			)
+		);
+	}
+
+	public loadingAllOrderTourToUser(username: string): Observable<IOrderTour[] | IError> {
+		return this.http.get(`${this.baseUrl}/order-tours?username=${username}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IOrderTour[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IOrderTour[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Invalid data");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to load order tours"))
 			)
 		);
 	}
@@ -938,6 +954,21 @@ export class HttpService {
 			})
 		);
 	}
+
+	createOrderTour(orderTour: ICreateOrderTour): Observable<IOrderTour | IError> {
+		return this.http.post(`${this.baseUrl}/order-tour-add`, orderTour, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IOrderTour | IError => {
+				if (response.status === HttpStatusCode.Created) {
+					return response.body as IOrderTour;
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Could not book a tour");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Server error during booking"))
+			)
+		);
+	}
 	// block update // ------------------------------------------------------------
 	updateUser(user: IUser): Observable<boolean | IError> {
 		return this.http.post(`${this.baseUrl}/update-user`, user, { observe: "response" }).pipe(
@@ -1074,6 +1105,22 @@ export class HttpService {
 			}),
 			catchError(
 				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, this.errorDefaultMessage[1]))
+			)
+		);
+	}
+
+	canceledOrderTour(orderId: number): Observable<IOrderTour | IError> {
+		return this.http.get(`${this.baseUrl}/order-tour-canceled?id=${orderId}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IOrderTour | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IOrderTour;
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Could not cancel the reservation");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Server error when canceling a reservation"))
 			)
 		);
 	}
@@ -1380,29 +1427,28 @@ export class HttpService {
 		);
 	}
 
-  loadingHotelsByParameters(countries: number[], minRate: number, maxRate: number, name: string) {
-    let params = new HttpParams();
-    params.set("minRate",minRate);
-    params.set("maxRate",maxRate);
-    params.set("name",name);
-    if(countries)
-      countries.forEach(country => {params.append("cityIds",country)});
+	loadingHotelsByParameters(countries: number[], minRate: number, maxRate: number, name: string) {
+		let params = new HttpParams();
+		params.set("minRate", minRate);
+		params.set("maxRate", maxRate);
+		params.set("name", name);
+		if (countries)
+			countries.forEach(country => {
+				params.append("cityIds", country);
+			});
 
-    let url = `${this.baseUrl}/hotel/search?name=${name}&minRate=${minRate}&maxRate=${maxRate}`;
-    if(countries)
-      countries.forEach(el=>url+=`&cityIds=${el}`);
+		let url = `${this.baseUrl}/hotel/search?name=${name}&minRate=${minRate}&maxRate=${maxRate}`;
+		if (countries) countries.forEach(el => (url += `&cityIds=${el}`));
 
-    return this.http.get(url,{observe: "response"}).pipe(
-      map((resp:HttpResponse<Object>):IHotelEntity[] | IError=>{
-
-        if(resp.status === HttpStatusCode.Ok) {
-          return resp.body as IHotelEntity[];
-        }
-        else{
-          console.log("error");
-          return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
-        }
-      })
-    )
-  }
+		return this.http.get(url, { observe: "response" }).pipe(
+			map((resp: HttpResponse<Object>): IHotelEntity[] | IError => {
+				if (resp.status === HttpStatusCode.Ok) {
+					return resp.body as IHotelEntity[];
+				} else {
+					console.log("error");
+					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+				}
+			})
+		);
+	}
 }

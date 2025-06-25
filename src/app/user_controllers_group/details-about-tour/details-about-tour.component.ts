@@ -6,16 +6,26 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { LoadingComponent } from "../../loading/loading.component";
 import { BarRating } from "ngx-bar-rating";
+import { OrderTourService } from "../../../services/order-tour.service";
+import { EntityStorage } from "../../../storage/entity.storage";
+import { ICreateOrderTour } from "../../../interfaces/tour-block/i-create-order-tour";
+import { EntityStoragePr2 } from "../../../storage/entity.storage.pr2";
+import { IOrderTour } from "../../../interfaces/tour-block/i-order-tour";
+import { StatisticService } from "../../../services/statistic.service";
+import { HotToastService } from "@ngxpert/hot-toast";
 
 @Component({
 	selector: "app-details-about-tour",
 	imports: [CommonModule, LoadingComponent, BarRating],
-	providers: [TourService],
+	providers: [TourService, OrderTourService],
 	templateUrl: "./details-about-tour.component.html",
 	styleUrl: "./details-about-tour.component.css"
 })
 export class DetailsAboutTourComponent implements OnInit {
 	private route: ActivatedRoute = inject(ActivatedRoute);
+	private store = inject(EntityStorage);
+	private storePr2 = inject(EntityStoragePr2);
+	private readonly toast: HotToastService = inject(HotToastService);
 
 	protected readonly tourInfo: WritableSignal<ITourDetail | null> = signal<ITourDetail | null>(null);
 	private params: Signal<Params | undefined> = toSignal<Params | undefined>(this.route.params);
@@ -32,7 +42,12 @@ export class DetailsAboutTourComponent implements OnInit {
 	private timerId: number | undefined;
 	protected errorLoading: WritableSignal<boolean> = signal<boolean>(false);
 
-	constructor(private tourService: TourService, private router: Router) {
+	constructor(
+		private tourService: TourService,
+		private router: Router,
+		private orderService: OrderTourService,
+		private stService: StatisticService
+	) {
 		this.setTour();
 	}
 
@@ -65,6 +80,39 @@ export class DetailsAboutTourComponent implements OnInit {
 		}
 	}
 
+	private checkUser(): boolean {
+		if (this.store.username() === "") {
+			this.setUserUrl();
+			this.router.navigate(["/authorization"]);
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	protected createOrderTour(): void {
+		if (this.tourInfo() !== null && this.checkUser()) {
+			const order: ICreateOrderTour = {
+				startDate: this.tourInfo()!.dateStart,
+				endDate: this.tourInfo()!.dateEnd,
+				price: this.tourInfo()!.price,
+				tourId: this.tourInfo()!.id,
+				username: this.store.username()
+			} as ICreateOrderTour;
+
+			console.log(order);
+			this.orderService.addOrderTour(order).then((r: IOrderTour | undefined): void => {
+				if (r) {
+					this.storePr2.setOrderTour(r);
+					this.stService.countTBUp(this.tourInfo()!.id);
+					this.toast.success("Тур заброньовано", this.getPr());
+				} else {
+					this.toast.error("Помилка бронювання", this.getPr());
+				}
+			});
+		}
+	}
+
 	protected convertDate(date: string | Date): string {
 		const currentDate: Date = new Date(date);
 		const month: number = currentDate.getMonth() + 1;
@@ -72,5 +120,18 @@ export class DetailsAboutTourComponent implements OnInit {
 		return `${currentDate.getDate().toString().padStart(2, "0")}.${month
 			.toString()
 			.padStart(2, "0")}.${currentDate.getFullYear()}`;
+	}
+
+	private getPr(): Object {
+		return {
+			theme: "snackbar",
+			duration: 5000,
+			autoClose: true,
+			dismissible: true,
+			position: "bottom-center",
+			style: {
+				"border-radius": "30px"
+			}
+		};
 	}
 }

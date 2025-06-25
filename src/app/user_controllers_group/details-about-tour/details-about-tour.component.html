@@ -13,12 +13,12 @@
         <div class="row mb-3">
             <div class="lh-base mb-3">{{tourInfo()?.description}}</div>
             <div class="col d-flex align-items-center">
-                <span class="me-2">Country:</span>
+                <span class="me-2">Країна:</span>
                 <span class="me-2">{{tourInfo()?.country?.name}}</span>
                 <img src="{{tourInfo()!.country!.flagImage}}" alt="c-img" class="country-flag">
             </div>
             <div class="col d-flex align-items-center">
-                <span class="me-2">City:</span>
+                <span class="me-2">Місто:</span>
                 <span class="me-2">{{tourInfo()?.city?.name}}</span>
             </div>
             <div class="col d-flex align-items-center">
@@ -31,7 +31,7 @@
 
     <div class="d-flex align-items-center justify-content-end">
         <span class="me-3 fs-5 fw-semibold">${{tourInfo()?.price}}</span>
-        <div class="btn link-button me-3">Забронювати</div>
+        <button class="btn link-button me-3" (click)="createOrderTour()">Забронювати</button>
     </div>
 } @else {
     @if (errorLoading()) {

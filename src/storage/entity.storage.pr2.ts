@@ -11,8 +11,9 @@ import { IStatisticHotel } from "../interfaces/statistic-block/i-statistic-hotel
 import { IStatisticTour } from "../interfaces/statistic-block/i-statistic-tour";
 import { IHotelRatesEntity } from "../interfaces/hotels-block/i-hotel-rates.entity";
 import { ICardTour } from "../interfaces/tour-block/i-card-tour";
-import {IMinCityEntity} from '../interfaces/country-block/i-min-city.entity';
-import {IMinCityCountryEntity} from '../interfaces/country-block/i-min-city-country.entity';
+import { IMinCityEntity } from "../interfaces/country-block/i-min-city.entity";
+import { IMinCityCountryEntity } from "../interfaces/country-block/i-min-city-country.entity";
+import { IOrderTour } from "../interfaces/tour-block/i-order-tour";
 
 const adminHotelConfig = entityConfig({
 	entity: type<IAdminHotelEntity>(),
@@ -81,10 +82,16 @@ const clientTourConfig = entityConfig({
 });
 
 const minCityCountryConfig = entityConfig({
-  entity: type<IMinCityCountryEntity>(),
-  collection: "minCityCountry",
-  selectId: minCity => minCity.cityId
-  });
+	entity: type<IMinCityCountryEntity>(),
+	collection: "minCityCountry",
+	selectId: minCity => minCity.cityId
+});
+
+const orderTourConfig = entityConfig({
+	entity: type<IOrderTour>(),
+	collection: "orderTours",
+	selectId: orderTour => orderTour.id
+});
 
 export const EntityStoragePr2 = signalStore(
 	{ providedIn: "root" },
@@ -101,6 +108,7 @@ export const EntityStoragePr2 = signalStore(
 	withEntities(hotelRatesConfig),
 	withEntities(clientTourConfig),
 	withEntities(minCityCountryConfig),
+	withEntities(orderTourConfig),
 
 	withMethods(store => ({
 		setAdminHotel(adminHotel: IAdminHotelEntity): void {
@@ -132,6 +140,9 @@ export const EntityStoragePr2 = signalStore(
 		},
 		setClientTour(clientTour: ICardTour): void {
 			patchState(store, setEntity(clientTour, clientTourConfig));
+		},
+		setOrderTour(orderTour: IOrderTour): void {
+			patchState(store, setEntity(orderTour, orderTourConfig));
 		},
 
 		setAllAdminHotels(adminHotels: IAdminHotelEntity[]): void {
@@ -166,10 +177,12 @@ export const EntityStoragePr2 = signalStore(
 			patchState(store, setAllEntities(clientTours, clientTourConfig));
 		},
 
-    setAllMinCityCountries(cities:IMinCityCountryEntity[]):void{
-      patchState(store, setAllEntities(cities,minCityCountryConfig))
-    },
-
+		setAllMinCityCountries(cities: IMinCityCountryEntity[]): void {
+			patchState(store, setAllEntities(cities, minCityCountryConfig));
+		},
+		setAllOrderTour(orderTours: IOrderTour[]): void {
+			patchState(store, setAllEntities(orderTours, orderTourConfig));
+		},
 		removeAdminHotel(id: number): void {
 			patchState(store, removeEntity(id, adminHotelConfig));
 		},
