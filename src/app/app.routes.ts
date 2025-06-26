@@ -31,6 +31,8 @@ import { HotelAllFeedbacksComponent } from "./hotel-controllers-group/hotel-all-
 import { MainToursComponent } from "./user_controllers_group/main-tours/main-tours.component";
 import { HotelAllComponent } from "./hotel-controllers-group/hotel-all/hotel-all.component";
 import { DetailsAboutTourComponent } from "./user_controllers_group/details-about-tour/details-about-tour.component";
+import { BookedHotelsComponent } from "./user_controllers_group/booked-hotels/booked-hotels.component";
+import { UserBookingComponent } from "./user_controllers_group/user-booking/user-booking.component";
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -40,7 +42,14 @@ export const routes: Routes = [
 	{ path: "error-data", component: Error400Component },
 	{ path: "successful-registration", component: SuccessfulRegistrationComponent },
 	{ path: "tours", component: MainToursComponent },
-	{ path: "booked-tours", component: BookedToursComponent },
+	{
+		path: "user-booking",
+		component: UserBookingComponent,
+		children: [
+			{ path: "tours", component: BookedToursComponent },
+			{ path: "hotels", component: BookedHotelsComponent }
+		]
+	},
 	{ path: "user-information", component: UserInformationComponent },
 	{
 		path: "admin-panel",

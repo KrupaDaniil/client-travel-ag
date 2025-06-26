@@ -1,1 +1,38 @@
-<p>booked-tours works!</p>
+<div class="container">
+    @if (loadingFailed()) {
+        <div class="my-5 text-center fw-semibold fs-4">Схоже щось пішло не так...</div>
+    }
+
+    @if (tours().length > 0 && !loadingFailed()) {
+        @for (order of tours(); track $index) {
+            <div class="card w-100 shadow my-3 rounded-3">
+                <div class="row row-cols-1 px-4">
+                    <div class="col my-3">
+                        <span class="fw-semibold fs-5" 
+                        [ngClass]="{'text-decoration-line-through': order.canceled}">{{order.tour.name}}</span>
+                    </div>
+                    <div class="col mb-3">
+                        <span class="text-secondary">Період {{convertDate(order.startDate)}} - {{convertDate(order.endDate)}}</span>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-between mb-3">
+                        @if (order.canceled) {
+                            <div class="text-danger">Скасовано</div>
+                        } @else {
+                            <div class="text-success">Заброньовано</div>
+                        }
+
+                        <div class="fw-semibold fs-5">${{order.price}}</div>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-end mb-3">
+                        <button class="btn btn-sm px-4 btn-outline-dark rounded-5" 
+                        [attr.data-order-id]="order.id" (click)="canceledTour($event)">Скасувати</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    } @else {
+        <app-loading></app-loading>
+    }
+
+</div>

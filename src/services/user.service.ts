@@ -17,6 +17,7 @@ import { IUserInfo } from "../interfaces/user-auth/i-user-info";
 import { ValidationService } from "./validation.service";
 import { ILoginError } from "../interfaces/i-login-error";
 import { IMinUser } from "../interfaces/i-min-user";
+import { LocalConstants } from "../app/enums/local-constants";
 
 @Injectable({
 	providedIn: "root"
@@ -38,10 +39,10 @@ export class UserService {
 			switchMap((item: IUserStartData | ILoginError | IError): Observable<void | ILoginError | IError> => {
 				if (this.check.isUser(item)) {
 					this.store.addUserStartData(item as IUserStartData);
-					const lastURL: string | null = localStorage.getItem("lastURL");
+					const lastURL: string | null = localStorage.getItem(LocalConstants.L_URL);
 					if (lastURL && lastURL.trim() !== "") {
 						this.router.navigateByUrl(lastURL);
-						localStorage.setItem("lastUrl", "");
+						localStorage.setItem(LocalConstants.L_URL, "");
 					} else {
 						this.router.navigate(["/"]).then();
 					}

@@ -5,6 +5,6 @@ export interface IOrderTour {
 	startDate: Date;
 	endDate: Date;
 	price: number;
-	isCanceled: boolean;
+	canceled: boolean;
 	tour: IMinTour;
 }

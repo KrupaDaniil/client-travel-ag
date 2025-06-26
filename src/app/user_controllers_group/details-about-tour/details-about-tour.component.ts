@@ -13,6 +13,7 @@ import { EntityStoragePr2 } from "../../../storage/entity.storage.pr2";
 import { IOrderTour } from "../../../interfaces/tour-block/i-order-tour";
 import { StatisticService } from "../../../services/statistic.service";
 import { HotToastService } from "@ngxpert/hot-toast";
+import { LocalConstants } from "../../enums/local-constants";
 
 @Component({
 	selector: "app-details-about-tour",
@@ -76,7 +77,7 @@ export class DetailsAboutTourComponent implements OnInit {
 	private setUserUrl(): void {
 		const url: string = this.router.url;
 		if (url !== "") {
-			localStorage.setItem("lastURL", url);
+			localStorage.setItem(LocalConstants.L_URL, url);
 		}
 	}
 
@@ -103,7 +104,9 @@ export class DetailsAboutTourComponent implements OnInit {
 			console.log(order);
 			this.orderService.addOrderTour(order).then((r: IOrderTour | undefined): void => {
 				if (r) {
-					this.storePr2.setOrderTour(r);
+					if (this.storePr2.orderToursEntities().length > 0) {
+						this.storePr2.setOrderTour(r);
+					}
 					this.stService.countTBUp(this.tourInfo()!.id);
 					this.toast.success("Тур заброньовано", this.getPr());
 				} else {

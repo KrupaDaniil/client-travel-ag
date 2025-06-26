@@ -1,0 +1,9 @@
+.text-active:hover {
+    border: 1px solid #cbccce;
+    border-radius: 10px 10px 0 0;
+}
+
+.text-active:focus-within {
+    border: 1px solid #cbccce;
+    border-radius: 10px 10px 0 0;
+}
