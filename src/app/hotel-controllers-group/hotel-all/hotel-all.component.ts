@@ -13,7 +13,7 @@ import {IHotelEntity} from '../../../interfaces/hotels-block/i-hotel.entity';
 import {EntityStoragePr2} from '../../../storage/entity.storage.pr2';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {HotelService} from '../../../services/Hotels/hotel.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {map} from 'rxjs';
 import {HotToastService} from '@ngxpert/hot-toast';
@@ -59,6 +59,7 @@ export class HotelAllComponent implements OnInit {
     minRate: new FormControl(0,[Validators.min(0),Validators.max(5)]),
     maxRate: new FormControl(0,[Validators.min(0),Validators.max(5)]),
     cityIds: new FormControl([]),
+
   })
   public countryIdRequest:number|undefined;
 
@@ -67,25 +68,20 @@ export class HotelAllComponent implements OnInit {
   get maxPages(){
     if(this.filteredHotels()!==null){
       return Math.ceil(this.filteredHotels()!.length / this.itemsPerPage);
-
     }
-
     return 0;
   }
 
-  constructor(private service: HotelService, private route: ActivatedRoute, private toast:HotToastService, private citiesSerive:CityService) {
+  constructor(private service: HotelService, private route: ActivatedRoute, private toast:HotToastService, private citiesSerive:CityService, private router:Router) {
+    this.countryIdRequest = this.route.snapshot.queryParams['countryId'];
     this.initHotels();
     this.initCities();
-    this.countryIdRequest = this.route.snapshot.queryParams['countryId'];
-    console.log(this.countryIdRequest);
-    if(this.countryIdRequest){
-
-    }
+    this.applyFilters();
   }
 
   ngOnInit(): void {
 
-    }
+  }
 
   private initHotels(){
     this.service.getAllHotelToAdmin().subscribe(res=>{
@@ -105,11 +101,24 @@ export class HotelAllComponent implements OnInit {
   }
 
   private initCities(){
-    this.citiesSerive.setAllMinCityCountry().subscribe(res=>{
-      if(res){
-        this.filter.patchValue({cityIds:this.cities().filter(c=>c.countryId==this.countryIdRequest).map(x=>x.cityId)})
-      }
-    });
+
+      this.citiesSerive.setAllMinCityCountry().subscribe(res=>{
+        if(res){
+          if(this.countryIdRequest) {
+            this.filter.patchValue({cityIds: this.cities().filter(c => c.countryId == this.countryIdRequest).map(x => x.cityId)});
+          }
+        }
+      });
+
+
+  }
+
+  private applyFilters() {
+    let name = this.route.snapshot.queryParams['name'];
+    if(name){
+      this.filter.patchValue({name:name});
+    }
+
   }
 
   get hotelsOnPage():IHotelEntity[] | undefined{
@@ -119,12 +128,12 @@ export class HotelAllComponent implements OnInit {
   }
 
 
+
   protected loadFilters(){
     let name = this.filter.get('name')?.value;
     let minValue = this.filter.get('minRate')?.value;
     let maxValue = this.filter.get('maxRate')?.value;
     let cityIds = this.filter.get('cityIds')?.value;
-
     let result:IAdminHotelEntity[]=this.hotels()!;
 
     if(name!=="")
@@ -142,6 +151,7 @@ export class HotelAllComponent implements OnInit {
       result = result.filter((h: IAdminHotelEntity) =>
         cityIds.includes(h.city.id));
     }
+
 
 
     this.filteredHotels.set(result);
@@ -170,6 +180,8 @@ export class HotelAllComponent implements OnInit {
 
   private toIHotelEntity(old:IAdminHotelEntity){
     let res:IHotelEntity = new class implements IHotelEntity {
+      countryName: String = "";
+      hotelsInCountry: number = 0;
       address: string = old.address;
       cityId: number = old.city.id;
       cityName: string = old.city.name;
@@ -197,5 +209,8 @@ export class HotelAllComponent implements OnInit {
 
   clearData() {
     this.filter.reset();
+    this.router.navigate(['/hotel']);
   }
+
+
 }

@@ -1,4 +1,4 @@
-<div class="booking-bg">
+<div class="booking-bg" *ngIf="hotel">
   <h3>
     Подивитись ціни для дат вашої подорожі
   </h3>
@@ -61,8 +61,8 @@
             <img ngSrc="/icons/room.svg" width="30" height="30" alt="amount"/>
             <select formControlName="roomType" class="form-select" #roomInp >
               <option value="-1" selected>Номер</option>
-              @if (roomTypes.length>0){
-                @for (room of roomTypes;track $index){
+              @if (hotel.roomTypes.length>0){
+                @for (room of hotel.roomTypes;track $index){
                   <option value="{{room.id}}">{{room.name}}</option>
                 }
               }
@@ -83,8 +83,8 @@
             <img ngSrc="/icons/solar_chef-hat-linear.svg" width="30" height="30" alt="amount"/>
             <select formControlName="foodType" class="form-select" #foodInp>
               <option value="-1" selected disabled>Харчування</option>
-              @if (foodTypes.length>0){
-                @for (food of foodTypes;track $index){
+              @if (hotel.foodTypes.length>0){
+                @for (food of hotel.foodTypes;track $index){
                   <option value="{{food.id}}">{{food.name}}</option>
                 }
               }
@@ -105,7 +105,7 @@
             <img ngSrc="/icons/from.svg" width="30" height="30" alt="amount"/>
             <select formControlName="from" class="form-select">
               <option value="-1" selected>Звідки</option>
-              @if (citiesFrom.length>0){
+              @if (cities().length>0){
                 @for (cityGroup of getCategorizedCities | keyvalue; track $index ) {
                   <optgroup label="{{cityGroup.key}}">
                     @for (city of cityGroup.value; track $index) {
@@ -141,22 +141,22 @@
 
 
 
-      <div class="modal fade" id="bookingModal" #bookingModal tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+      <div *ngIf="currentUser()" class="modal fade" id="bookingModal" #bookingModal tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="bookingModalLabel">Бронювання</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button #closeBookingModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column">
               <div class="mb-3">
                 <label for="clientName" class="form-label">Ім`я</label>
-                <input type="text" id="clientName" class="form-control" formControlName="clientName" form="bookingForm"/>
+                <input type="text" id="clientName" class="form-control"  form="bookingForm" [value]="currentUser()?.firstName" readonly/>
               </div>
 
               <div class="mb-3">
                 <label for="clientSurname" class="form-label">Прізвище</label>
-                <input type="text" id="clientSurname" class="form-control" formControlName="clientSurname" form="bookingForm"/>
+                <input type="text" id="clientSurname" class="form-control" form="bookingForm" [value]="currentUser()?.lastName" readonly/>
               </div>
 
               <div class="mb-3">
@@ -166,8 +166,15 @@
 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
-              <button type="button" class="btn btn-outline-primary" (mousedown)="countApp()" (click)="bookHotel()">Забронювати</button>
+              @if (loadingBooking) {
+                <div class="spinner-border" role="status">
+
+                </div>
+              }@else{
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-outline-primary" (mousedown)="countApp()" (click)="bookHotel()">Забронювати</button>
+              }
+
             </div>
           </div>
         </div>
@@ -179,6 +186,27 @@
 </div>
 
 
+
+<button type="button" #successModal class="d-none" data-bs-toggle="modal" data-bs-target="#successModal">
+  Launch demo modal
+</button>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="successModalLabel">Заявка прийнята!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h6>Очікуйте дзвінка менеджера :)</h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ок</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

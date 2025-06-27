@@ -10,7 +10,6 @@ export interface IHotelEntity {
 
 
   feedbacksAmount:number;
-  place:number;
   cityId:number;
   cityName:string;
 }

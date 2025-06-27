@@ -14,6 +14,7 @@ import { ICardTour } from "../interfaces/tour-block/i-card-tour";
 import { IMinCityEntity } from "../interfaces/country-block/i-min-city.entity";
 import { IMinCityCountryEntity } from "../interfaces/country-block/i-min-city-country.entity";
 import { IOrderTour } from "../interfaces/tour-block/i-order-tour";
+import {ICityBookingEntity} from '../interfaces/country-block/i-city-booking.entity';
 
 const adminHotelConfig = entityConfig({
 	entity: type<IAdminHotelEntity>(),
@@ -93,6 +94,12 @@ const orderTourConfig = entityConfig({
 	selectId: orderTour => orderTour.id
 });
 
+const citiesBookingConfig = entityConfig({
+  entity:type<ICityBookingEntity>(),
+  collection: "citiesBookings",
+  selectId: citiesBooking => citiesBooking.cityId
+})
+
 export const EntityStoragePr2 = signalStore(
 	{ providedIn: "root" },
 
@@ -109,11 +116,15 @@ export const EntityStoragePr2 = signalStore(
 	withEntities(clientTourConfig),
 	withEntities(minCityCountryConfig),
 	withEntities(orderTourConfig),
+  withEntities(citiesBookingConfig),
 
 	withMethods(store => ({
 		setAdminHotel(adminHotel: IAdminHotelEntity): void {
 			patchState(store, setEntity(adminHotel, adminHotelConfig));
 		},
+    setAllCitiesBooking(cities: ICityBookingEntity[]): void {
+      patchState(store, setAllEntities(cities, citiesBookingConfig));
+    },
 		setMinCountry(minCountry: IMinCountryEntity): void {
 			patchState(store, setEntity(minCountry, minCountryConfig));
 		},
