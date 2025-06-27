@@ -1,1 +1,54 @@
-<p>booked-hotels works!</p>
+<div class="container">
+    @if (isLoadingFailed()) {
+        <div class="my-5 text-center fw-semibold fs-4">Схоже щось пішло не так...</div>
+    }
+
+    @if (hotelsList() && hotelsList()!.length > 0 && !isLoadingFailed()) {
+        @for (order of hotelsList(); track $index) {
+            <div class="card w-100 shadow my-3 rounded-3">
+                <div class="row row-cols-1 px-4">
+                    <div class="col d-flex align-items-center justify-content-between my-3">
+                        <div class="d-flex align-items-center">
+                            <div class="fw-semibold fs-5 text-transparent me-3" 
+                            [ngClass]="{'text-decoration-line-through': (order.status === stCanceled)}">
+                                {{order.hotel.hotelName}}
+                            </div>
+                            <bar-rating [(rate)]="order.hotel.rate" [max]="5" [readonly]="true" class="me-3"></bar-rating>
+                        </div>
+                        <div class="text-secondary fs-6">
+                            <img ngSrc="icons/geo-img.svg" alt="geo" width="20" height="20" priority class="float-start me-2">
+                            <span>{{order.hotel.address}}</span> 
+                        </div>
+                    </div>
+                    <div class="col mb-4">
+                        <span class="text-secondary">Період {{convertDate(order.dateFrom)}} - {{convertDate(order.dateTo)}}</span>
+                    </div>
+                    <div class="col mb-4">
+                        <div class="row">
+                            <div class="col text-secondary">Тип номеру: {{order.roomTypeName}}</div>
+                            <div class="col text-secondary">Тип меню: {{order.foodTypeName}}</div>
+                            <div class="col text-secondary">Кількість осіб: {{order.peopleAmount}}</div>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-between mb-3">
+                        @if (order.status === stCanceled) {
+                            <div class="text-danger">Скасовано</div>
+                        } @else {
+                            <div class="text-success">Заброньовано</div>
+                        }
+
+                        <div class="fw-semibold fs-5">${{order.fullPrice}}</div>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-end mb-3">
+                        <button class="btn btn-sm px-4 btn-outline-dark rounded-5" 
+                        [attr.data-order-id]="order.id" (click)="cancelOrder($event)">Скасувати</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    } @else {
+        <app-loading></app-loading>
+    }
+
+</div>

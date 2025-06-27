@@ -43,12 +43,12 @@ import { IStatisticHotel } from "../interfaces/statistic-block/i-statistic-hotel
 import { IStatisticTour } from "../interfaces/statistic-block/i-statistic-tour";
 import { IHotelRatesEntity } from "../interfaces/hotels-block/i-hotel-rates.entity";
 import { ICityBookingEntity } from "../interfaces/country-block/i-city-booking.entity";
-import { IAdventure } from "../interfaces/hotels-block/i-adventure.entity";
 import { ICardTour } from "../interfaces/tour-block/i-card-tour";
 import { ITourDetail } from "../interfaces/tour-block/i-tour-detail";
 import { IMinCityCountryEntity } from "../interfaces/country-block/i-min-city-country.entity";
 import { IOrderTour } from "../interfaces/tour-block/i-order-tour";
 import { ICreateOrderTour } from "../interfaces/tour-block/i-create-order-tour";
+import { IOrderHotels } from "../interfaces/hotels-block/i-order-hotels";
 
 @Injectable({
 	providedIn: "root"
@@ -702,6 +702,21 @@ export class HttpService {
 		);
 	}
 
+	public loadingAllOrderHotelToUser(username: string): Observable<IOrderHotels[] | IError> {
+		return this.http.get(`${this.baseUrl}/hotel/all-booking-hotel/${username}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IOrderHotels[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IOrderHotels[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Invalid data");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to load order hotels"))
+			)
+		);
+	}
+
 	// block adding // ------------------------------------------------------------
 	addUser(user: INewUser): Observable<IUser | IError> {
 		return this.http.post(`${this.baseUrl}/add-user`, user, { observe: "response" }).pipe(
@@ -1114,6 +1129,22 @@ export class HttpService {
 			map((response: HttpResponse<Object>): IOrderTour | IError => {
 				if (response.status === HttpStatusCode.Ok) {
 					return response.body as IOrderTour;
+				} else {
+					return new ErrorMessage(HttpStatusCode.BadRequest, "Could not cancel the reservation");
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Server error when canceling a reservation"))
+			)
+		);
+	}
+
+	canceledOrderHotel(orderId: number): Observable<IOrderHotels | IError> {
+		return this.http.get(`${this.baseUrl}/hotel/canceled-booking-hotel/${orderId}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): IOrderHotels | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as IOrderHotels;
 				} else {
 					return new ErrorMessage(HttpStatusCode.BadRequest, "Could not cancel the reservation");
 				}

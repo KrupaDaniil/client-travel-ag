@@ -23,7 +23,7 @@
 
         <div class="tour-container">
             @for (tour of displayTours(); track $index) {
-                <div class="card rounded-3 card-df">
+                <div class="card rounded-3 card-df shadow">
                     <img src="{{tour.imageUrl}}" alt="{{tour.name}}" class="card-img-top card-img-df">
                     <div class="card-body">
                         <div class="card-title fs-4 fw-semibold d-inline-block text-truncate">{{tour.name}}</div>
