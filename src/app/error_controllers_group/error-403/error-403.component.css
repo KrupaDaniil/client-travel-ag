@@ -1,0 +1,29 @@
+.t-center {
+    width: 100%;
+    height: 86dvh;
+}
+
+.h-text {
+    font-size: 15dvh;
+}
+
+.back-btn {
+    width: 250px;
+    height: 37px;
+    border: 1px solid darkorange;
+    background: none;
+    color: darkorange;
+    border-radius: 30px;
+    margin-top: 25px;
+    transition: transform 0.05s ease;
+}
+
+.back-btn:hover {
+    background: darkorange;
+    color: white;
+    box-shadow: 0 0 10px rgb(167, 165, 165);
+}
+
+.back-btn:active {
+    transform: scale(0.96);
+}

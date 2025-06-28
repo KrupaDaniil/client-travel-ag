@@ -75,9 +75,15 @@ export class DetailsAboutTourComponent implements OnInit {
 	}
 
 	private setUserUrl(): void {
+		const maxTime: number = 5 * 60 * 1000;
+
 		const url: string = this.router.url;
 		if (url !== "") {
 			localStorage.setItem(LocalConstants.L_URL, url);
+
+			window.setTimeout((): void => {
+				localStorage.removeItem(LocalConstants.L_URL);
+			}, maxTime);
 		}
 	}
 

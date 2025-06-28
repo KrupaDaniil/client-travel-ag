@@ -8,7 +8,7 @@ export const authUserGuard: CanActivateFn = (route: ActivatedRouteSnapshot, stat
 	if (store.username() !== "" && store.roles().length > 0) {
 		return true;
 	} else {
-		window.location.href = "/login";
+		window.location.href = "/unauthorized";
 		return false;
 	}
 };

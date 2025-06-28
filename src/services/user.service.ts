@@ -34,18 +34,22 @@ export class UserService {
 		private check: ValidationService
 	) {}
 
+	private goRedirect(): void {
+		const lastURL: string | null = localStorage.getItem(LocalConstants.L_URL);
+		if (lastURL && lastURL.trim() !== "") {
+			this.router.navigateByUrl(lastURL);
+			localStorage.setItem(LocalConstants.L_URL, "");
+		} else {
+			this.router.navigate(["/"]).then();
+		}
+	}
+
 	singIn(user: IUserLogin): Observable<void | ILoginError | IError> {
 		return this.http.loginUser(user).pipe(
 			switchMap((item: IUserStartData | ILoginError | IError): Observable<void | ILoginError | IError> => {
 				if (this.check.isUser(item)) {
 					this.store.addUserStartData(item as IUserStartData);
-					const lastURL: string | null = localStorage.getItem(LocalConstants.L_URL);
-					if (lastURL && lastURL.trim() !== "") {
-						this.router.navigateByUrl(lastURL);
-						localStorage.setItem(LocalConstants.L_URL, "");
-					} else {
-						this.router.navigate(["/"]).then();
-					}
+					this.goRedirect();
 				}
 				if (this.check.isLoginError(item)) {
 					return of(item as ILoginError);
@@ -71,7 +75,7 @@ export class UserService {
 					if (data != null) {
 						this.store.addUserStartData(new UserStartData(data.roles, data.sub));
 						flag = true;
-						this.router.navigate(["/"]).then();
+						this.goRedirect();
 					}
 				}
 			}

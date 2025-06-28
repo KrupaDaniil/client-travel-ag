@@ -8,10 +8,12 @@ import { LocalConstants } from "../../enums/local-constants";
 import { HotToastService } from "@ngxpert/hot-toast";
 import { CommonModule } from "@angular/common";
 import { LoadingComponent } from "../../loading/loading.component";
+import { StatisticService } from "../../../services/statistic.service";
 
 @Component({
 	selector: "app-booked-tours",
 	imports: [CommonModule, LoadingComponent],
+	providers: [OrderTourService, StatisticService],
 	templateUrl: "./booked-tours.component.html",
 	styleUrl: "./booked-tours.component.css",
 	standalone: true
@@ -24,7 +26,7 @@ export class BookedToursComponent implements OnInit {
 	private readonly username: string;
 	protected loadingFailed: WritableSignal<boolean> = signal<boolean>(false);
 
-	constructor(private orderService: OrderTourService, private router: Router) {
+	constructor(private orderService: OrderTourService, private router: Router, private st: StatisticService) {
 		this.username = this.store.username();
 	}
 
@@ -63,6 +65,7 @@ export class BookedToursComponent implements OnInit {
 				if (r) {
 					this.store2.setOrderTour(r);
 					this.toast.success("Бронювання скасовано", this.getPrObj());
+					this.st.countTBDown(r.tour.id);
 				} else {
 					this.toast.error("Помилка скасування", this.getPrObj());
 				}

@@ -9,11 +9,12 @@ import { LoadingComponent } from "../../loading/loading.component";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { AdventureStatus } from "../../enums/adventure-status";
 import { BarRating } from "ngx-bar-rating";
+import { StatisticService } from "../../../services/statistic.service";
 
 @Component({
 	selector: "app-booked-hotels",
 	imports: [LoadingComponent, CommonModule, NgOptimizedImage, BarRating],
-	providers: [OrderHotelsService],
+	providers: [OrderHotelsService, StatisticService],
 	templateUrl: "./booked-hotels.component.html",
 	styleUrl: "./booked-hotels.component.css",
 	standalone: true
@@ -27,7 +28,7 @@ export class BookedHotelsComponent implements OnInit {
 	protected isLoadingFailed: WritableSignal<boolean> = signal<boolean>(false);
 	protected stCanceled: number;
 
-	constructor(private orderService: OrderHotelsService, private router: Router) {
+	constructor(private orderService: OrderHotelsService, private router: Router, private st: StatisticService) {
 		this.username = this.store.username();
 		this.stCanceled = AdventureStatus.CANCELED;
 	}
@@ -77,6 +78,7 @@ export class BookedHotelsComponent implements OnInit {
 								if (index !== -1) {
 									or[index] = r;
 									this.toast.success("Бронювання скасовано", this.tsObj());
+									this.st.countHBDown(r.hotel.id);
 								} else {
 									this.toast.error("Помилка скасування", this.tsObj());
 								}
