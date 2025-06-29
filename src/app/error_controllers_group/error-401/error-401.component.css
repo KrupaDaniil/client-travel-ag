@@ -25,5 +25,6 @@
 }
 
 .back-btn:active {
+    border: 1px solid darkorange;
     transform: scale(0.96);
 }

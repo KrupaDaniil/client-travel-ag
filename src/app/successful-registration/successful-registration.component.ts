@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { RouterModule } from "@angular/router";
 
 @Component({
-  selector: 'app-successful-registration',
-  imports: [],
-  templateUrl: './successful-registration.component.html',
-  styleUrl: './successful-registration.component.css'
+	selector: "app-successful-registration",
+	imports: [RouterModule],
+	templateUrl: "./successful-registration.component.html",
+	styleUrl: "./successful-registration.component.css"
 })
-export class SuccessfulRegistrationComponent {
-
-}
+export class SuccessfulRegistrationComponent {}
