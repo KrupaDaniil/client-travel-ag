@@ -27,7 +27,7 @@ import {HttpParams} from '@angular/common/http';
 })
 export class HotelsListByCityComponent implements OnInit {
   private store = inject(EntityStorage)
-
+  public cancelError = true;
   readonly hotels: Signal<IHotelEntity[]> = computed(() => this.store.hotelsEntities());
   readonly topHotels: Signal<IHotelEntity[]> = computed(() => this.store.topHotelsEntities());
   readonly countries: Signal<ICountryEntity[]> = computed(() => this.store.countriesEntities());
@@ -45,12 +45,16 @@ export class HotelsListByCityComponent implements OnInit {
   constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute, private router: Router) {
     const id = this.route.snapshot.paramMap.get("countryId");
     this.countryId = id ? Number(id) : 0;
+
+
   }
 
   ngOnInit(): void {
     this.service.getRandomHotelsByCountryId(this.countryId, 4);
     this.service.getTopHotelsByCountryId(this.countryId, 3);
-    this.countryService.setCountryById(this.countryId);
+    this.countryService.setCountryById(this.countryId).subscribe(res=>{
+      this.cancelError = res;
+    });
   }
 
 

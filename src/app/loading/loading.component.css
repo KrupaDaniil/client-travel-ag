@@ -24,6 +24,21 @@
   font-size: 2rem;
 }
 
+.reload{
+  border:none;
+  background-color: white;
+}
+
+a.wrap{
+  text-decoration: none;
+  color: black;
+}
+
+a>h4{
+  cursor: pointer;
+}
+
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
