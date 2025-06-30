@@ -12,7 +12,7 @@ import { ICreateOrderTour } from "../../../interfaces/tour-block/i-create-order-
 import { EntityStoragePr2 } from "../../../storage/entity.storage.pr2";
 import { IOrderTour } from "../../../interfaces/tour-block/i-order-tour";
 import { StatisticService } from "../../../services/statistic.service";
-import { HotToastService } from "@ngxpert/hot-toast";
+import { CreateHotToastRef, HotToastService } from "@ngxpert/hot-toast";
 import { LocalConstants } from "../../enums/local-constants";
 
 @Component({
@@ -106,13 +106,15 @@ export class DetailsAboutTourComponent implements OnInit {
 				tourId: this.tourInfo()!.id,
 				username: this.store.username()
 			} as ICreateOrderTour;
+			const ref: CreateHotToastRef<unknown> = this.toast.loading("Завантаження...", this.getPr());
 
-			console.log(order);
 			this.orderService.addOrderTour(order).then((r: IOrderTour | undefined): void => {
+				ref.close();
 				if (r) {
 					if (this.storePr2.orderToursEntities().length > 0) {
 						this.storePr2.setOrderTour(r);
 					}
+
 					this.stService.countTBUp(this.tourInfo()!.id);
 					this.toast.success("Тур заброньовано", this.getPr());
 				} else {

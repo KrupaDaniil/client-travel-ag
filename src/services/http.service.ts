@@ -1305,7 +1305,7 @@ export class HttpService {
 	}
 
 	rdBookingHotel(hotelId: number): Observable<IStatisticHotel | IError> {
-		return this.http.get(`${this.baseUrl}/booking-down-hotel?id=${hotelId}`, { observe: "response" }).pipe(
+		return this.http.get(`${this.baseUrl}/booking-down-hotel?hotelId=${hotelId}`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): IStatisticHotel | IError => {
 				if (response.status === HttpStatusCode.Ok) {
 					return response.body as IStatisticHotel;
@@ -1366,7 +1366,7 @@ export class HttpService {
 	}
 
 	rdBookingTour(tourId: number): Observable<IStatisticTour | IError> {
-		return this.http.get(`${this.baseUrl}/booking-down-tour?id=${tourId}`, { observe: "response" }).pipe(
+		return this.http.get(`${this.baseUrl}/booking-down-tour?tourId=${tourId}`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): IStatisticTour | IError => {
 				if (response.status === HttpStatusCode.Ok) {
 					return response.body as IStatisticTour;
@@ -1482,6 +1482,4 @@ export class HttpService {
 			})
 		);
 	}
-
-
 }

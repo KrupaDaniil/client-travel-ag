@@ -5,7 +5,7 @@ import { IOrderTour } from "../../../interfaces/tour-block/i-order-tour";
 import { EntityStorage } from "../../../storage/entity.storage";
 import { Router } from "@angular/router";
 import { LocalConstants } from "../../enums/local-constants";
-import { HotToastService } from "@ngxpert/hot-toast";
+import { CreateHotToastRef, HotToastService } from "@ngxpert/hot-toast";
 import { CommonModule } from "@angular/common";
 import { LoadingComponent } from "../../loading/loading.component";
 import { StatisticService } from "../../../services/statistic.service";
@@ -59,9 +59,12 @@ export class BookedToursComponent implements OnInit {
 		const trId: string | undefined = element.dataset["orderId"];
 
 		if (trId) {
+			const ref: CreateHotToastRef<unknown> = this.toast.loading("Обробка...", this.getPrObj());
 			const id: number = Number.parseInt(trId);
-			console.log(id);
+
 			this.orderService.canceledOrderTour(id).then((r: IOrderTour | undefined): void => {
+				ref.close();
+
 				if (r) {
 					this.store2.setOrderTour(r);
 					this.toast.success("Бронювання скасовано", this.getPrObj());

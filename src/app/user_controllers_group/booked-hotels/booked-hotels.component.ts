@@ -4,7 +4,7 @@ import { IOrderHotels } from "../../../interfaces/hotels-block/i-order-hotels";
 import { OrderHotelsService } from "../../../services/Hotels/order-hotels.service";
 import { Router } from "@angular/router";
 import { LocalConstants } from "../../enums/local-constants";
-import { HotToastService } from "@ngxpert/hot-toast";
+import { CreateHotToastRef, HotToastService } from "@ngxpert/hot-toast";
 import { LoadingComponent } from "../../loading/loading.component";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { AdventureStatus } from "../../enums/adventure-status";
@@ -69,10 +69,13 @@ export class BookedHotelsComponent implements OnInit {
 			const id: string | undefined = element.dataset["orderId"];
 
 			if (id) {
+				const ref: CreateHotToastRef<unknown> = this.toast.loading("Обробка...", this.tsObj());
 				const rId: number = Number.parseInt(id);
+
 				this.orderService.getCanceledOrderHotel(rId).then((r: IOrderHotels | undefined): void => {
 					if (r) {
 						this.hotelsList.update((or: IOrderHotels[] | null): IOrderHotels[] | null => {
+							ref.close();
 							if (or !== null) {
 								const index: number = or.findIndex((orh: IOrderHotels): boolean => orh.id === rId);
 								if (index !== -1) {
@@ -86,6 +89,8 @@ export class BookedHotelsComponent implements OnInit {
 							return or;
 						});
 					} else {
+						ref.close();
+						this.toast.error("Помилка скасування", this.tsObj());
 					}
 				});
 			}
