@@ -15,6 +15,25 @@
     margin-bottom: 40px;
 }
 
+.faq-container {
+    width: 70dvw;
+}
+
 .w-acr {
-    width: 75dvw;
+    width: 100%;
+}
+
+.accordion-button:hover {
+    background-color: rgb(224, 227, 230) !important;
+}
+
+.accordion-button:focus-within {
+    box-shadow: none !important;
+    background-color: rgb(219, 221, 223) !important;
+    color: rgb(46, 46, 46) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgb(219, 221, 223) !important;
+    color: rgb(46, 46, 46) !important;
 }
