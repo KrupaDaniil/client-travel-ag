@@ -1,0 +1,20 @@
+.block-center {
+    width: 100%;
+    margin: 30px auto;
+}
+
+.title-h {
+    font-size: 10dvh;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.text-h {
+    font-size: 14pt;
+    color: gray;
+    margin-bottom: 40px;
+}
+
+.w-acr {
+    width: 75dvw;
+}

@@ -36,6 +36,7 @@ import { UserBookingComponent } from "./user_controllers_group/user-booking/user
 import { Component } from "@angular/core";
 import { Error403Component } from "./error_controllers_group/error-403/error-403.component";
 import { authUserGuard } from "../guards/auth-user.guard";
+import { FAQComponent } from "./user_controllers_group/f.a.q/f.a.q.component";
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -94,5 +95,6 @@ export const routes: Routes = [
 	},
 	{ path: "hotels/:id/feedbacks", component: HotelAllFeedbacksComponent },
 	{ path: "tour/detail/:id", component: DetailsAboutTourComponent },
+	{ path: "faq", component: FAQComponent },
 	{ path: "**", component: Error404Component }
 ];
