@@ -17,6 +17,7 @@ import {UserService} from '../../../services/user.service';
 import {NgOptimizedImage} from '@angular/common';
 import {OwlDateTimeModule} from '@danielmoncada/angular-datetime-picker';
 import {ReactiveFormsModule} from '@angular/forms';
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: 'app-hotel-details',
@@ -39,11 +40,12 @@ export class HotelDetailsComponent implements OnInit {
   protected readonly hotelId: number;
   private store = inject(EntityStorage)
   public hotel?: IHotelDetailsEntity;
-
+  public cancelError = true;
   @ViewChild('bookingComponent') section!: ElementRef;
 
   constructor(private service: HotelService, private countryService: CountryService, private route: ActivatedRoute,
-              private check: ValidationService, private stService: StatisticService, private userService: UserService) {
+              private check: ValidationService, private stService: StatisticService, private userService: UserService,
+              private toast:HotToastService) {
     const id = this.route.snapshot.paramMap.get("hotelId");
     this.hotelId = id ? Number(id) : 0;
     console.log("main", this.hotelId);
@@ -57,7 +59,11 @@ export class HotelDetailsComponent implements OnInit {
     this.service.getHotelById(this.hotelId).subscribe((res: IHotelDetailsEntity | undefined): void => {
       if (res) {
         this.hotel = res;
-        console.log(this.hotel);
+        this.cancelError = true;
+      }
+      else{
+        this.cancelError = false;
+        this.toast.show("Hotel not found.");
       }
     });
   }

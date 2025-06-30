@@ -11,6 +11,7 @@ import {LoadingComponent} from '../../loading/loading.component';
 import {NgClass} from '@angular/common';
 import {EntityStorage} from '../../../storage/entity.storage';
 import {IError} from '../../../interfaces/i-error';
+import {HotToastService} from '@ngxpert/hot-toast';
 
 @Component({
   selector: 'app-hotel-all-feedbacks',
@@ -44,10 +45,13 @@ export class HotelAllFeedbacksComponent implements OnInit {
     return 0;
   }
 
-  constructor(private router: ActivatedRoute, private service:HotelService,private check: ValidationService) {
+  public cancelError = true;
+
+  constructor(private router: ActivatedRoute, private service:HotelService,private check: ValidationService, private toast:HotToastService) {
     const id = this.router.snapshot.paramMap.get("id");
     this.hotelId = id ? Number(id) : 0;
   }
+
 
   ngOnInit(): void {
     this.initHotel();
@@ -76,6 +80,11 @@ export class HotelAllFeedbacksComponent implements OnInit {
         if (!this.check.isError(res as IError)) {
           this.storepr2.setAllHotelFeedbacks(res as IHotelFeedbackEntity[]);
           this.feedbacksToShow.set(this.feedbacksOnPage);
+          this.cancelError = true;
+        }
+        else{
+          this.cancelError = false;
+          this.toast.show("Feedbacks not found.");
         }
       });
     }

@@ -40,9 +40,17 @@ import {CityService} from '../../../services/city.service';
   templateUrl: './hotel-all.component.html',
   styleUrl: './hotel-all.component.css'
 })
-export class HotelAllComponent implements OnInit {
+export class HotelAllComponent {
+
+  constructor(private service: HotelService, private route: ActivatedRoute, private toast:HotToastService, private citiesSerive:CityService, private router:Router) {
+    this.countryIdRequest = this.route.snapshot.queryParams['countryId'];
+    this.initHotels();
+    this.initCities();
+    this.applyFilters();
+  }
 
 
+  public cancelError = false;
 
   readonly store = inject(EntityStoragePr2);
 
@@ -72,16 +80,7 @@ export class HotelAllComponent implements OnInit {
     return 0;
   }
 
-  constructor(private service: HotelService, private route: ActivatedRoute, private toast:HotToastService, private citiesSerive:CityService, private router:Router) {
-    this.countryIdRequest = this.route.snapshot.queryParams['countryId'];
-    this.initHotels();
-    this.initCities();
-    this.applyFilters();
-  }
 
-  ngOnInit(): void {
-
-  }
 
   private initHotels(){
     this.service.getAllHotelToAdmin().subscribe(res=>{
@@ -92,10 +91,12 @@ export class HotelAllComponent implements OnInit {
           autoClose: true,
           position: "bottom-left"
         });
+        this.cancelError = false;
       }
       else{
         this.filteredHotels.set(this.hotels());
         this.loadFilters();
+        this.cancelError = true;
       }
     });
   }

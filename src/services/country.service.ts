@@ -4,10 +4,12 @@ import {HttpService} from './http.service';
 import {MessageService} from './message.service';
 import {ValidationService} from './validation.service';
 import {ICountryEntity} from '../interfaces/country-block/i-country.entity';
-import {firstValueFrom, map} from 'rxjs';
+import {firstValueFrom, map, Observable, of} from 'rxjs';
 import {IError} from '../interfaces/i-error';
 import {IMinCountryEntity} from '../interfaces/country-block/i-min-country.entity';
 import {EntityStoragePr2} from '../storage/entity.storage.pr2';
+import {HttpResponse, HttpStatusCode} from '@angular/common/http';
+import {ErrorMessage} from '../models/error-message';
 
 @Injectable({
   providedIn: 'root',
@@ -49,19 +51,25 @@ export class CountryService {
     });
   }
 
-  setCountryById(id: number): void {
-    this.http_s.loadingCountryById(id).subscribe({
-      next: (item: ICountryEntity | IError) => {
-        if (this.check.isError(item)) {
-          this.message.setMessage((item as IError).message);
+  setCountryById(id: number):Observable<boolean> {
+    return this.http_s.loadingCountryById(id).pipe(
+      map((response): boolean => {
+        if (this.check.isError(response)) {
+          this.message.setMessage((response as IError).message);
+          return false;
         } else {
           this.message.setMessage(null);
-          this.store.setCountry(item as ICountryEntity);
-
+          this.store.setCountry(response as ICountryEntity);
+          return true;
         }
-      }
-    });
+    })
+    );
   }
+
+//
+//   next: (item: ICountryEntity | IError) => {
+//
+// }
 
   setMinCountryById(id: number): void {
     this.http_s.loadingMinCountryById(id).subscribe({
