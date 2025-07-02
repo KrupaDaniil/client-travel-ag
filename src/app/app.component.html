@@ -2,8 +2,8 @@
   <nav class="navbar navStyle z-3">
     <div class="container-fluid align-items-center justify-content-between">
       <div class="d-flex align-items-center justify-content-start">
-        <button class="menu-button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <button class="menu-button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
           <img ngSrc="/icons/menu_24dp.svg" height="35" width="35" alt="menu">
         </button>
       </div>
@@ -16,18 +16,18 @@
 
       <div class="d-flex align-items-center justify-content-end">
         <a class="loginUserBtn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUserMenu"
-           aria-controls="offcanvasUserMenu" aria-label="Toggle navigation">
+          aria-controls="offcanvasUserMenu" aria-label="Toggle navigation">
           <img ngSrc="/icons/login_user_icon.svg" height="45" width="45" alt="Login_User">
         </a>
       </div>
 
       <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasUserMenu"
-           aria-labelledby="offcanvasUserMenu">
+        aria-labelledby="offcanvasUserMenu">
         <div class="offcanvas-header">
           <div class="row w-100">
             <div class="col">
               @if (isLogin()) {
-                <div class="offcanvas-title is-user fst-italic" id="offcanvasUserMenuLabel">{{ username() }}</div>
+              <div class="offcanvas-title is-user fst-italic" id="offcanvasUserMenuLabel">{{ username() }}</div>
               }
             </div>
             <div class="col">
@@ -41,23 +41,27 @@
         </div>
         <div class="offcanvas-body">
           @if (isLogin()) {
-            <div class="d-flex justify-content-center align-items-center flex-column">
-              <a class="btn link-button mb-3 w-75" routerLink="booked-tours" data-bs-dismiss="offcanvas">Moї бронювання</a>
-              <a class="btn link-button mb-3 w-75" routerLink="user-information" data-bs-dismiss="offcanvas">Про користувача</a>
-              <button class="btn link-button my-4 w-75" (click)="onLogout()" data-bs-dismiss="offcanvas">Вихід</button>
-            </div>
+          <div class="d-flex justify-content-center align-items-center flex-column">
+            <a class="btn link-button mb-3 w-75" routerLink="booked-tours" data-bs-dismiss="offcanvas">Moї
+              бронювання</a>
+            <a class="btn link-button mb-3 w-75" routerLink="user-information" data-bs-dismiss="offcanvas">Про
+              користувача</a>
+            <button class="btn link-button my-4 w-75" (click)="onLogout()" data-bs-dismiss="offcanvas">Вихід</button>
+          </div>
           } @else {
-            <div class="d-flex justify-content-center align-items-center flex-column">
-              <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Moї бронювання</a>
-              <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Про користувача</a>
-              <a class="btn link-button my-4 w-75" routerLink="/authorization" data-bs-dismiss="offcanvas">Увійти</a>
-            </div>
+          <div class="d-flex justify-content-center align-items-center flex-column">
+            <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Moї
+              бронювання</a>
+            <a class="btn link-button mb-3 w-75" routerLink="authorization" data-bs-dismiss="offcanvas">Про
+              користувача</a>
+            <a class="btn link-button my-4 w-75" routerLink="/authorization" data-bs-dismiss="offcanvas">Увійти</a>
+          </div>
           }
         </div>
       </div>
 
       <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasNavbar"
-           aria-labelledby="offcanvasNavbarLabel">
+        aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
           <div class="row w-100">
             <div class="col">
@@ -90,10 +94,54 @@
   </nav>
   <main>
     <div class="main-container">
-      <router-outlet/>
+      <router-outlet />
     </div>
   </main>
+  <footer class="footer rounded-top-4">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>Navigation</h3>
+          <ul>
+            <li><a routerLink="/">Home</a></li>
+            <li><a href="#">Tours</a></li>
+            <li><a href="#">Contacts</a></li>
+            <li><a href="#">Reviews</a></li>
+            <li><a href="#">Countries</a></li>
+            <li><a href="#">Tour Calendar</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>Tours</h3>
+          <ul>
+            <li><a href="#">Paris</a></li>
+            <li><a href="#">Egypt</a></li>
+            <li><a href="#">Budapest</a></li>
+            <li><a href="#">Italy</a></li>
+            <li><a href="#">Spain</a></li>
+            <li><a href="#">Bulgaria</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>Contacts</h3>
+          <div class="contact-info">
+            <p><strong>Mon - Fri:</strong> 10:00 - 19:00</p>
+            <p><strong>Address:</strong><br>11, Prospect Nebesnoi Sotni, 2, Odesa</p>
+            <div class="phone-numbers">
+              <a href="tel:+380443384144">+38 044 338 41 44</a>
+              <a href="tel:+380665914144">+38 066 591 41 44</a>
+              <a href="tel:+380965914144">+38 096 591 41 44</a>
+              <a href="tel:+380635914144">+38 063 591 41 44</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 Online Travel Agency - SunTrip Ukraine</p>
+      </div>
+    </div>
+  </footer>
 </div>
-
-
-
