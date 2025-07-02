@@ -1,3 +1,7 @@
+.start-container {
+  min-height: 100dvh !important;
+}
+
 .menu-button {
   background: transparent;
   margin-left: 7.224dvw;
@@ -14,21 +18,21 @@
   margin-top: 1.2rem;
 }
 
-.user-d-item>.dropdown-item {
+.user-d-item > .dropdown-item {
   margin: 0 !important;
   padding: 0.7rem 1rem 0.7rem 1rem !important;
 }
 
-.user-d-item>.dropdown-divider {
+.user-d-item > .dropdown-divider {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.user-d-item> :hover {
+.user-d-item > :hover {
   background: rgb(143, 151, 159, 0.2) !important;
 }
 
-.user-d-item>.dropdown-item:active {
+.user-d-item > .dropdown-item:active {
   color: rgba(255, 106, 0, 0.8);
 }
 
@@ -162,17 +166,17 @@
     height: 35px;
   }
 
-  .menu-button>img {
+  .menu-button > img {
     width: 31px;
     height: 31px;
   }
 
-  .loginUserBtn>img {
+  .loginUserBtn > img {
     width: 35px;
     height: 35px;
   }
 
-  .containerLogo>img {
+  .containerLogo > img {
     width: 49px;
     height: 49px;
   }
@@ -181,12 +185,12 @@
 
 @media (max-width: 402px) {
 
-  .menu-button>img {
+  .menu-button > img {
     width: 28px;
     height: 28px;
   }
 
-  .loginUserBtn>img {
+  .loginUserBtn > img {
     width: 28px;
     height: 28px;
   }

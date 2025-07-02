@@ -1,10 +1,12 @@
 .country-flag {
     width: 20px;
 }
+
 .tr-img {
     width: 400px;
     border-radius: 15px;
 }
+
 .ds-img-cn {
     display: grid;
     grid-template-columns: 420px 1fr;
@@ -15,22 +17,22 @@
 }
 
 .link-button {
-  text-decoration: none;
-  padding: 10px 30px;
-  border-radius: 30px;
-  background-color: transparent;
-  border: 1px solid #D9913C;
-  color: #D9913C;
-  font-size: 16px;
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 30px;
+    background-color: transparent;
+    border: 1px solid #D9913C;
+    color: #D9913C;
+    font-size: 16px;
 }
 
 .link-button:hover {
-  background-color: #D9913C;
-  color: white;
+    background-color: #D9913C;
+    color: white;
 }
 
 .link-button:active {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 @media (max-width: 830px) {
@@ -45,6 +47,7 @@
     .ds-img-cn {
         grid-template-rows: auto 1fr;
     }
+
     .tr-img {
         width: 350px;
     }
