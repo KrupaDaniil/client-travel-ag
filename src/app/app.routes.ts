@@ -38,6 +38,8 @@ import { Error403Component } from "./error_controllers_group/error-403/error-403
 import { authUserGuard } from "../guards/auth-user.guard";
 import { FAQComponent } from "./user_controllers_group/f.a.q/f.a.q.component";
 import { ContactsComponent } from "./user_controllers_group/contacts/contacts.component";
+import { CountryCardsComponent } from "./user_controllers_group/country-cards/country-cards.component";
+import { CitiesComponent } from "./user_controllers_group/cities/cities.component";
 
 export const routes: Routes = [
 	{ path: "", component: MainUserComponent },
@@ -98,5 +100,7 @@ export const routes: Routes = [
 	{ path: "tour/detail/:id", component: DetailsAboutTourComponent },
 	{ path: "contacts", component: ContactsComponent },
 	{ path: "faq", component: FAQComponent },
+  { path: "countries", component: CountryCardsComponent},
+  { path: "cities", component: CitiesComponent},
 	{ path: "**", component: Error404Component }
 ];

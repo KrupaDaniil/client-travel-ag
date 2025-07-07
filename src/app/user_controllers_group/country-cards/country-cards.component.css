@@ -1,0 +1,264 @@
+/* Color Variables */
+:root {
+  --primary-dark: #11212D;
+  --accent-red: #79292A;
+  --accent-orange: #D9913C;
+  --accent-blue: #8DBECD;
+  --accent-green: #9F943B;
+  --white: #ffffff;
+  --light-gray: #f8f9fa;
+  --shadow-light: rgba(17, 33, 45, 0.1);
+  --shadow-medium: rgba(17, 33, 45, 0.15);
+  --shadow-heavy: rgba(17, 33, 45, 0.25);
+}
+
+.country-cards-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.country-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.country-card {
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px var(--shadow-light);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.country-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 60px var(--shadow-medium);
+  text-decoration: none;
+  color: inherit;
+}
+
+.country-card:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.country-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue), var(--accent-green));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.country-card:hover::before {
+  opacity: 1;
+}
+
+.card-flag-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--light-gray), #e9ecef);
+}
+
+.card-flag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.country-card:hover .card-flag {
+  transform: scale(1.08);
+}
+
+.card-flag-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, rgba(17, 33, 45, 0.1));
+  pointer-events: none;
+}
+
+.card-content {
+  padding: 1.75rem 1.5rem;
+  background: var(--white);
+  position: relative;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+  line-height: 1.3;
+  text-align: center;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+.country-card:hover .card-title {
+  color: var(--accent-red);
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  color: var(--primary-dark);
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--accent-blue);
+  border-top: 4px solid var(--accent-orange);
+  border-radius: 50%;
+  animation: spin 1.2s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+.loading-state p {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--accent-green);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .country-cards {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .country-cards-container {
+    padding: 1.5rem;
+  }
+
+  .country-cards {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card-flag-container {
+    height: 180px;
+  }
+
+  .card-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .country-cards-container {
+    padding: 1rem;
+  }
+
+  .country-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .country-card {
+    max-width: 100%;
+  }
+
+  .card-flag-container {
+    height: 160px;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* Animation for card entrance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.country-card {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.country-card:nth-child(1) { animation-delay: 0.1s; }
+.country-card:nth-child(2) { animation-delay: 0.15s; }
+.country-card:nth-child(3) { animation-delay: 0.2s; }
+.country-card:nth-child(4) { animation-delay: 0.25s; }
+.country-card:nth-child(5) { animation-delay: 0.3s; }
+.country-card:nth-child(6) { animation-delay: 0.35s; }
+.country-card:nth-child(7) { animation-delay: 0.4s; }
+.country-card:nth-child(8) { animation-delay: 0.45s; }
+
+/* Hover effects for better interactivity */
+.country-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent, rgba(141, 190, 205, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.country-card:hover::after {
+  opacity: 1;
+}
+
+/* Focus states for accessibility */
+.country-card:focus {
+  outline: 3px solid var(--accent-blue);
+  outline-offset: 4px;
+}
+
+.country-card:focus:not(:focus-visible) {
+  outline: none;
+}

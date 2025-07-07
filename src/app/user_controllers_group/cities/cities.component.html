@@ -1,0 +1,43 @@
+<div class="cities-container">
+      <div class="cities-header">
+        <button class="back-button" (click)="goBack()">
+          ← Back to Countries
+        </button>
+        <h1 class="page-title" *ngIf="countryName()">
+          Cities in {{ countryName() }}
+        </h1>
+      </div>
+
+      <div class="cities-content">
+        <div class="city-cards" *ngIf="cities().length > 0; else loadingTemplate">
+          <div
+            class="city-card"
+            *ngFor="let city of cities(); trackBy: trackByCityId"
+          >
+            <div class="city-card-background">
+              <img
+                [src]="city.cityImage.blobUrl"
+                [alt]="city.cityImage.blobFileName || city.name + ' city view'"
+                class="city-image"
+                loading="lazy"
+              />
+              <div class="city-overlay"></div>
+            </div>
+            <div class="city-info">
+              <h3 class="city-name">{{ city.name }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #loadingTemplate>
+          <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading cities...</p>
+          </div>
+        </ng-template>
+
+        <div class="empty-state" *ngIf="cities().length === 0 && !isLoading()">
+          <p>No cities found for this country.</p>
+        </div>
+      </div>
+    </div>
