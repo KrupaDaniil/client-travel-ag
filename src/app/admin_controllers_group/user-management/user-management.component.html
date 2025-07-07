@@ -1,227 +1,245 @@
 @if (errorMessage() && errorMessage() !== null) {
-  <div class="d-flex align-items-center justify-content-center mt-3 fs-4">
-    {{ errorMessage() }}
-  </div>
+    <div class="d-flex align-items-center justify-content-center mt-3 fs-4">
+        {{ errorMessage() }}
+    </div>
 } @else {
-  <div class="row my-3">
-    <div class="col g-cn">
-      <div class="d-flex align-items-center">
-        <form *ngIf="searchDataForm" [formGroup]="searchDataForm">
-          <div class="searchBlock">
-            <input class="form-control form-control-sm" type="text" aria-label="search input"
-                   formControlName="search_text">
-            <select class="form-select form-select-sm" formControlName="search_option"
-                    aria-label="select search option">
-              <option selected hidden="hidden" disabled>search by...</option>
-              <option value="username">Username</option>
-              <option value="email">Email</option>
-            </select>
-            <button type="button" class="btn btn-sm" (click)="searchUser()">
-              <img ngSrc="/icons/search_adm_org.svg" width="20" height="20" alt="search icon">
-            </button>
-            <button type="button" class="btn btn-sm" (click)="clearSearch()">
-              <img ngSrc="/icons/clear_close.png" width="20" height="20" alt="clear icon">
-            </button>
-          </div>
-        </form>
-      </div>
+    <div class="row my-3">
+        <div class="col g-cn">
+            <div class="d-flex align-items-center">
+                <form *ngIf="searchDataForm" [formGroup]="searchDataForm">
+                    <div class="searchBlock">
+                        <input class="form-control form-control-sm" type="text" aria-label="search input"
+                               formControlName="search_text">
+                        <select class="form-select form-select-sm" formControlName="search_option"
+                                aria-label="select search option">
+                            <option selected hidden="hidden" disabled>search by...</option>
+                            <option value="username">Username</option>
+                            <option value="email">Email</option>
+                        </select>
+                        <button type="button" class="btn btn-sm" (click)="searchUser()">
+                            <img ngSrc="/icons/search_adm_org.svg" width="20" height="20" alt="search icon">
+                        </button>
+                        <button type="button" class="btn btn-sm" (click)="clearSearch()">
+                            <img ngSrc="/icons/clear_close.png" width="20" height="20" alt="clear icon">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col">
+            <div class="btn-act-block">
+                <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #addUserBtn>Add user</button>
+                <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3" #editUserBtn>Edit user</button>
+                <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3" #RemoveUserBtn>Remove user</button>
+            </div>
+        </div>
     </div>
-    <div class="col">
-      <div class="btn-act-block">
-        <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #addUserBtn>Add user</button>
-        <button class="btn btn-sm btn-outline-primary rounded-5 me-2 px-3" #editUserBtn>Edit user</button>
-        <button class="btn btn-sm btn-outline-danger rounded-5 me-2 px-3" #RemoveUserBtn>Remove user</button>
-      </div>
-    </div>
-  </div>
 
-  @if (displayContent() !== null && displayContent()!.length > 0) {
+    @if (displayContent() !== null && displayContent()!.length > 0) {
 
-    <div class="my-3">
-      <table class="table table-hover align-middle">
-        <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Username</th>
-          <th scope="col">Name</th>
-          <th scope="col">Surname</th>
-          <th scope="col">Birthday</th>
-          <th scope="col">Email</th>
-          <th scope="col">Is Active</th>
-          <th scope="col">Roles</th>
-        </tr>
-        </thead>
-        <tbody class="table-group-divider" #usersBlock>
-          @for (user of displayContent(); track user.id; let i = $index) {
-            <tr [attr.data-user-id]="user.id">
-              <th scope="row">
-                <div class="d-flex align-items-center justify-content-center">
-                  <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId" disabled/>
-                  <div class="ms-2">{{ i + 1 }}</div>
+        <div class="my-3">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Birthday</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Is Active</th>
+                    <th scope="col">Roles</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider" #usersBlock>
+                    @for (user of displayContent()! | paginate: {
+                        itemsPerPage: displaySize,
+                        currentPage: page
+                    }; track user.id; let i = $index) {
+                        <tr [attr.data-user-id]="user.id">
+                            <th scope="row">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId"
+                                           disabled/>
+                                    <div class="ms-2">{{ i + 1 }}</div>
+                                </div>
+                            </th>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.firstName }}</td>
+                            <td>{{ user.lastName }}</td>
+                            <td>{{ user.birthday }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                @if (user.active) {
+                                    <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
+                                } @else {
+                                    <input type="checkbox" class="checked-flag form-check-input" disabled/>
+                                }
+                            </td>
+                            <td>
+                                @if (user.roles.length > 0) {
+                                    @for (role of user.roles; track $index) {
+                                        <div class="mb-1">{{ role.name }}</div>
+                                    }
+                                } @else {
+                                    <div class="mb-1">No roles assigned</div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex align-items-center justify-content-center my-4">
+                <pagination-controls (pageChange)="page = $event" [previousLabel]="''"
+                                     [nextLabel]="''"></pagination-controls>
+            </div>
+        </div>
+
+
+        <dialog id="addUserModal" #addUserModal class="custom-dialog">
+            <div class="closeBtnContainer">
+                <button class="btn-close" #addModelBtnClose></button>
+            </div>
+
+
+            <form method="dialog" *ngIf="addUserForm" [formGroup]="addUserForm" class="m-3">
+                <div class="row mb-3">
+                    <div class="col input-group input-group-sm">
+                        <span class="input-group-text">Username</span>
+                        <input type="text" class="form-control disabled" formControlName="username"
+                               aria-label="Username">
+                    </div>
+                    <div class="col input-group input-group-sm">
+                        <span class="input-group-text">Email</span>
+                        <input type="text" class="form-control" formControlName="email" aria-label="Email">
+                    </div>
+                    <div class="col input-group input-group-sm">
+                        <span class="input-group-text">Password</span>
+                        <input type="password" class="form-control" formControlName="password" aria-label="Password">
+                    </div>
                 </div>
-              </th>
-              <td>{{ user.username }}</td>
-              <td>{{ user.firstName }}</td>
-              <td>{{ user.lastName }}</td>
-              <td>{{ user.birthday }}</td>
-              <td>{{ user.email }}</td>
-              <td>
-                @if (user.active) {
-                  <input type="checkbox" class="checked-flag form-check-input " checked disabled/>
-                } @else {
-                  <input type="checkbox" class="checked-flag form-check-input" disabled/>
-                }
-              </td>
-              <td>
-                @if (user.roles.length > 0) {
-                  @for (role of user.roles; track $index) {
-                    <div class="mb-1">{{ role.name }}</div>
-                  }
-                } @else {
-                  <div class="mb-1">No roles assigned</div>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
 
+                <div class="row mb-3">
+                    <div class="col input-group input-group-sm">
+                        <span class="input-group-text">Name</span>
+                        <input type="text" class="form-control" formControlName="firstName" aria-label="Name">
+                    </div>
+                    <div class="col input-group input-group-sm">
+                        <span class="input-group-text">Surname</span>
+                        <input type="text" class="form-control" formControlName="lastName" aria-label="Surname">
+                    </div>
+                    <div class="col input-group input-group-sm">
+                        <span class="input-group-text">Birthday</span>
+                        <input type="date" class="form-control" formControlName="birthday" aria-label="Birthday">
+                    </div>
+                </div>
 
-    <dialog id="addUserModal" #addUserModal class="custom-dialog">
-      <div class="closeBtnContainer">
-        <button class="btn-close" #addModelBtnClose></button>
-      </div>
+                <div class="d-flex align-items-center justify-content-start mb-3">
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" formControlName="active" aria-label="Is Active">
+                        <label class="form-check-label">Is Active</label>
+                    </div>
+                    <div formGroupName="roles">
+                        @for (user_role of userRoles(); track $index) {
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input checked-flag me-1"
+                                       [formControlName]="user_role.name">
+                                <label class="form-check-label me-2">{{ user_role.name }}</label>
+                            </div>
+                        }
+                    </div>
+                </div>
 
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="submit" class="btn btn-sm btn-outline-success px-4" (click)="addingUser()">Add
+                    </button>
+                </div>
 
-      <form method="dialog" *ngIf="addUserForm" [formGroup]="addUserForm" class="m-3">
-        <div class="row mb-3">
-          <div class="col input-group input-group-sm">
-            <span class="input-group-text">Username</span>
-            <input type="text" class="form-control disabled" formControlName="username" aria-label="Username">
-          </div>
-          <div class="col input-group input-group-sm">
-            <span class="input-group-text">Email</span>
-            <input type="text" class="form-control" formControlName="email" aria-label="Email">
-          </div>
-          <div class="col input-group input-group-sm">
-            <span class="input-group-text">Password</span>
-            <input type="password" class="form-control" formControlName="password" aria-label="Password">
-          </div>
-        </div>
+            </form>
 
-        <div class="row mb-3">
-          <div class="col input-group input-group-sm">
-            <span class="input-group-text">Name</span>
-            <input type="text" class="form-control" formControlName="firstName" aria-label="Name">
-          </div>
-          <div class="col input-group input-group-sm">
-            <span class="input-group-text">Surname</span>
-            <input type="text" class="form-control" formControlName="lastName" aria-label="Surname">
-          </div>
-          <div class="col input-group input-group-sm">
-            <span class="input-group-text">Birthday</span>
-            <input type="date" class="form-control" formControlName="birthday" aria-label="Birthday">
-          </div>
-        </div>
+        </dialog>
 
-        <div class="d-flex align-items-center justify-content-start mb-3">
-          <div class="form-check form-check-inline">
-            <input type="checkbox" class="form-check-input" formControlName="active" aria-label="Is Active">
-            <label class="form-check-label">Is Active</label>
-          </div>
-          <div formGroupName="roles">
-            @for (user_role of userRoles(); track $index) {
-              <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input checked-flag me-1" [formControlName]="user_role.name">
-                <label class="form-check-label me-2">{{ user_role.name }}</label>
-              </div>
+        <dialog id="editUserModal" #editUserModal class="custom-dialog">
+            <div class="closeBtnContainer">
+                <button class="btn-close" #editModalBtnClose></button>
+            </div>
+            @if (editUserForm) {
+
+                <form method="dialog" [formGroup]="editUserForm" class="m-3">
+                    <input type="hidden" formControlName="id"/>
+
+                    <div class="row mb-3">
+                        <div class="col input-group input-group-sm">
+                            <span class="input-group-text">Username</span>
+                            <input type="text" class="form-control" formControlName="username" aria-label="Username"
+                                   required/>
+                        </div>
+                        <div class="col input-group input-group-sm">
+                            <span class="input-group-text">Email</span>
+                            <input
+                                    type="email" class="form-control" formControlName="email" aria-label="Email"
+                                    required/>
+                        </div>
+
+                        <div class="col input-group input-group-sm">
+                            <span class="input-group-text">Password</span>
+                            <input type="password" class="form-control" formControlName="password"
+                                   aria-label="Password"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col input-group input-group-sm">
+                            <span class="input-group-text">Name</span>
+                            <input type="text" class="form-control" formControlName="firstName" aria-label="Name"
+                                   required/>
+                        </div>
+                        <div class="col input-group input-group-sm">
+                            <span class="input-group-text">Surname</span>
+                            <input type="text" class="form-control" formControlName="lastName" aria-label="Surname"
+                                   required/>
+                        </div>
+                        <div class="col input-group input-group-sm">
+                            <span class="input-group-text">Birthday</span>
+                            <input type="date" class="form-control" formControlName="birthday" aria-label="Birthday"/>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-start mb-3">
+                        <div class="form-check me-3">
+                            <input type="checkbox" class="form-check-input checked-flag" formControlName="active"
+                                   aria-label="Is Active"/>
+                            <label class="form-check-label">Is Active</label>
+                        </div>
+
+                        <div formGroupName="roles">
+                            @for (_role of userRoles(); track $index) {
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input checked-flag me-1"
+                                           [formControlName]="_role.name"/>
+                                    <label class="form-check-label me-2">{{ _role.name }}</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-sm btn-outline-success px-4" (click)="onEditUser()">Save
+                        </button>
+                    </div>
+                </form>
             }
-          </div>
-        </div>
-
-        <div class="d-flex align-items-center justify-content-end">
-          <button type="submit" class="btn btn-sm btn-outline-success px-4" (click)="addingUser()">Add</button>
-        </div>
-
-      </form>
-
-    </dialog>
-
-    <dialog id="editUserModal" #editUserModal class="custom-dialog">
-      <div class="closeBtnContainer">
-        <button class="btn-close" #editModalBtnClose></button>
-      </div>
-      @if (editUserForm) {
-
-        <form method="dialog" [formGroup]="editUserForm" class="m-3">
-          <input type="hidden" formControlName="id"/>
-
-          <div class="row mb-3">
-            <div class="col input-group input-group-sm">
-              <span class="input-group-text">Username</span>
-              <input type="text" class="form-control" formControlName="username" aria-label="Username" required/>
-            </div>
-            <div class="col input-group input-group-sm">
-              <span class="input-group-text">Email</span>
-              <input
-                type="email" class="form-control" formControlName="email" aria-label="Email" required/>
-            </div>
-
-            <div class="col input-group input-group-sm">
-              <span class="input-group-text">Password</span>
-              <input type="password" class="form-control" formControlName="password" aria-label="Password"/>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col input-group input-group-sm">
-              <span class="input-group-text">Name</span>
-              <input type="text" class="form-control" formControlName="firstName" aria-label="Name" required/>
-            </div>
-            <div class="col input-group input-group-sm">
-              <span class="input-group-text">Surname</span>
-              <input type="text" class="form-control" formControlName="lastName" aria-label="Surname" required/>
-            </div>
-            <div class="col input-group input-group-sm">
-              <span class="input-group-text">Birthday</span>
-              <input type="date" class="form-control" formControlName="birthday" aria-label="Birthday"/>
-            </div>
-          </div>
-
-          <div class="d-flex align-items-center justify-content-start mb-3">
-            <div class="form-check me-3">
-              <input type="checkbox" class="form-check-input checked-flag" formControlName="active"
-                     aria-label="Is Active"/>
-              <label class="form-check-label">Is Active</label>
-            </div>
-
-            <div formGroupName="roles">
-              @for (_role of userRoles(); track $index) {
-                <div class="form-check form-check-inline">
-                  <input type="checkbox" class="form-check-input checked-flag me-1" [formControlName]="_role.name"/>
-                  <label class="form-check-label me-2">{{ _role.name }}</label>
+        </dialog>
+    } @else {
+        <div class="d-flex align-items-center justify-content-center mt-3 flex-column">
+            @if (this.loadingFailed()) {
+                <span class="fs-4">List is empty</span>
+            } @else {
+                <div class="fw-semibold fs-5 my-3">Loading list...</div>
+                <div class="spinner-border text-secondary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-              }
-            </div>
-          </div>
-
-          <div class="d-flex align-items-center justify-content-end">
-            <button type="submit" class="btn btn-sm btn-outline-success px-4" (click)="onEditUser()">Save</button>
-          </div>
-        </form>
-      }
-    </dialog>
-  } @else {
-    <div class="d-flex align-items-center justify-content-center mt-3 flex-column">
-      @if (this.loadingFailed()) {
-        <span class="fs-4">List is empty</span>
-      } @else {
-        <div class="fw-semibold fs-5 my-3">Loading list...</div>
-        <div class="spinner-border text-secondary" role="status">
-          <span class="visually-hidden">Loading...</span>
+            }
         </div>
-      }
-    </div>
-  }
+    }
 }

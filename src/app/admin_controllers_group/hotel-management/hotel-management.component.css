@@ -1,45 +1,49 @@
 .carousel-admin-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50dvw;
-  height: 50dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50dvw;
+    height: 50dvh;
 }
 
 .carousel-admin-container img {
-  max-width: 40dvw;
+    max-width: 40dvw;
 }
 
 .selected-flag:checked {
-  background-color: rgba(255, 69, 0, 0.8);
-  border-color: orangered;
+    background-color: rgba(255, 69, 0, 0.8);
+    border-color: orangered;
 }
 
 .selected-flag:disabled {
-  opacity: 1;
+    opacity: 1;
 }
 
 .selected-flag:focus {
-  box-shadow: 0 0 5px #8c8c8c;
-  border-color: #e4e7ea;
+    box-shadow: 0 0 5px #8c8c8c;
+    border-color: #e4e7ea;
 }
 
 .custom-dialog {
-  min-width: 60dvw !important;
-  max-height: 60dvh !important;
+    min-width: 60dvw !important;
+    max-height: 60dvh !important;
 }
 
 .ds-ts {
-  width: 100%;
-  height: 15dvh;
-  resize: none;
+    width: 100%;
+    height: 15dvh;
+    resize: none;
 }
 
 .cursor-pointer {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .g-cn input:focus {
-  box-shadow: none;
-  border-color: #e4e7ea;
+    box-shadow: none;
+    border-color: #e4e7ea;
+}
+
+::ng-deep .ngx-pagination .current {
+    background: rgba(49, 190, 154, 0.8) !important;
 }

@@ -5,319 +5,328 @@
 @import url('https://fonts.cdnfonts.com/css/roboto');
 
 html, body {
-  font-family: 'Roboto', sans-serif;
-  height: 100%;
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
 }
 
 body {
-  margin: 0 auto !important;
-  font-family: Futura, sans-serif !important;
+    margin: 0 auto !important;
+    font-family: Futura, sans-serif !important;
 }
 
 .container {
-  min-width: 402px !important;
-  max-width: 1440px !important;
+    min-width: 402px !important;
+    max-width: 1440px !important;
 }
 
 .hide-block {
-  opacity: 0;
-  transition: opacity 0.8s ease;
+    opacity: 0;
+    transition: opacity 0.8s ease;
 }
 
 .show-block {
-  opacity: 1;
-  transition: opacity 1s ease;
+    opacity: 1;
+    transition: opacity 1s ease;
 }
 
 .searchBlock {
-  width: 35dvw;
-  min-width: 30rem;
-  display: grid;
-  grid-template-columns: 54% 30% 8% 8%;
-  grid-template-rows: 100%;
-  align-items: center;
-  margin-left: 10px;
-  border: 1px solid lightgray;
-  border-radius: 30px;
-  padding-left: 10px;
+    width: 35dvw;
+    min-width: 30rem;
+    display: grid;
+    grid-template-columns: 54% 30% 8% 8%;
+    grid-template-rows: 100%;
+    align-items: center;
+    margin-left: 10px;
+    border: 1px solid lightgray;
+    border-radius: 30px;
+    padding-left: 10px;
 }
 
 .searchBlock > input {
-  width: 100%;
-  border: none;
+    width: 100%;
+    border: none;
 }
 
 .searchBlock > select {
-  width: 100%;
-  border: none;
-  border-radius: 0;
-  border-left: 1px lightgray solid;
-  border-right: 1px lightgray solid;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    border-left: 1px lightgray solid;
+    border-right: 1px lightgray solid;
 }
 
 .searchBlock > select:focus-within {
-  box-shadow: none;
-  outline: none;
-  border-color: lightgray;
+    box-shadow: none;
+    outline: none;
+    border-color: lightgray;
 }
 
 .btn-act-block {
-  min-width: 20rem;
-  display: flex;
-  align-items: center;
-  justify-content: end;
+    min-width: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: end;
 }
 
 .searchBlock > button {
-  width: 100%;
-  border-radius: 0;
-  border: none;
-  background-color: white;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    background-color: white;
 }
 
 .searchBlock > button:last-child {
-  border-left: 1px lightgray solid;
-  border-radius: 0 30px 30px 0;
+    border-left: 1px lightgray solid;
+    border-radius: 0 30px 30px 0;
 }
 
 .searchBlock > button:hover {
-  background-color: #e1e1e1;
+    background-color: #e1e1e1;
 }
 
 .custom-dialog {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 1px 1px 10px #343434;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 1px 1px 10px #343434;
 }
 
 .closeBtnContainer {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding: 0 1rem;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 0 1rem;
 }
 
 ::backdrop {
-  background-color: rgba(157, 157, 157, 0.7);
+    background-color: rgba(157, 157, 157, 0.7);
 }
 
 .not-resize {
-  resize: none;
+    resize: none;
 }
 
 .ng-select-ngCs.ng-select-container {
-  border-color: #dfe3e7 !important;
-  max-width: 30dvw !important;
+    border-color: #dfe3e7 !important;
+    max-width: 30dvw !important;
 }
 
 .ng-select-ngCs.ng-select-opened > .ng-select-container {
-  border-color: #86aed3 !important;
+    border-color: #86aed3 !important;
 }
 
 .ng-dropdown-panel.ng-select-bottom {
-  border-bottom-color: #86aed3 !important;
-  border-left-color: #86aed3 !important;
-  border-right-color: #86aed3 !important;
-  border-top-color: rgba(91, 115, 138, 0.8) !important;
+    border-bottom-color: #86aed3 !important;
+    border-left-color: #86aed3 !important;
+    border-right-color: #86aed3 !important;
+    border-top-color: rgba(91, 115, 138, 0.8) !important;
 }
 
 .ng-select-ngCs.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
-  box-shadow: none !important;
-  border-color: #86aed3 !important;
+    box-shadow: none !important;
+    border-color: #86aed3 !important;
 }
 
 .admin-input-group {
-  border-radius: 4px !important;
-  height: 36px !important;
+    border-radius: 4px !important;
+    height: 36px !important;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
-  background-color: rgba(201, 217, 236, 0.73) !important;
-  text-decoration: underline orangered 1px !important;
+    background-color: rgba(201, 217, 236, 0.73) !important;
+    text-decoration: underline orangered 1px !important;
 }
 
 .ng-option:hover {
-  background-color: rgba(201, 217, 236, 0.73) !important;
+    background-color: rgba(201, 217, 236, 0.73) !important;
 }
 
 .admin-input {
-  box-shadow: none !important;
+    box-shadow: none !important;
 }
 
 .admin-input:active {
-  border-color: #86aed3 !important;
+    border-color: #86aed3 !important;
 }
 
 .txt-min-h {
-  min-height: 15rem !important;
+    min-height: 15rem !important;
 }
 
 
 .bootstrap-like-select {
-  width: 20dvw;
-  height: 1dvh;
+    width: 20dvw;
+    height: 1dvh;
 
-  .mat-form-field-wrapper {
-    padding: 0;
-  }
+    .mat-form-field-wrapper {
+        padding: 0;
+    }
 
-  .mat-form-field-flex {
-    height: 0.1rem;
-    align-items: center;
-  }
+    .mat-form-field-flex {
+        height: 0.1rem;
+        align-items: center;
+    }
 
-  .mat-select {
-    font-size: 0.1rem;
-    padding: 0;
-    min-height: unset;
-    line-height: 1.2;
-  }
+    .mat-select {
+        font-size: 0.1rem;
+        padding: 0;
+        min-height: unset;
+        line-height: 1.2;
+    }
 
-  .mat-select-trigger {
-    padding: 0;
-    min-height: unset;
-  }
+    .mat-select-trigger {
+        padding: 0;
+        min-height: unset;
+    }
 
-  .mat-select-value {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.2rem;
-  }
+    .mat-select-value {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.2rem;
+    }
 
-  .mat-select-value-text {
-    font-size: 0.1rem;
-    padding: 0;
-    background-color: #e9ecef;
-    border-radius: 0.2rem;
-  }
+    .mat-select-value-text {
+        font-size: 0.1rem;
+        padding: 0;
+        background-color: #e9ecef;
+        border-radius: 0.2rem;
+    }
 }
 
 .input-control {
-  width: 217px;
-  height: 27px;
-  border-radius: 30px;
-  border: 1px solid #8DBECD;
-  padding-left: 10px;
-  font-size: 10pt;
+    width: 217px;
+    height: 27px;
+    border-radius: 30px;
+    border: 1px solid #8DBECD;
+    padding-left: 10px;
+    font-size: 10pt;
 }
 
 .input-control:focus {
-  box-shadow: none;
-  outline: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .custom-password {
-  display: flex;
-  align-items: center;
-  width: 217px;
-  height: 27px;
-  border-radius: 30px;
-  border: 1px solid #8DBECD;
+    display: flex;
+    align-items: center;
+    width: 217px;
+    height: 27px;
+    border-radius: 30px;
+    border: 1px solid #8DBECD;
 }
 
 .custom-password > input {
-  width: 172px;
-  height: 25px;
-  margin-left: 11px;
-  border: none;
-  padding: 0;
-  font-size: 10pt;
+    width: 172px;
+    height: 25px;
+    margin-left: 11px;
+    border: none;
+    padding: 0;
+    font-size: 10pt;
 }
 
 .custom-password > button {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  padding: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    padding: 0;
 }
 
 
 .input-control::placeholder {
-  color: #8DBECD;
+    color: #8DBECD;
 }
 
 .custom-password > input::placeholder {
-  color: #8DBECD;
+    color: #8DBECD;
 }
 
 .custom-password > input:focus {
-  box-shadow: none;
-  outline: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .errorTextContainer {
-  min-height: 16px;
-  width: 187px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-left: 15px;
-  color: red;
-  font-size: 10pt;
-  text-wrap: auto;
+    min-height: 16px;
+    width: 187px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-left: 15px;
+    color: red;
+    font-size: 10pt;
+    text-wrap: auto;
 }
 
 @media (max-width: 884px) {
-  .btn-act-block {
-    margin-top: 15px;
-    justify-content: center;
-  }
+    .btn-act-block {
+        margin-top: 15px;
+        justify-content: center;
+    }
 
-  .g-cn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    .g-cn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-  .searchBlock > button:last-child {
-    padding-right: 15px;
-  }
+    .searchBlock > button:last-child {
+        padding-right: 15px;
+    }
 }
 
 .custom-date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 217px;
-  height: 27px;
-  border-radius: 30px;
-  border: 1px solid #8DBECD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 217px;
+    height: 27px;
+    border-radius: 30px;
+    border: 1px solid #8DBECD;
 }
 
 .custom-date > input {
-  width: 168px;
-  height: 25px;
-  margin-left: 11px;
-  border: none;
-  padding: 0;
-  font-size: 10pt;
+    width: 168px;
+    height: 25px;
+    margin-left: 11px;
+    border: none;
+    padding: 0;
+    font-size: 10pt;
 }
 
 .custom-date > button {
-  width: 25px;
-  height: 25px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin-right: 5px;
+    width: 25px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin-right: 5px;
 }
 
 .custom-date > input:focus {
-  outline: none;
-  caret-color: transparent;
+    outline: none;
+    caret-color: transparent;
 }
 
 .custom-date > input::placeholder {
-  color: #8DBECD;
+    color: #8DBECD;
 }
 
 .br-movie.br-readonly .br-active {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
+
 .br-movie {
-  --br-width: 25px !important;
-  /* --_br-active-color: #49c3c7; */
-  --_br-active-color: rgba(78, 203, 192, 0.8);
+    --br-width: 25px !important;
+    /* --_br-active-color: #49c3c7; */
+    --_br-active-color: rgba(78, 203, 192, 0.8);
+}
+
+.ngx-pagination a:hover {
+    border-radius: 10px;
+}
+
+.ngx-pagination .current {
+    border-radius: 10px;
 }
