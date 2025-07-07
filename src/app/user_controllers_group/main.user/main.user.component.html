@@ -38,11 +38,11 @@
         <input type="text" class="search-input form-control" placeholder="Знайдіть свою подорож">
       </div>
 
-      <div class="button-group">
-        <button class="orange-btn me-2">Шукати все</button>
-        <button class="orange-btn-outline me-2">Готелі</button>
-        <button class="orange-btn-outline">Країни</button>
-      </div>
+      <ul class="button-list">
+        <li><button class="orange-btn">Шукати</button></li>
+        <li><a routerLink="hotels" class="orange-btn-outline">Готелі</a></li>
+        <li><a routerLink="countries" class="orange-btn-outline">Країни</a></li>
+      </ul>
     </div>
   </div>
   <div class="row mt-5">
@@ -54,25 +54,25 @@
             d="M 0 69 L 0 9 Q 0 1 8 1 L 64 1 L 120 1 Q 128 1 128 9 V 69 Q 128 77 120 77 L 104 77 Q 96 77 96 85 L 96 85 Q 96 93 88 93 T 40 93 Q 32 93 32 85 L 32 85 Q 32 77 24 77 L 8 77 Q 0 77 0 69 Z"
             fill="#8DBECD"></path>
         </svg>
-          <div *ngIf="visibleCountries() as countries" class="carousel-container">
-            <div class="carousel-wrapper">
-              <div class="carousel-block" style="position: relative;">
-                <button class="nav left" style="position: absolute; left: 10%" (click)="prevSlide()">&#10094;</button>
+        <div *ngIf="visibleCountries() as countries" class="carousel-container">
+          <div class="carousel-wrapper">
+            <div class="carousel-block" style="position: relative;">
+              <button class="nav left" style="position: absolute; left: 10%" (click)="prevSlide()">&#10094;</button>
 
-                <div class="carousel">
-                  <div class="carousel-card" *ngFor="let country of countries; let i = index"
-                    [ngClass]="{ 'center': i === 1, 'left': i === 0, 'right': i === 2 }">
-                    <img [src]="country.defaultImage?.blobUrl || 'imgs/placeholder.jpg'" alt="Country image" />
-                    <div class="hotel-title">{{ country.name }}</div>
-                  </div>
+              <div class="carousel">
+                <div class="carousel-card" *ngFor="let country of countries; let i = index"
+                  [ngClass]="{ 'center': i === 1, 'left': i === 0, 'right': i === 2 }">
+                  <img [src]="country.defaultImage?.blobUrl || 'imgs/placeholder.jpg'" alt="Country image" />
+                  <div class="hotel-title">{{ country.name }}</div>
                 </div>
-
-                <button class="nav right" style="position: absolute; right: 10%" (click)="nextSlide()">&#10095;</button>
               </div>
-            </div>
 
-            <a href="#" class="carousel-label">Популярні країни</a>
+              <button class="nav right" style="position: absolute; right: 10%" (click)="nextSlide()">&#10095;</button>
+            </div>
           </div>
+
+          <a href="#" class="carousel-label">Популярні країни</a>
+        </div>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
     <div class="col-10 mt-4 mx-auto">
       <div class="row" style="min-height: 500px;">
 
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-3 card-link-col">
           <a href="news.html" class="card-link">
             <div class="card card-news h-100">
               <div class="card-overlay">
@@ -95,7 +95,7 @@
         <div class="col-12 col-md-3">
           <div class="row h-100">
 
-            <div class="col-12">
+            <div class="col-12 card-link-col">
               <a href="hotels.html" class="card-link">
                 <div class="card card-hotels">
                   <div class="card-overlay">
@@ -105,7 +105,7 @@
               </a>
             </div>
 
-            <div class="col-12 mt-auto">
+            <div class="col-12 mt-auto card-link-col">
               <a href="reviews.html" class="card-link">
                 <div class="card card-reviews">
                   <div class="card-overlay">
@@ -121,7 +121,7 @@
         <div class="col-12 col-md-6">
           <div class="row h-100">
 
-            <div class="col-12">
+            <div class="col-12 card-link-col">
               <a href="countries.html" class="card-link">
                 <div class="card card-countries">
                   <div class="card-overlay">
@@ -273,7 +273,7 @@
               <div class="row mt-4">
                 <div class="col-6">
                   <button type="button" class="btn btn-search w-100">
-                    Шукати
+                    Дивитись
                   </button>
                 </div>
                 <div class="col-6">
@@ -289,9 +289,9 @@
           <div class="col-lg-4 col-md-6">
             <div class="tours-section">
               <div class="d-flex justify-content-between align-items-center">
-                <h2 class="tours-title">All Tours</h2>
+                <h2 class="tours-title">Усі Тури</h2>
                 <button type="button" class="btn btn-view">
-                  <i class="fas fa-eye me-2"></i>View
+                  Шукати
                 </button>
               </div>
               <div>
