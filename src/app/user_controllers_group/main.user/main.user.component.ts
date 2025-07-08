@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { ICountryEntity } from '../../../interfaces/country-block/i-country.entity';
 import { CountryService } from '../../../services/country.service';
 import { EntityStorage } from '../../../storage/entity.storage';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-main.user',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './main.user.component.html',
   styleUrl: './main.user.component.css'
 })
