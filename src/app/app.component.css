@@ -1,336 +1,340 @@
 .start-container {
-  min-height: 100dvh !important;
+    min-height: 100dvh !important;
 }
 
 .menu-button {
-  background: transparent;
-  margin-left: 7.224dvw;
-  border: none;
-  border-radius: 50%;
-  width: 46px;
-  height: 46px;
+    background: transparent;
+    margin-left: 7.224dvw;
+    border: none;
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
 }
 
 .user-menu {
-  border: none !important;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4) !important;
-  padding: 0 !important;
-  margin-top: 1.2rem;
+    border: none !important;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4) !important;
+    padding: 0 !important;
+    margin-top: 1.2rem;
 }
 
 .user-d-item > .dropdown-item {
-  margin: 0 !important;
-  padding: 0.7rem 1rem 0.7rem 1rem !important;
+    margin: 0 !important;
+    padding: 0.7rem 1rem 0.7rem 1rem !important;
 }
 
 .user-d-item > .dropdown-divider {
-  margin: 0 !important;
-  padding: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .user-d-item > :hover {
-  background: rgb(143, 151, 159, 0.2) !important;
+    background: rgb(143, 151, 159, 0.2) !important;
 }
 
 .user-d-item > .dropdown-item:active {
-  color: rgba(255, 106, 0, 0.8);
+    color: rgba(255, 106, 0, 0.8);
 }
 
 .navStyle {
-  background: #8DBECD;
-  width: 100%;
-  height: 80px;
-  position: sticky;
-  padding: 0 !important;
-  border-radius: 0 0 10px 10px;
+    background: #8DBECD;
+    width: 100%;
+    height: 80px;
+    position: sticky;
+    padding: 0 !important;
+    border-radius: 0 0 10px 10px;
 }
 
 .loginUserBtn {
-  margin-right: 7.224dvw;
-  border-radius: 50%;
+    margin-right: 7.224dvw;
+    border-radius: 50%;
 }
 
 :is(.loginUserBtn, .menu-button):active {
-  will-change: transform;
-  transform: scale(0.90);
-  transition: transform 0.1s ease-in-out;
+    will-change: transform;
+    transform: scale(0.90);
+    transition: transform 0.1s ease-in-out;
 }
 
 .containerLogo {
-  all: unset;
-  background: #e8f5e9;
-  border-radius: 50%;
+    all: unset;
+    background: #e8f5e9;
+    border-radius: 50%;
 }
 
 :is(.containerLogo, .loginUserBtn, .menu-button):hover {
-  box-shadow: 0 0 7px rgba(234, 234, 234, 0.7);
+    box-shadow: 0 0 7px rgba(234, 234, 234, 0.7);
 }
 
 .container-fluid {
-  position: sticky !important;
-  max-height: 80px !important;
-  width: 100% !important;
-  padding: 0 !important;
+    position: sticky !important;
+    max-height: 80px !important;
+    width: 100% !important;
+    padding: 0 !important;
 }
 
 .menu-item {
-  text-decoration: none;
-  color: black;
-  font-size: 18px;
-  padding: 10px;
-  font-weight: 500;
-  border: 1px solid #D9913C;
-  border-radius: 30px;
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    padding: 10px;
+    font-weight: 500;
+    border: 1px solid #D9913C;
+    border-radius: 30px;
 }
 
 .menu-item:hover {
-  text-decoration: underline #D9913C;
+    text-decoration: underline #D9913C;
 }
 
 .disabled-item {
-  color: black;
-  font-size: 18px;
-  padding: 10px;
-  opacity: 0.5;
-  font-weight: 500;
-  cursor: pointer;
+    color: black;
+    font-size: 18px;
+    padding: 10px;
+    opacity: 0.5;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .link-button {
-  text-decoration: none;
-  padding: 10px 30px;
-  border-radius: 30px;
-  background-color: transparent;
-  border: 1px solid #D9913C;
-  color: #D9913C;
-  font-size: 16px;
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 30px;
+    background-color: transparent;
+    border: 1px solid #D9913C;
+    color: #D9913C;
+    font-size: 16px;
 }
 
 .link-button:hover {
-  background-color: #D9913C;
-  color: white;
+    background-color: #D9913C;
+    color: white;
 }
 
 .link-button:active {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 .logout-container {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  width: 100%;
-  margin-top: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 100%;
+    margin-top: 35px;
 }
 
 .is-user {
-  font-weight: 500;
-  font-size: 22px;
-  margin-left: 60px;
+    font-weight: 500;
+    font-size: 22px;
+    margin-left: 60px;
 }
 
 .close {
-  border-radius: 50%;
-  background: transparent;
-  border: none;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
 }
 
 .offcanvas {
-  width: 500px !important;
+    width: 500px !important;
 }
 
 .offcanvas-header {
-  margin-top: 20px !important;
+    margin-top: 20px !important;
 }
 
 .menu-logo {
-  margin-left: 60px;
+    margin-left: 60px;
 }
 
 .mg-cls {
-  margin-left: 140px;
+    margin-left: 140px;
 }
 
 .menu-links {
-  margin-top: 80px;
-  margin-left: 97px;
+    margin-top: 80px;
+    margin-left: 97px;
 }
 
 
 @media (max-width: 550px) {
-  .menu-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 35px;
-    height: 35px;
-  }
+    .menu-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 35px;
+        height: 35px;
+    }
 
-  .menu-button > img {
-    width: 31px;
-    height: 31px;
-  }
+    .menu-button > img {
+        width: 31px;
+        height: 31px;
+    }
 
-  .loginUserBtn > img {
-    width: 35px;
-    height: 35px;
-  }
+    .loginUserBtn > img {
+        width: 35px;
+        height: 35px;
+    }
 
-  .containerLogo > img {
-    width: 49px;
-    height: 49px;
-  }
+    .containerLogo > img {
+        width: 49px;
+        height: 49px;
+    }
 
 }
 
 @media (max-width: 402px) {
 
-  .menu-button > img {
-    width: 28px;
-    height: 28px;
-  }
+    .menu-button > img {
+        width: 28px;
+        height: 28px;
+    }
 
-  .loginUserBtn > img {
-    width: 28px;
-    height: 28px;
-  }
+    .loginUserBtn > img {
+        width: 28px;
+        height: 28px;
+    }
 
 }
 
 /* footer styles */
 .footer {
-  background-image: url('/imgs/fon-palmy.jpg');
-  background-size: cover;
-  background-position: center;
-  padding: 60px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-image: url('/imgs/fon-palmy.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .footer-container {
-  background: #FFFFFF;
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 1000px;
-  width: 100%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  margin: 0 auto;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 1000px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
 }
 
 .footer-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 30px;
 }
 
 .footer-column h3 {
-  color: #11212D;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #D9913C;
-  padding-bottom: 8px;
+    color: #11212D;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #D9913C;
+    padding-bottom: 8px;
 }
 
 ul {
-  list-style: none;
+    list-style: none;
 }
 
 .footer-column ul li {
-  margin-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .footer-column ul li a {
-  color: #11212D;
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s ease;
+    color: #11212D;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
 }
 
 .footer-column ul li a:hover {
-  color: #79292A;
+    color: #79292A;
 }
 
 .contact-info p {
-  color: #11212D;
-  font-size: 14px;
-  margin-bottom: 10px;
+    color: #11212D;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
 .contact-info strong {
-  color: #79292A;
+    color: #79292A;
 }
 
 .phone-numbers {
-  margin-top: 15px;
+    margin-top: 15px;
 }
 
 .phone-numbers a {
-  display: block;
-  color: #79292A;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  transition: color 0.3s ease;
+    display: block;
+    color: #79292A;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    transition: color 0.3s ease;
 }
 
 .phone-numbers a:hover {
-  color: #11212D;
+    color: #11212D;
 }
 
 .footer-bottom {
-  text-align: center;
-  padding-top: 20px;
-  border-top: 1px solid #8DBECD;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #8DBECD;
 }
 
 .footer-bottom p {
-  color: #11212D;
-  font-size: 14px;
-  font-weight: bold;
+    color: #11212D;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 @media (max-width: 768px) {
-  .footer {
-    padding: 40px 15px;
-    min-height: auto;
-  }
+    .footer {
+        padding: 40px 15px;
+        min-height: auto;
+    }
 
-  .footer-container {
-    padding: 30px 25px;
-  }
+    .footer-container {
+        padding: 30px 25px;
+    }
 
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    margin-bottom: 25px;
-  }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-bottom: 25px;
+    }
 
-  .footer-column h3 {
-    font-size: 16px;
-  }
+    .footer-column h3 {
+        font-size: 16px;
+    }
 
-  .footer-column ul li a,
-  .contact-info p,
-  .phone-numbers a {
-    font-size: 13px;
-  }
+    .footer-column ul li a,
+    .contact-info p,
+    .phone-numbers a {
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 480px) {
-  .footer {
-    padding: 30px 10px;
-  }
+    .footer {
+        padding: 30px 10px;
+    }
 
-  .footer-container {
-    padding: 25px 20px;
-    border-radius: 15px;
-  }
+    .footer-container {
+        padding: 25px 20px;
+        border-radius: 15px;
+    }
 
-  .footer-grid {
-    gap: 25px;
-  }
+    .footer-grid {
+        gap: 25px;
+    }
+
+    .mg-cls {
+        margin-left: 20dvw;
+    }
 }
