@@ -1,18 +1,18 @@
-import {inject, Injectable} from "@angular/core";
-import {HttpService} from "./http.service";
-import {MessageService} from "./message.service";
-import {ValidationService} from "./validation.service";
-import {EntityStorage} from "../storage/entity.storage";
-import {firstValueFrom, map} from "rxjs";
-import {ICityEntity} from "../interfaces/country-block/i-city.entity";
-import {IMainCountryForCityEntity} from "../interfaces/country-block/i-main-country-for-city.entity";
-import {IBlobImageEntity} from "../interfaces/country-block/i-blob-image.entity";
-import {IError} from "../interfaces/i-error";
-import {IMinCityEntity} from '../interfaces/country-block/i-min-city.entity';
-import {IMinCityCountryEntity} from '../interfaces/country-block/i-min-city-country.entity';
-import {EntityStoragePr2} from '../storage/entity.storage.pr2';
-import {HttpResponse, HttpStatusCode} from '@angular/common/http';
-import {ErrorMessage} from '../models/error-message';
+import { inject, Injectable } from "@angular/core";
+import { HttpService } from "./http.service";
+import { MessageService } from "./message.service";
+import { ValidationService } from "./validation.service";
+import { EntityStorage } from "../storage/entity.storage";
+import { firstValueFrom, map } from "rxjs";
+import { ICityEntity } from "../interfaces/country-block/i-city.entity";
+import { IMainCountryForCityEntity } from "../interfaces/country-block/i-main-country-for-city.entity";
+import { IBlobImageEntity } from "../interfaces/country-block/i-blob-image.entity";
+import { IError } from "../interfaces/i-error";
+import { IMinCityEntity } from '../interfaces/country-block/i-min-city.entity';
+import { IMinCityCountryEntity } from '../interfaces/country-block/i-min-city-country.entity';
+import { EntityStoragePr2 } from '../storage/entity.storage.pr2';
+import { HttpResponse, HttpStatusCode } from '@angular/common/http';
+import { ErrorMessage } from '../models/error-message';
 
 @Injectable({
   providedIn: "root"
@@ -37,14 +37,14 @@ export class CityService {
     });
   }
 
-  setAllMinCityCountry(){
+  setAllMinCityCountry() {
     return this.http_s.loadingAllMinCityCountries().pipe(
       map((items: IMinCityCountryEntity[] | IError): IMinCityCountryEntity[] | IError => {
         if (this.check.isError(items)) {
           this.messages.setMessage((items as IError).message);
           return new ErrorMessage(HttpStatusCode.NoContent, "Can'r load cities");
         }
-        else{
+        else {
           this.messages.setMessage(null);
           this.storepr2.setAllMinCityCountries(items as IMinCityCountryEntity[]);
           return items as IMinCityCountryEntity[];
@@ -77,15 +77,32 @@ export class CityService {
     );
   }
 
+  async getAllCountryCitiesFull(id: number): Promise<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | undefined> {
+    return await firstValueFrom(
+      this.http_s.loadingAllCountryFullCities(id).pipe(
+        map((item: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError):
+          ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | undefined => {
+          if (this.check.isError(item)) {
+            this.messages.setMessage((item as IError).message);
+            return undefined;
+          } else {
+            this.messages.setMessage(null);
+            return item as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[];
+          }
+        })
+      )
+    );
+  }
+
   async addCityEntity(newCity: FormData): Promise<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null> {
     return await firstValueFrom(
       this.http_s
         .addCity(newCity)
         .pipe(
           map((
-              entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
-            ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null =>
-              this.setCity(entity)
+            entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
+          ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null =>
+            this.setCity(entity)
           )
         )
     );
@@ -97,9 +114,9 @@ export class CityService {
         .updateCity(updateCity)
         .pipe(
           map((
-              entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
-            ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null =>
-              this.setCity(entity)
+            entity: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | IError
+          ): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity> | null =>
+            this.setCity(entity)
           )
         )
     );

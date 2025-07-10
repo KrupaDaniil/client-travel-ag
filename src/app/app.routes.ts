@@ -102,5 +102,6 @@ export const routes: Routes = [
 	{ path: "faq", component: FAQComponent },
   { path: "countries", component: CountryCardsComponent},
   { path: "cities", component: CitiesComponent},
+  { path: "cities/:id", component: CitiesComponent},
 	{ path: "**", component: Error404Component }
 ];
