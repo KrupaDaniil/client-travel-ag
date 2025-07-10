@@ -62,7 +62,7 @@
               <div class="carousel">
                 <div class="carousel-card" *ngFor="let country of countries; let i = index"
                   [ngClass]="{ 'center': i === 1, 'left': i === 0, 'right': i === 2 }">
-                  <img [src]="country.defaultImage?.blobUrl || 'imgs/placeholder.jpg'" alt="Country image" />
+                  <img [src]="country.defaultImage?.blobUrl || '/imgs/default-image-placeholder.webp'" alt="Country image" />
                   <div class="hotel-title">{{ country.name }}</div>
                 </div>
               </div>

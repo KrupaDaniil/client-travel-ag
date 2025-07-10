@@ -365,6 +365,22 @@ export class HttpService {
 		);
 	}
 
+  loadingAllCountryFullCities(id: number): Observable<ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError> {
+		return this.http.get(`${this.baseUrl}/cities/${id}`, { observe: "response" }).pipe(
+			map((response: HttpResponse<Object>): ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError => {
+				if (response.status === HttpStatusCode.Ok) {
+					return response.body as ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[];
+				} else {
+					return new ErrorMessage(HttpStatusCode.NoContent, this.errorDefaultMessage[4]);
+				}
+			}),
+			catchError(
+				(error: HttpErrorResponse): Observable<IError> =>
+					of(this.getErrorMessage(error, "Error loading full cities data"))
+			)
+		);
+	}
+
 	loadingAllFromToEntities(): Observable<IFromToEntity[] | IError> {
 		return this.http.get<Object>(`${this.baseUrl}/from-to/all`, { observe: "response" }).pipe(
 			map((response: HttpResponse<Object>): IFromToEntity[] | IError => {
