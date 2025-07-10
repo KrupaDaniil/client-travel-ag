@@ -36,11 +36,11 @@ export class CitiesComponent implements OnInit {
   private async loadCities(countryId: number): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const cities = await this.cityService.getAllCountryCities(countryId);
+      const cities = await this.cityService.getAllCountryCitiesFull(countryId);
       if (cities) {
-        //this.citiesSignal.set(cities);
+        this.citiesSignal.set(cities);
         if (cities.length > 0) {
-          //this.countryNameSignal.set(cities[0].country.name);
+          this.countryNameSignal.set(cities[0].country.name);
         }
       }
     } catch (error) {
