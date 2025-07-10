@@ -27,7 +27,9 @@
                     </div>
                     <div class="col d-flex align-items-center justify-content-end mb-3">
                         <button class="btn btn-sm px-4 btn-outline-dark rounded-5"
-                                [attr.data-order-id]="order.id" (click)="canceledTour($event)">Скасувати
+                                [attr.data-order-id]="order.id" (click)="canceledTour($event)"
+                                [ngClass]="{ 'disabled': order.canceled }"
+                        >Скасувати
                         </button>
                     </div>
                 </div>
