@@ -24,7 +24,7 @@ export class CityService {
   constructor(private http_s: HttpService, private messages: MessageService, private check: ValidationService) {
   }
 
-  setAllAdminCities(): void {
+  setAllAdminCities() {
     this.http_s.loadingAllAdminCities().subscribe({
       next: (cities: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>[] | IError): void => {
         if (this.check.isError(cities)) {

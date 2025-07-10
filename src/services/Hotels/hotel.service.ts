@@ -34,8 +34,8 @@ export class HotelService {
 		});
 	}
 
-	public getTopHotelsByCountryId(countryId: number, amount: number): void {
-		this.http.loadingTopHotelsByCountryId(countryId, amount).subscribe(res => {
+	public getTopHotelsByCountryId(cityId: number, amount: number): void {
+		this.http.loadingTopHotelsByCityIdId(cityId, amount).subscribe(res => {
 			this.store.setTopHotels(res as IHotelEntity[]);
 		});
 	}

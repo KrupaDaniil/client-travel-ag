@@ -23,7 +23,7 @@ export class HotelCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.hotel);
+
   }
 
 

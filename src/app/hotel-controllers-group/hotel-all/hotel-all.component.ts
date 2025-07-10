@@ -41,11 +41,15 @@ import {CityService} from '../../../services/city.service';
   styleUrl: './hotel-all.component.css'
 })
 export class HotelAllComponent {
-
+  public citiesIds:Number = 0;
   constructor(private service: HotelService, private route: ActivatedRoute, private toast:HotToastService, private citiesSerive:CityService, private router:Router) {
     this.countryIdRequest = this.route.snapshot.queryParams['countryId'];
+    console.log(this.citiesIds);
+    this.citiesIds =  Number(this.route.snapshot.queryParams['cityIds']);
+
     this.initHotels();
     this.initCities();
+
     this.applyFilters();
   }
 
@@ -56,6 +60,8 @@ export class HotelAllComponent {
 
   readonly hotels:Signal<IAdminHotelEntity[]> = computed(() => this.store.adminHotelsEntities());
   readonly cities:Signal<IMinCityCountryEntity[]> = computed(()=>this.store.minCityCountryEntities());
+
+
 
   public filteredHotels:WritableSignal<IAdminHotelEntity[] | null> = signal<IAdminHotelEntity[] | null>(null);
 
@@ -102,16 +108,16 @@ export class HotelAllComponent {
   }
 
   private initCities(){
-
+    if(this.cities().length === 0){
       this.citiesSerive.setAllMinCityCountry().subscribe(res=>{
         if(res){
-          if(this.countryIdRequest) {
-            this.filter.patchValue({cityIds: this.cities().filter(c => c.countryId == this.countryIdRequest).map(x => x.cityId)});
+          if(this.citiesIds) {
+            this.filter.patchValue({cityIds: Array.of(this.citiesIds)});
+            console.log(this.filter.value);
           }
         }
       });
-
-
+    }
   }
 
   private applyFilters() {
@@ -135,6 +141,8 @@ export class HotelAllComponent {
     let minValue = this.filter.get('minRate')?.value;
     let maxValue = this.filter.get('maxRate')?.value;
     let cityIds = this.filter.get('cityIds')?.value;
+
+    console.log(cityIds)
     let result:IAdminHotelEntity[]=this.hotels()!;
 
     if(name!=="")
@@ -210,7 +218,7 @@ export class HotelAllComponent {
 
   clearData() {
     this.filter.reset();
-    this.router.navigate(['/hotel']);
+    this.router.navigate(['/hotels']);
   }
 
 
