@@ -427,9 +427,9 @@ export class HttpService {
 			);
 	}
 
-	loadingTopHotelsByCityIdId(cityIdId: number, amount: number): Observable<IHotelEntity[] | IError> {
+	loadingTopHotelsByCityId(cityId: number, amount: number): Observable<IHotelEntity[] | IError> {
 		return this.http
-			.get<Object>(`${this.baseUrl}/hotel/top/${cityIdId}?amount=${amount}`, { observe: "response" })
+			.get<Object>(`${this.baseUrl}/hotel/top/${cityId}?amount=${amount}`, { observe: "response" })
 			.pipe(
 				map((resp: HttpResponse<object>): IHotelEntity[] | IError => {
 					if (resp.status === 200) {

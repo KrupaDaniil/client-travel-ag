@@ -35,7 +35,7 @@ export class HotelService {
 	}
 
 	public getTopHotelsByCountryId(cityId: number, amount: number): void {
-		this.http.loadingTopHotelsByCityIdId(cityId, amount).subscribe(res => {
+		this.http.loadingTopHotelsByCityId(cityId, amount).subscribe(res => {
 			this.store.setTopHotels(res as IHotelEntity[]);
 		});
 	}
