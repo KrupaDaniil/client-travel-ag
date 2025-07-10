@@ -85,7 +85,7 @@ export const routes: Routes = [
 	},
 	{ path: "authorization", component: LoginStartComponent },
 	{
-		path: "hotels/:countryId",
+		path: "hotels/:cityId",
 		component: HotelsListByCityComponent
 	},
 	{

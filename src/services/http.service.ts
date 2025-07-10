@@ -428,22 +428,22 @@ export class HttpService {
             );
     }
 
-    loadingTopHotelsByCountryId(countryId: number, amount: number): Observable<IHotelEntity[] | IError> {
-        return this.http
-            .get<Object>(`${this.baseUrl}/hotel/top/${countryId}?amount=${amount}`, {observe: "response"})
-            .pipe(
-                map((resp: HttpResponse<object>): IHotelEntity[] | IError => {
-                    if (resp.status === 200) {
-                        return resp.body as IHotelEntity[];
-                    } else {
-                        return resp.body as IError;
-                    }
-                }),
-                catchError(
-                    (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Top Hotels loading error"))
-                )
-            );
-    }
+	loadingTopHotelsByCityId(cityId: number, amount: number): Observable<IHotelEntity[] | IError> {
+		return this.http
+			.get<Object>(`${this.baseUrl}/hotel/top/${cityId}?amount=${amount}`, { observe: "response" })
+			.pipe(
+				map((resp: HttpResponse<object>): IHotelEntity[] | IError => {
+					if (resp.status === 200) {
+						return resp.body as IHotelEntity[];
+					} else {
+						return resp.body as IError;
+					}
+				}),
+				catchError(
+					(error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Top Hotels loading error"))
+				)
+			);
+	}
 
     loadingHotelsByCountryId(countryId: number): Observable<IHotelEntity[] | IError> {
         console.log(countryId);

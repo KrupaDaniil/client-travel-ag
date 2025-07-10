@@ -1,19 +1,18 @@
-@if (country){
+@if (city){
 
   <div class="d-flex justify-content-center align-items-center flex-column">
 
 
-    @if (country.defaultImage){
-      <div class="mat-card-baner" [style.background-image]="'url('+country.defaultImage+')'">
-        <h3 class="mat-card-title">{{country.name}}</h3>
+    @if (city.cityImage){
+      <div class="mat-card-baner" [style.background-image]="'url('+city.cityImage.blobUrl+')'">
+        <h3 class="mat-card-title">{{city.name}}</h3>
       </div>
     }@else{
       <div class="mat-card-baner" style="background-image: url('/imgs/image (1).jpg')">
-        <h3 class="mat-card-title">{{country.name}}</h3>
+        <h3 class="mat-card-title">{{city.name}}</h3>
       </div>
 
     }
-
 
     <p class="city-description">
 
@@ -22,9 +21,9 @@
     <div class="fact-block d-flex justify-content-center align-items-center">
       <div class="content">
         <h3>
-          Відпочинок в {{country.name}}
+          Відпочинок в {{city.name}}
         </h3>
-        {{country.description}}
+        {{city.description}}
       </div>
     </div>
 
@@ -76,12 +75,12 @@
 
 
 
-    @for (hotel of topHotels();track $index){
+    @for (hotel of otherHotels;track $index){
       <app-hotel-card style="margin-top: 90px;" [hotel]="hotel">
       </app-hotel-card>
     }
 
-    <button class="btn btn-outline-light mt-5 mb-5" routerLink="/hotels?coutryId={{countryId}}">Усі готелі</button>
+    <button class="btn btn-outline-light mt-5 mb-5" [routerLink]="['/hotels']" [queryParams]="{cityIds:cityId}" >Усі готелі</button>
 
   </div>
 
