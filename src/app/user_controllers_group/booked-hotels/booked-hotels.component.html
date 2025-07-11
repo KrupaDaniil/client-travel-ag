@@ -45,13 +45,15 @@
                     </div>
                     <div class="col d-flex align-items-center justify-content-end mb-3">
                         <button class="btn btn-sm px-4 btn-outline-dark rounded-5"
-                                [attr.data-order-id]="order.id" (click)="cancelOrder($event)">Скасувати
+                                [attr.data-order-id]="order.id" (click)="cancelOrder($event)"
+                                [ngClass]="{'disabled': (order.status === stCanceled)}"
+                        >Скасувати
                         </button>
                     </div>
                 </div>
             </div>
         }
-        
+
         <div class="d-flex align-items-center justify-content-center my-4">
             <pagination-controls (pageChange)="page = $event" [previousLabel]="''"
                                  [nextLabel]="''"></pagination-controls>
