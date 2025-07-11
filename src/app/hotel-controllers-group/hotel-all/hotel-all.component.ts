@@ -89,22 +89,32 @@ export class HotelAllComponent {
 
 
   private initHotels(){
-    this.service.getAllHotelToAdmin().subscribe(res=>{
-      if(!res){
-        this.toast.show("No hotels found",{
-          theme: "snackbar",
-          duration: 5000,
-          autoClose: true,
-          position: "bottom-left"
-        });
-        this.cancelError = false;
-      }
-      else{
-        this.filteredHotels.set(this.hotels());
-        this.loadFilters();
-        this.cancelError = true;
-      }
-    });
+
+    if(this.hotels().length==0){
+      this.service.getAllHotelToAdmin().subscribe(res=>{
+        if(!res){
+          this.toast.show("No hotels found",{
+            theme: "snackbar",
+            duration: 5000,
+            autoClose: true,
+            position: "bottom-left"
+          });
+          this.cancelError = false;
+        }
+        else{
+          this.filteredHotels.set(this.hotels());
+          this.loadFilters();
+          this.cancelError = true;
+        }
+      });
+    }
+    else{
+      this.filteredHotels.set(this.hotels());
+      this.loadFilters();
+      this.cancelError = true;
+    }
+
+
   }
 
   private initCities(){
@@ -142,10 +152,10 @@ export class HotelAllComponent {
     let maxValue = this.filter.get('maxRate')?.value;
     let cityIds = this.filter.get('cityIds')?.value;
 
-    console.log(cityIds)
+    console.log(name)
     let result:IAdminHotelEntity[]=this.hotels()!;
 
-    if(name!=="")
+    if(name && name!=="")
       result = result.filter((h: IAdminHotelEntity) =>
         h.hotelName.toLowerCase().includes(name.toLowerCase())
       )
@@ -156,7 +166,7 @@ export class HotelAllComponent {
       );
     }
 
-    if(cityIds.length>0){
+    if(cityIds && cityIds.length>0){
       result = result.filter((h: IAdminHotelEntity) =>
         cityIds.includes(h.city.id));
     }
@@ -218,7 +228,8 @@ export class HotelAllComponent {
 
   clearData() {
     this.filter.reset();
-    this.router.navigate(['/hotels']);
+    this.loadFilters();
+    this.router.navigate(['/hotels']).then(r => console.log(""));
   }
 
 
