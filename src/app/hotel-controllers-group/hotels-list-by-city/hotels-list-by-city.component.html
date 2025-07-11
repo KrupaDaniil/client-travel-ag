@@ -51,7 +51,7 @@
     </div>
 
 
-    <div class="carousel-container" *ngIf="visibleHotels!=null">
+    <div class="carousel-container" *ngIf="visibleHotels!=null && hotels().length>=3">
       <div class="carousel-wrapper">
         <div class="carousel-block" style="position: relative;">
           <button class="nav left" style="position: absolute;left:10%" (click)="prevSlide()">&#10094;</button>
