@@ -22,6 +22,7 @@ import {IRole} from "../../../interfaces/i-role";
 import {CommonModule, NgIf, NgOptimizedImage} from "@angular/common";
 import {INewUser} from "../../../interfaces/i-new-user";
 import {NgxPaginationModule} from "ngx-pagination";
+import {HotToastService} from "@ngxpert/hot-toast";
 
 @Component({
     selector: "app-user-management",
@@ -32,12 +33,13 @@ import {NgxPaginationModule} from "ngx-pagination";
 })
 export class UserManagementComponent implements OnInit, AfterViewChecked {
     private store = inject(EntityStorage);
+    private toast: HotToastService = inject(HotToastService);
     private userId: number | undefined;
     protected readonly displaySize: number;
     protected page: number;
     private selectUser: IUser | undefined;
     private readonly defaultRole: string;
-    private initAddForm: boolean;
+    protected initAddForm: WritableSignal<boolean> = signal<boolean>(false);
     private isSelectedRow: boolean;
     private timerId: number | undefined;
     private searchList: IUser[] | undefined;
@@ -68,7 +70,6 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         this.defaultRole = "ROLE_USER";
         this.displaySize = 10;
         this.page = 1;
-        this.initAddForm = false;
         this.isSelectedRow = false;
         this.roleService.setAllRoles();
         this.initRolesBlock();
@@ -98,22 +99,10 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         effect(() => {
             const roles = this.userRoles();
 
-            if (roles && roles.length > 0 && !this.initAddForm) {
+            if (roles && roles.length > 0 && !this.initAddForm()) {
                 this.createAddUserForm();
 
-                this.initAddForm = true;
-
-                if (this.addUserBtn?.nativeElement && this.addUserForm) {
-                    this.render2.listen(this.addUserBtn.nativeElement, "click", () => {
-                        this.openAddUserModal();
-                    });
-
-                    if (this.addModelBtnClose?.nativeElement) {
-                        this.render2.listen(this.addModelBtnClose.nativeElement, "click", () => {
-                            this.closeAddUserModal();
-                        });
-                    }
-                }
+                this.initAddForm.set(true);
             }
         });
     }
@@ -206,13 +195,13 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
         });
     }
 
-    private openAddUserModal(): void {
+    protected openAddUserModal(): void {
         if (this.addUserModal?.nativeElement) {
             this.addUserModal.nativeElement.showModal();
         }
     }
 
-    private closeAddUserModal(): void {
+    protected closeAddUserModal(): void {
         if (this.addUserModal?.nativeElement) {
             this.addUserModal.nativeElement.close();
         }
@@ -339,6 +328,27 @@ export class UserManagementComponent implements OnInit, AfterViewChecked {
                         const tmpArr: IUser[] = this.displayContent() || [];
                         tmpArr.push(item);
                         this.displayContent.set(tmpArr);
+                        this.toast.success("The user is created", {
+                            theme: "snackbar",
+                            autoClose: true,
+                            duration: 3500,
+                            dismissible: true,
+                            position: "bottom-center",
+                            style: {
+                                "border-radius": "30px"
+                            }
+                        })
+                    } else {
+                        this.toast.error(this.errorMessage() || "Error creation", {
+                            theme: "snackbar",
+                            autoClose: true,
+                            duration: 3500,
+                            dismissible: true,
+                            position: "bottom-center",
+                            style: {
+                                "border-radius": "30px"
+                            }
+                        })
                     }
                 }
             });
