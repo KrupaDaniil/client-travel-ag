@@ -109,7 +109,8 @@ export class HotelAllComponent {
       });
     }
     else{
-      this.filteredHotels.set(this.hotels());
+      console.log("hotels found");
+      this.applyFilters();
       this.loadFilters();
       this.cancelError = true;
     }
@@ -152,13 +153,14 @@ export class HotelAllComponent {
     let maxValue = this.filter.get('maxRate')?.value;
     let cityIds = this.filter.get('cityIds')?.value;
 
-    console.log(name)
+    console.log("Loading filters", this.filter.get('name')?.value);
     let result:IAdminHotelEntity[]=this.hotels()!;
 
     if(name && name!=="")
       result = result.filter((h: IAdminHotelEntity) =>
         h.hotelName.toLowerCase().includes(name.toLowerCase())
       )
+
     if(minValue|| maxValue){
       result = result.filter((h: IAdminHotelEntity) =>{
           return h.rate >=minValue && h.rate <= maxValue;
@@ -172,6 +174,7 @@ export class HotelAllComponent {
     }
 
 
+    console.log(result);
 
     this.filteredHotels.set(result);
   }
