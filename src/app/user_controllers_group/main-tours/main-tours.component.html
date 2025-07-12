@@ -1,53 +1,58 @@
 @if (isLoadingData() && displayTours() && displayTours()!.length > 0) {
-<div class="main-container">
-  <form *ngIf="searchForm" [formGroup]="searchForm" class="search-container">
-    <div class="mb-3 w-100">
-      <label for="trName" class="form-label ms-3">Назва туру</label>
-      <input type="text" formControlName="tourName" id="trName" class="form-control rounded-5 ps-3">
-    </div>
-    <div class="mb-3 w-100">
-      <label for="trPriceMin" class="form-label ms-3">Ціна</label>
-      <div class="d-flex align-items-center justify-content-center">
-        <input type="number" formControlName="minPrice" id="trPriceMin" class="form-control rounded-5 ps-3"
-          [min]="minPrice!" [max]="maxPrice!">
-        <span class="mx-1 text-secondary">&#8213;</span>
-        <input type="number" formControlName="maxPrice" id="trPriceMax" class="form-control rounded-5 ps-3"
-          [min]="minPrice!" [max]="maxPrice!">
-      </div>
-    </div>
-    <div class="mb-3 d-flex align-items-center w-75">
-      <button class="btn btn-outline-success rounded-5 px-3 me-2" (click)="searchData()">Шукати</button>
-      <button class="btn btn-outline-danger rounded-5 px-3" (click)="clearSearch()">Очистити</button>
-    </div>
-  </form>
+    <div class="main-container">
+        <form *ngIf="searchForm" [formGroup]="searchForm" class="search-container">
+            <div class="mb-3 w-100">
+                <label for="trName" class="form-label ms-3">Назва туру</label>
+                <input type="text" formControlName="tourName" id="trName" class="form-control rounded-5 ps-3">
+            </div>
+            <div class="mb-3 w-100">
+                <label for="trPriceMin" class="form-label ms-3">Ціна</label>
+                <div class="d-flex align-items-center justify-content-center">
+                    <input type="number" formControlName="minPrice" id="trPriceMin" class="form-control rounded-5 ps-3"
+                           [min]="minPrice!" [max]="maxPrice!">
+                    <span class="mx-1 text-secondary">&#8213;</span>
+                    <input type="number" formControlName="maxPrice" id="trPriceMax" class="form-control rounded-5 ps-3"
+                           [min]="minPrice!" [max]="maxPrice!">
+                </div>
+            </div>
+            <div class="mb-3 d-flex align-items-center w-75">
+                <button class="btn btn-outline-success rounded-5 px-3 me-2" (click)="searchData()">Шукати</button>
+                <button class="btn btn-outline-danger rounded-5 px-3" (click)="clearSearch()">Очистити</button>
+            </div>
+        </form>
 
-  <div class="tour-container">
-    @for (tour of displayTours(); track $index) {
-    <div class="card rounded-3 card-df shadow">
-      <img src="{{tour.imageUrl}}" alt="{{tour.name}}" class="card-img-top card-img-df">
-      <div class="card-body">
-        <div class="card-title fs-4 fw-semibold d-inline-block text-truncate">{{ tour.name }}</div>
-        <div class="card-text mb-3">
-          <span class="me-2">Доступно</span>
-          <span class="border-bottom pe-2">{{ convertDate(tour.dateStart) }}</span>
-          <span class="vr"></span>
-          <span class="border-bottom ps-2">{{ convertDate(tour.dateEnd) }}</span>
-        </div>
-        <div class="row align-items-center mb-3">
-          <div class="col">
-            <a href="#" class="link-success link-offset-2 link-offset-3-hover
+        <div class="tour-container">
+            @for (tour of displayTours()! | paginate: {itemsPerPage: itemsCount, currentPage: page}; track $index) {
+                <div class="card rounded-3 card-df shadow">
+                    <img src="{{tour.imageUrl}}" alt="{{tour.name}}" class="card-img-top card-img-df">
+                    <div class="card-body">
+                        <div class="card-title fs-4 fw-semibold t-ellipsis">{{ tour.name }}</div>
+                        <div class="card-text mb-3">
+                            <span class="me-2">Доступно</span>
+                            <span class="border-bottom pe-2">{{ convertDate(tour.dateStart) }}</span>
+                            <span class="vr"></span>
+                            <span class="border-bottom ps-2">{{ convertDate(tour.dateEnd) }}</span>
+                        </div>
+                        <div class="row align-items-center mb-3">
+                            <div class="col">
+                                <a href="#" class="link-success link-offset-2 link-offset-3-hover
                                 link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-              routerLink="/tour/detail/{{tour.id}}" routerLinkActive="router-link-active">детальніше ></a>
-          </div>
-          <div class="col fw-semibold fs-5 text-end">${{ tour.price }}</div>
+                                   routerLink="/tour/detail/{{tour.id}}" routerLinkActive="router-link-active">детальніше
+                                    ></a>
+                            </div>
+                            <div class="col fw-semibold fs-5 text-end">${{ tour.price }}</div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
-      </div>
     </div>
-    }
-  </div>
-</div>
+    <div class="d-flex align-items-center justify-content-center my-4">
+        <pagination-controls (pageChange)="page = $event" [previousLabel]="''"
+                             [nextLabel]="''"></pagination-controls>
+    </div>
 
 
 } @else {
-<app-loading></app-loading>
+    <app-loading></app-loading>
 }
