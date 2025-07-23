@@ -448,73 +448,6 @@
   height: 50%;
 }
 
-@media(max-width: 1400px) {
-  .bottom-left-text {
-    font-size: 5rem;
-    bottom: 5%;
-    left: 3%;
-  }
-
-
-  .bottom-right-text {
-    font-size: 2rem;
-  }
-}
-
-@media(max-width: 1200px) {
-  .bottom-left-text {
-    font-size: 4rem;
-    bottom: 5%;
-    left: 3%;
-  }
-
-  .select-tour-btn {
-    width: 23%;
-    padding: 0 16px;
-  }
-
-  .top-right {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .bottom-right-text {
-    font-size: 1.5rem;
-  }
-
-  .all-countries-btn {
-    width: 40%;
-  }
-}
-
-@media(max-width: 992px) {
-  .bottom-left-text {
-    font-size: 3.5rem;
-    bottom: 2%;
-    left: 1%;
-  }
-
-  .select-tour-btn {
-    width: 25%;
-    padding: 0 16px;
-  }
-
-  .top-right {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .bottom-right {
-    right: 5%;
-  }
-
-  .all-countries-btn {
-    width: 40%;
-  }
-}
-
 .button-list {
   display: flex;
   flex-wrap: wrap;
@@ -528,7 +461,8 @@
 
 .button-list li {
   width: 33%;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .orange-btn {
@@ -660,35 +594,41 @@
 .carousel-container {
   display: flex;
   min-height: 400px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .carousel-wrapper {
   display: flex;
   justify-content: center;
   align-items: start;
-  margin-top: 70px;
+  margin-top: 10vw;
 }
 
 
 .carousel-block {
   display: flex;
   align-items: center;
-  top: 10%;
-  left: 50%;
+  position: relative;
+  left: 45%;
   transform: translateX(-50%);
+  width: 100%;
+  padding: 0 5%;
 }
 
 .carousel {
   display: flex;
-  gap: 1rem;
+  gap: 2vw;
   z-index: 1;
   flex-direction: row;
 }
 
 .carousel-card {
-  margin-top: 50px;
-  width: 292px;
-  height: 292px;
+  width: 25vw;
+  height: 25vw;
+  max-width: 348px;
+  max-height: 348px;
   border-radius: 2rem;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -733,7 +673,16 @@
   cursor: pointer;
   z-index: 10;
   color: #444;
+}
 
+.nav.left {
+  position: absolute;
+  left: 15%;
+}
+
+.nav.right {
+  position: absolute;
+  right: 5%;
 }
 
 .carousel-label {
@@ -764,30 +713,134 @@
   text-align: right;
 }
 
+@media(max-width: 1400px) {
+  .bottom-left-text {
+    font-size: 5rem;
+    bottom: 5%;
+    left: 3%;
+  }
+
+
+  .bottom-right-text {
+    font-size: 2rem;
+  }
+
+  .carousel-wrapper {
+    margin-top: 3vw;
+  }
+
+    .carousel-card {
+    width: 25vw;
+    height: 25vw;
+  }
+}
+
+@media(max-width: 1200px) {
+  .bottom-left-text {
+    font-size: 4rem;
+    bottom: 5%;
+    left: 3%;
+  }
+
+  .select-tour-btn {
+    width: 23%;
+    padding: 0 16px;
+  }
+
+  .top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .bottom-right-text {
+    font-size: 1.5rem;
+  }
+
+  .all-countries-btn {
+    width: 40%;
+  }
+
+  .carousel-wrapper {
+    margin-top: 2vw;
+  }
+}
+
+@media(max-width: 992px) {
+  .carousel-card {
+    width: 20vw;
+    height: 20vw;
+  }
+
+  .bottom-left-text {
+    font-size: 3.5rem;
+    bottom: 2%;
+    left: 1%;
+  }
+
+  .select-tour-btn {
+    width: 25%;
+    padding: 0 16px;
+  }
+
+  .top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .bottom-right {
+    right: 5%;
+  }
+
+  .all-countries-btn {
+    width: 40%;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-svg-container>.svg-background {
+    display: none;
+  }
+
+  .carousel-card {
+    width: 35vw;
+    height: 35vw;
+  }
+
+  .carousel-card.center {
+    transform: scale(1.05);
+  }
+
+  .carousel-wrapper {
+    margin-top: 5vw;
+  }
+
+  .nav {
+    color: #ddd;
+    font-size: 2.5rem;
+  }
+
+  .nav.left {
+    position: absolute;
+    left: 25%;
+  }
+
+  .nav.right {
+    position: absolute;
+    right: 15%;
+  }
+
+  .carousel-label {
+    bottom: 0px;
+    border-color: #ddd;
+    color: #ddd;
+  }
+}
+
 @media (max-width: 576px) {
   .form-search form {
     margin-left: 10px;
     margin-right: 10px;
-  }
-
-  .carousel-container {
-    width: 100vw;
-    margin-top: 5em;
-  }
-
-  .carousel-wrapper .carousel {
-    width: 100vw;
-  }
-
-  .carousel-card.center {
-    width: 100vw;
-  }
-
-  .nav.right {
-    right: 5% !important;
-  }
-
-  .nav.left {
-    left: 5% !important;
   }
 }
