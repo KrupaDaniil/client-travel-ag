@@ -52,12 +52,12 @@ export class ValidationService {
 		return item !== null && typeof item === "object" && "roles" in item && Array.isArray(item.roles);
 	}
 
-  isHttpError(item: any): boolean {
-    return (
-      item !== null &&
-      typeof item === "object" &&
-      typeof item.status === "number" &&
-      typeof item.message === "string" &&
-      typeof item.message === "string");
-  }
+	isHttpError(item: any): boolean {
+		return (
+			item !== null &&
+			typeof item === "object" &&
+			typeof item.status === "number" &&
+			typeof item.message === "string" &&
+			typeof item.message === "string");
+	}
 }

@@ -21,10 +21,10 @@ import {TagManagementComponent} from "./admin_controllers_group/tag-management/t
 import {HotelDetailsComponent} from "./hotel-controllers-group/hotel-details/hotel-details.component";
 import {HotelManagementComponent} from "./admin_controllers_group/hotel-management/hotel-management.component";
 import {
-	RoomTypeManagementComponent
+    RoomTypeManagementComponent
 } from "./admin_controllers_group/room-type-management/room-type-management.component";
 import {
-	FoodTypeManagementComponent
+    FoodTypeManagementComponent
 } from "./admin_controllers_group/food-type-management/food-type-management.component";
 import {TourManagementComponent} from "./admin_controllers_group/tour-management/tour-management.component";
 import {StatisticComponent} from "./admin_controllers_group/statistic/statistic.component";
@@ -42,6 +42,11 @@ import {FAQComponent} from "./user_controllers_group/f.a.q/f.a.q.component";
 import {ContactsComponent} from "./user_controllers_group/contacts/contacts.component";
 import {CountryCardsComponent} from "./user_controllers_group/country-cards/country-cards.component";
 import {CitiesComponent} from "./user_controllers_group/cities/cities.component";
+import {
+    ReservationManagementComponent
+} from "./manager_controller_group/reservation-management/reservation-management.component";
+import {ReservedToursComponent} from "./manager_controller_group/reserved-tours/reserved-tours.component";
+import {ReservedHotelsComponent} from "./manager_controller_group/reserved-hotels/reserved-hotels.component";
 
 export const routes: Routes = [
     {path: "", component: MainUserComponent},
@@ -63,6 +68,15 @@ export const routes: Routes = [
         ]
     },
     {path: "user-information", component: UserInformationComponent, canActivate: [authUserGuard]},
+    {
+        path: "rsv-management",
+        component: ReservationManagementComponent,
+        canActivate: [authAdminPanelGuard],
+        children: [
+            {path: "rsv-tours", component: ReservedToursComponent},
+            {path: "rsv-hotels", component: ReservedHotelsComponent}
+        ]
+    },
     {
         path: "admin-panel",
         component: AdminPanelComponent,

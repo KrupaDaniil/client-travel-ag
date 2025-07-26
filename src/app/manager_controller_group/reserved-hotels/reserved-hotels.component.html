@@ -1,0 +1,100 @@
+<div class="row my-3">
+    <div class="col g-cn">
+        <div class="d-flex align-items-center">
+            <form *ngIf="searchDataForm" [formGroup]="searchDataForm">
+                <div class="searchBlock">
+                    <input class="form-control form-control-sm" type="text" aria-label="search input"
+                           formControlName="search_text">
+                    <select class="form-select form-select-sm" formControlName="search_option"
+                            aria-label="select search option">
+                        <option selected hidden="hidden" disabled>search by...</option>
+                        <option value="username">Username</option>
+                        <option value="hotel_name">Hotel name</option>
+                    </select>
+                    <button type="button" class="btn btn-sm" (click)="searchTour()">
+                        <img ngSrc="/icons/search_adm_org.svg" width="20" height="20" alt="search icon">
+                    </button>
+                    <button type="button" class="btn btn-sm" (click)="clearSearch()">
+                        <img ngSrc="/icons/clear_close.png" width="20" height="20" alt="clear icon">
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col">
+        <div class="btn-act-block">
+            <button class="btn btn-sm btn-outline-success rounded-5 me-2 px-3" #cnRsvBtn>Confirm reservation</button>
+        </div>
+    </div>
+</div>
+
+@if (displayOrderHotels() && displayOrderHotels()!.length > 0) {
+
+    <div class="my-3">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Hotel name</th>
+                <th scope="col">Room type</th>
+                <th scope="col">Food type</th>
+                <th scope="col">Full date</th>
+                <th scope="col">People</th>
+                <th scope="col">Price</th>
+                <th scope="col">Client</th>
+                <th scope="col">Canceled</th>
+                <th scope="col">Ordered</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider" #orderHotelsBlock>
+                @for (ort of displayOrderHotels()! | paginate: {
+                    itemsPerPage: displaySize,
+                    currentPage: page
+                }; track ort.id; let i = $index) {
+                    <tr [attr.data-order-id]="ort.id">
+                        <th scope="row">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <input type="radio" class="form-check-input p-0 m-0 selected-flag" name="userId"
+                                       disabled/>
+                                <div class="ms-2">{{ i + 1 }}</div>
+                            </div>
+                        </th>
+                        <td>{{ ort.hotel!.hotelName }}</td>
+                        <td>{{ ort.roomTypeName }}</td>
+                        <td>{{ ort.foodTypeName }}</td>
+                        <td>{{ convertDate(ort.dateFrom, ort.dateTo) }}</td>
+                        <td>{{ ort.peopleAmount }}</td>
+                        <td>{{ ort.fullPrice }}</td>
+                        <td>{{ convertUser(ort.client) }}</td>
+                        <td>
+                            @if (ort.status === AdventureStatus.CANCELED) {
+                                <span class="text-danger">Canceled</span>
+                            } @else {
+                                <span class="text-success">Active</span>
+                            }
+                        </td>
+                        <td>
+                            @if (ort.orderProcessed) {
+                                <span class="text-success">Processed</span>
+                            } @else {
+                                <span>-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="d-flex align-items-center justify-content-center my-4">
+            <pagination-controls (pageChange)="page = $event" [previousLabel]="''"
+                                 [nextLabel]="''"></pagination-controls>
+        </div>
+    </div>
+
+} @else {
+    <div class="d-flex align-items-center justify-content-center mt-3 flex-column">
+        @if (!isLoading()) {
+            <app-loading></app-loading>
+        }
+    </div>
+}
+

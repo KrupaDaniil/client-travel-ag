@@ -25,6 +25,8 @@ import {ITagEntity} from "../interfaces/hotels-block/i-tag.entity";
 import {IFoodTypeEntity} from "../interfaces/hotels-block/i-food-type.entity";
 import {IRoomTypeEntity} from "../interfaces/hotels-block/i-room-type.entity";
 import {IHotelEntity} from "../interfaces/hotels-block/i-hotel.entity";
+import {IOrderTour} from "../interfaces/tour-block/i-order-tour";
+import {IOrderHotels} from "../interfaces/hotels-block/i-order-hotels";
 
 function loadUserStartData(): () => IUserStartData {
     return () => {
@@ -104,6 +106,18 @@ const roomTypeConfig = entityConfig({
     selectId: typeRoom => typeRoom.id
 });
 
+const rvnTourConfig = entityConfig({
+    entity: type<IOrderTour>(),
+    collection: "orderedTours",
+    selectId: orderedTour => orderedTour.id
+});
+
+const rvnHotelConfig = entityConfig({
+    entity: type<IOrderHotels>(),
+    collection: "orderHotels",
+    selectId: orderHotel => orderHotel.id
+});
+
 export const EntityStorage = signalStore(
     {providedIn: "root"},
 
@@ -119,6 +133,8 @@ export const EntityStorage = signalStore(
     withEntities(roomTypeConfig),
     withEntities(hotelConfig),
     withEntities(topHotelConfig),
+    withEntities(rvnTourConfig),
+    withEntities(rvnHotelConfig),
     withMethods(store => ({
         addUserStartData(startData: IUserStartData): void {
             patchState(store, startData);
@@ -144,6 +160,12 @@ export const EntityStorage = signalStore(
         },
         setCountry(country: ICountryEntity): void {
             patchState(store, setEntity(country, countryConfig));
+        },
+        setRvnTour(rvnTour: IOrderTour): void {
+            patchState(store, setEntity(rvnTour, rvnTourConfig));
+        },
+        setRvnHotel(rvnHotel: IOrderHotels): void {
+            patchState(store, setEntity(rvnHotel, rvnHotelConfig));
         },
 
         setAdminCity(city: ICityEntity<IMainCountryForCityEntity, IBlobImageEntity>): void {
@@ -182,6 +204,12 @@ export const EntityStorage = signalStore(
         },
         setTopHotels(hotels: IHotelEntity[]): void {
             patchState(store, addEntities(hotels, topHotelConfig));
+        },
+        setAllRvnTours(rvnTours: IOrderTour[]): void {
+            patchState(store, setAllEntities(rvnTours, rvnTourConfig));
+        },
+        setAllRvnHotels(rvnHotels: IOrderHotels[]): void {
+            patchState(store, setAllEntities(rvnHotels, rvnHotelConfig));
         },
 
         updateUserStartData(userStartData: Partial<IUserStartData>): void {
