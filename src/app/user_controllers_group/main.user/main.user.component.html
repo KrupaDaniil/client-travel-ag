@@ -1,36 +1,35 @@
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-10 mx-auto">
-            <div class="svg-container">
-                <svg class="svg-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 96"
-                     preserveAspectRatio="xMidYMid slice">
-                    <defs>
-                        <clipPath id="customClip">
-                            <path
-                                    d="M 0 60 L 0 8 Q 0 0 8 0 L 116 0 Q 120 0 120 4 Q 120 8 124 8 L 152 8 Q 160 8 160 16 V 88 Q 160 96 152 96 T 72 96 Q 64 96 64 88 L 64 76 Q 64 68 56 68 L 8 68 Q 0 68 0 60 Z"/>
-                        </clipPath>
+  <div class="row">
+    <div class="col-10 mx-auto">
+      <div class="svg-container">
+        <svg class="svg-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 96"
+          preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <clipPath id="customClip">
+              <path
+                d="M 0 60 L 0 8 Q 0 0 8 0 L 116 0 Q 120 0 120 4 Q 120 8 124 8 L 152 8 Q 160 8 160 16 V 88 Q 160 96 152 96 T 72 96 Q 64 96 64 88 L 64 76 Q 64 68 56 68 L 8 68 Q 0 68 0 60 Z" />
+            </clipPath>
 
-                        <linearGradient id="darkGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="black" stop-opacity="0"/>
-                            <stop offset="100%" stop-color="black" stop-opacity="0.3"/>
-                        </linearGradient>
-                    </defs>
+            <linearGradient id="darkGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="black" stop-opacity="0" />
+              <stop offset="100%" stop-color="black" stop-opacity="0.3" />
+            </linearGradient>
+          </defs>
 
-                    <image href="/imgs/main-svg-light.jpg" alt="mhdapvsg" class="back-img"
-                           clip-path="url(#customClip)"/>
-                    <rect width="100%" height="100%" fill="url(#darkGradient)" clip-path="url(#customClip)"/>
-                </svg>
+          <image href="/imgs/main-svg-light.jpg" alt="mhdapvsg" class="back-img" clip-path="url(#customClip)" />
+          <rect width="100%" height="100%" fill="url(#darkGradient)" clip-path="url(#customClip)" />
+        </svg>
 
-                <div class="overlay-content">
-                    <button class="top-right select-tour-btn">Обрати тур</button>
-                    <p class="bottom-left-text">SunTrip</p>
-                    <p class="bottom-right-text bottom-right">— це про подорожі, які ти запам'ятаєш на довго!</p>
-                </div>
-            </div>
+        <div class="overlay-content">
+          <a routerLink="tours" class="top-right select-tour-btn">Обрати тур</a>
+          <p class="bottom-left-text">SunTrip</p>
+          <p class="bottom-right-text bottom-right">— це про подорожі, які ти запам'ятаєш на довго!</p>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!--<div class="row mt-3">
+  <!--<div class="row mt-3">
         <div class="col-10 mx-auto">
             <div class="search-input-wrapper">
                 <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,339 +49,338 @@
         </div>
     </div>-->
 
-    <div class="row mt-5">
-        <div class="col-11 mx-auto">
-            <div class="carousel-svg-container">
-                <svg class="svg-background" viewBox="0 0 128 100" xmlns="http://www.w3.org/2000/svg"
-                     style="width: 100%; height: auto;" preserveAspectRatio="xMidYMid slice">
-                    <path
-                            d="M 0 69 L 0 9 Q 0 1 8 1 L 64 1 L 120 1 Q 128 1 128 9 V 69 Q 128 77 120 77 L 104 77 Q 96 77 96 85 L 96 85 Q 96 93 88 93 T 40 93 Q 32 93 32 85 L 32 85 Q 32 77 24 77 L 8 77 Q 0 77 0 69 Z"
-                            fill="#8DBECD"></path>
-                </svg>
-                <div *ngIf="visibleCountries() as countries" class="carousel-container">
-                    <div class="carousel-wrapper">
-                        <div class="carousel-block" style="position: relative;">
-                            <button class="nav left" (click)="prevSlide()">
-                                &#10094;
-                            </button>
-                            <div *ngIf="visibleCountries() as countries" class="carousel-container">
-                                <div class="carousel">
-                                    <div class="carousel-card" *ngFor="let country of countries; let i = index"
-                                         [ngClass]="{ 'center': i === 1, 'left': i === 0, 'right': i === 2 }">
-                                        @if (country.defaultImage && country.defaultImage!.blobUrl) {
-                                            <img [src]="country.defaultImage!.blobUrl" alt="Country image"/>
-                                        } @else {
-                                            <img [src]="'/imgs/default-image-placeholder.webp'" alt="Country image"/>
-                                        }
+  <div class="row mt-5">
+    <div class="col-11 mx-auto">
+      <div class="carousel-svg-container">
+        <svg class="svg-background" viewBox="0 0 128 100" xmlns="http://www.w3.org/2000/svg"
+          style="width: 100%; height: auto;" preserveAspectRatio="xMidYMid slice">
+          <path
+            d="M 0 69 L 0 9 Q 0 1 8 1 L 64 1 L 120 1 Q 128 1 128 9 V 69 Q 128 77 120 77 L 104 77 Q 96 77 96 85 L 96 85 Q 96 93 88 93 T 40 93 Q 32 93 32 85 L 32 85 Q 32 77 24 77 L 8 77 Q 0 77 0 69 Z"
+            fill="#8DBECD"></path>
+        </svg>
+        <div *ngIf="visibleCountries() as countries" class="carousel-container">
+          <div class="carousel-wrapper">
+            <div class="carousel-block" style="position: relative;">
+              <button class="nav left" (click)="prevSlide()">
+                &#10094;
+              </button>
+              <div *ngIf="visibleCountries() as countries" class="carousel-container">
+                <div class="carousel">
+                  <div class="carousel-card" *ngFor="let country of countries; let i = index"
+                    [ngClass]="{ 'center': i === 1, 'left': i === 0, 'right': i === 2 }">
+                    @if (country.defaultImage && country.defaultImage!.blobUrl) {
+                    <img [src]="country.defaultImage!.blobUrl" alt="Country image" />
+                    } @else {
+                    <img [src]="'/imgs/default-image-placeholder.webp'" alt="Country image" />
+                    }
 
-                                        <div class="hotel-title">{{ country.name }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="nav right" (click)="nextSlide()">
-                                &#10095;
-                            </button>
-                        </div>
-                    </div>
-
-                    <a routerLink="countries" class="carousel-label">Усі Країни</a>
+                    <div class="hotel-title">{{ country.name }}</div>
+                  </div>
                 </div>
+              </div>
+              <button class="nav right" (click)="nextSlide()">
+                &#10095;
+              </button>
             </div>
+          </div>
+
+          <a routerLink="countries" class="carousel-label">Усі Країни</a>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="row mt-5">
-        <div class="col-10 mt-4 mx-auto">
-            <div class="row" style="min-height: 500px;">
+  <div class="row mt-5">
+    <div class="col-10 mt-4 mx-auto">
+      <div class="row" style="min-height: 500px;">
 
-                <div class="col-12 col-md-3 card-link-col">
-                    <a routerLink="tours" class="card-link">
-                        <div class="card card-news h-100">
-                            <div class="card-overlay">
-                                <h2 class="card-title">Обрати Тур</h2>
-                                <img src="/imgs/calendar.png" alt="Calendar Icon" class="calendar-icon">
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Hotel Booking and Reviews -->
-                <div class="col-12 col-md-3">
-                    <div class="row h-100">
-
-                        <div class="col-12 card-link-col">
-                            <a routerLink="hotels" class="card-link">
-                                <div class="card card-hotels">
-                                    <div class="card-overlay">
-                                        <h2 class="card-title">Бронювання Готелів</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-12 mt-auto card-link-col">
-                            <a routerLink="/" class="card-link">
-                                <div class="card card-reviews">
-                                    <div class="card-overlay">
-                                        <h2 class="card-title">Відгуки</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Countries, Contacts, FAQ -->
-                <div class="col-12 col-md-6">
-                    <div class="row h-100">
-
-                        <div class="col-12 card-link-col">
-                            <a routerLink="countries" class="card-link">
-                                <div class="card card-countries">
-                                    <div class="card-overlay">
-                                        <h2 class="card-title">Всі країни</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-12 mt-auto">
-                            <div class="row">
-
-                                <div class="col-6">
-                                    <a routerLink="contacts" class="card-link">
-                                        <div class="card card-contacts">
-                                            <div class="card-overlay">
-                                                <h2 class="card-title">Контакти</h2>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-
-                                <div class="col-6">
-                                    <a routerLink="faq" class="card-link">
-                                        <div class="card card-faq">
-                                            <div class="card-overlay">
-                                                <h2 class="card-title">Часті запитання</h2>
-                                                <div class="qa-icons">
-                                                    <img src="/imgs/3d-q-question-answer-symbols-with-bubble-speech 1.png"
-                                                         alt="q-and-a-icon"
-                                                         class="qa-icon">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-12 col-md-3 card-link-col">
+          <a routerLink="tours" class="card-link">
+            <div class="card card-news h-100">
+              <div class="card-overlay">
+                <h2 class="card-title">Обрати Тур</h2>
+                <img src="/imgs/calendar.png" alt="Calendar Icon" class="calendar-icon">
+              </div>
             </div>
+          </a>
         </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-10 mx-auto">
-            <div class="tour-container">
-                <div class="row">
-                    <!-- Left Side - Search Form -->
-                    <div class="col-lg-8 col-md-6 my-auto">
-                        <div class="search-section">
-                            <!-- Search Input -->
-                            <div class="search-input-wrapper">
-                                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                                <input type="text" class="search-input form-control"
-                                       placeholder="Знайти свій готель по слову">
-                            </div>
 
-                            <!-- Parameter Selection Text -->
-                            <p class="parameter-text text-center">або виберіть один/кілька параметрів</p>
+        <!-- Hotel Booking and Reviews -->
+        <div class="col-12 col-md-3">
+          <div class="row h-100">
 
-                            <!-- Form Fields -->
-                            <div class="row form-row">
-                                <div class="col-md-4 mb-3">
-                                    <div class="input-group">
-                    <span class="input-group-text">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                           class="bi bi-tag" viewBox="0 0 16 16">
-                        <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
-                        <path
-                                d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
-                      </svg>
-                    </span>
-                                        <select class="form-select select-input">
-                                            <option selected>Ціна</option>
-                                            <option value="1">Менше за $500</option>
-                                            <option value="2">$500 - $1000</option>
-                                            <option value="3">$1000 - $2000</option>
-                                            <option value="4">Більше за $2000</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="input-group">
-                    <span class="input-group-text">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                           class="bi bi-calendar4" viewBox="0 0 16 16">
-                        <path
-                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
-                      </svg>
-                    </span>
-                                        <input type="date" class="form-control select-input" placeholder="Дата заселення">
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="input-group">
-                    <span class="input-group-text">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                           class="bi bi-people" viewBox="0 0 16 16">
-                        <path
-                                d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                      </svg>
-                    </span>
-                                        <select class="form-select">
-                                            <option selected>Кількість</option>
-                                            <option value="1">1 людина</option>
-                                            <option value="2">2 людини</option>
-                                            <option value="3">3-4 людини</option>
-                                            <option value="4">5+ людини</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row form-row">
-                                <div class="col mb-3">
-                                    <div class="input-group">
-                    <span class="input-group-text">
-                      <img style="height: 16px;width: 16px;" src="/icons/flight-land-svgrepo-com.svg" alt="land-icon"/>
-                    </span>
-                                        <select class="form-control">
-                                            <option selected>Куди</option>
-                                            <option value="1">New York</option>
-                                            <option value="2">Los Angeles</option>
-                                            <option value="3">Chicago</option>
-                                            <option value="4">Miami</option>
-                                        </select>
-                                        <span class="input-group-text">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                           class="bi bi-clock" viewBox="0 0 16 16">
-                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
-                      </svg>
-                    </span>
-                                        <select class="form-select select-input">
-                                            <option selected>Тривалість</option>
-                                            <option value="1">1-3 дні</option>
-                                            <option value="2">4-7 днів</option>
-                                            <option value="3">1-2 неділі</option>
-                                            <option value="4">2+ неділі</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <!-- Action Buttons -->
-                            <div class="row mt-4">
-                                <div class="col-6">
-                                    <button type="button" class="btn btn-search w-100">
-                                        Шукати
-                                    </button>
-                                </div>
-                                <div class="col-6">
-                                    <button type="button" class="btn btn-reset w-100">
-                                        Скинути фільтри
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Side - Tours Section -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="tours-section">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h2 class="tours-title">Усі Готелі</h2>
-                                <a routerLink="hotels" class="btn btn-view">
-                                    Дивитись
-                                </a>
-                            </div>
-                            <div>
-                                <img src="/project_images/login_full_start.jpg"
-                                     alt="Travel destinations with tropical theme"
-                                     class="tour-image">
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-12 card-link-col">
+              <a routerLink="hotels" class="card-link">
+                <div class="card card-hotels">
+                  <div class="card-overlay">
+                    <h2 class="card-title">Бронювання Готелів</h2>
+                  </div>
                 </div>
+              </a>
             </div>
-        </div>
-    </div>
-    <div class="row mt-5 mb-5">
-        <div class="col-8 mx-auto">
-            <h2 class="suntrip-section-title">Онлайн турагенція SunTrip</h2>
 
-            <p class="suntrip-paragraph">Шановні туристи, раді вітати Вас на сайті турагенції SunTrip. Ми є
-                офіційним
-                офісом продажу туроператора SunTrip Україна. На нашому сайті можна підібрати путівку та забронювати
-                онлайн.
-                На сьогоднішній день офіси компанії відкриті на багатьох курортах світу. Постійне розширення географії
-                послуг і любов до своєї справи допомогло компанії стати кращою в туристичній галузі.</p>
-
-            <h2 class="suntrip-section-title">SunTrip Україна - купити тур онлайн</h2>
-
-            <p class="suntrip-paragraph">SunTrip знає як зробити відпочинок незабутнім! Багаторічний досвід роботи в
-                туристичному сегменті дозволяє щорічно відправляти туристів на зустріч новим пригодам. Замовляючи тур
-                в
-                нашій туристичній агенції, Ви можете бути впевненими в якості свого відпочинку. Тури з SunTrip -
-                набагато
-                більше, ніж авіаквитки і номер в готелі, це позитивні враження які залишаться на все життя.</p>
-
-            <h2 class="suntrip-section-title">Турагентство - підбір і пошук авіа путівок</h2>
-
-            <ul class="suntrip-services-list">
-                <li class="suntrip-service-item"><span class="suntrip-service-name">Пошук турів</span> - на нашому
-                    сайті Ви
-                    можете підібрати і купити пакетні авіа та автобусні тури, а також тільки проживання в готелі.
-                </li>
-
-                <li class="suntrip-service-item"><span class="suntrip-service-name">Підбір туру</span> - зверніться до
-                    наших
-                    менеджерів для підбору та пошуку туру, який буде відповідати всім Вашим вимогам. Ми підберемо
-                    оптимальне
-                    рішення для відпочинку під Ваш бюджет.
-                </li>
-
-                <li class="suntrip-service-item"><span class="suntrip-service-name">Гарячі путівки</span> - це
-                    пропозиції на
-                    найближчі дати. Подивитися гарячі тури можна скориставшись пошуком туру на сайті. Це унікальні
-                    пропозиції
-                    для бюджетних туристів, і тих, хто не проти заощадити на відпочинку. Турагентство SunTrip пропонує
-                    гарячі
-                    путівки в кращі курорти світу.
-                </li>
-
-                <li class="suntrip-service-item"><span class="suntrip-service-name">Партнерські відносини</span> -
-                    наша
-                    турагенція є офіційним представником SunTrip і співпрацює з основними туроператорами України, що
-                    дозволяє
-                    охопити всю широту послуг і напрямків туристичної галузі.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row mt-5 mb-3">
-        <div class="col-10 mx-auto">
-            <div class="closing-phrase-container">
-                <div class="mx-auto w-50">
-                    <p class="closing-phrase">Туристична агенція SunTrip - ми пропонуємо не просто відпочинок, а
-                        втілення мрій,
-                        яскраві емоції та нові враження.</p>
+            <div class="col-12 mt-auto card-link-col">
+              <a routerLink="/" class="card-link">
+                <div class="card card-reviews">
+                  <div class="card-overlay">
+                    <h2 class="card-title">Відгуки</h2>
+                  </div>
                 </div>
+              </a>
             </div>
+          </div>
         </div>
+
+        <!-- Countries, Contacts, FAQ -->
+        <div class="col-12 col-md-6">
+          <div class="row h-100">
+
+            <div class="col-12 card-link-col">
+              <a routerLink="countries" class="card-link">
+                <div class="card card-countries">
+                  <div class="card-overlay">
+                    <h2 class="card-title">Всі країни</h2>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-12 mt-auto">
+              <div class="row">
+
+                <div class="col-6">
+                  <a routerLink="contacts" class="card-link">
+                    <div class="card card-contacts">
+                      <div class="card-overlay">
+                        <h2 class="card-title">Контакти</h2>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="col-6">
+                  <a routerLink="faq" class="card-link">
+                    <div class="card card-faq">
+                      <div class="card-overlay">
+                        <h2 class="card-title">Часті запитання</h2>
+                        <div class="qa-icons">
+                          <img src="/imgs/3d-q-question-answer-symbols-with-bubble-speech 1.png" alt="q-and-a-icon"
+                            class="qa-icon">
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-10 mx-auto">
+      <div class="tour-container">
+        <form [formGroup]="filter">
+          <div class="row">
+            <!-- Left Side - Search Form -->
+            <div class="col-lg-8 col-md-6 my-auto">
+              <div class="search-section">
+                <!-- Search Input -->
+                <div class="search-input-wrapper">
+                  <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  </svg>
+                  <input type="text" class="search-input form-control" placeholder="Знайти свій готель по назві"
+                    formControlName="name" id="name">
+                </div>
+
+                <!-- Parameter Selection Text -->
+                <p class="parameter-text text-center">або виберіть один/кілька параметрів</p>
+
+                <!-- Form Fields -->
+                <div class="row form-row">
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-tag" viewBox="0 0 16 16">
+                          <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0" />
+                          <path
+                            d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z" />
+                        </svg>
+                      </span>
+                      <select class="form-select select-input" formControlName="price" id="price">
+                        <option value="0" selected>Ціна</option>
+                        <option value="1">Менше за $500</option>
+                        <option value="2">$500 - $1000</option>
+                        <option value="3">$1000 - $2000</option>
+                        <option value="4">Більше за $2000</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-calendar4" viewBox="0 0 16 16">
+                          <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+                        </svg>
+                      </span>
+                      <input type="date" class="form-control select-input" placeholder="Дата заселення" id="checkin">
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-people" viewBox="0 0 16 16">
+                          <path
+                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                        </svg>
+                      </span>
+                      <select class="form-select" formControlName="numberOfPeople" id="numberOfPeople">
+                        <option value="0" selected>Кількість</option>
+                        <option value="1">1 людина</option>
+                        <option value="2">2 людини</option>
+                        <option value="3">3-4 людини</option>
+                        <option value="4">5+ людини</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row form-row">
+                  <div class="col mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <img style="height: 16px;width: 16px;" src="/icons/flight-land-svgrepo-com.svg"
+                          alt="land-icon" />
+                      </span>
+                      <ng-select class="form-control" [multiple]="true" notFoundText="Міста не знайденно"
+                        formControlName="cityIds" placeholder="Куди" groupBy="countryName" [items]="cities()"
+                        bindValue="cityId" bindLabel="cityName">
+
+                      </ng-select>
+                      <span class="input-group-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-clock" viewBox="0 0 16 16">
+                          <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
+                        </svg>
+                      </span>
+                      <select class="form-select select-input" id="duration">
+                        <option value="0" selected>Тривалість</option>
+                        <option value="1">1-3 дні</option>
+                        <option value="2">4-7 днів</option>
+                        <option value="3">1-2 неділі</option>
+                        <option value="4">2+ неділі</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- Action Buttons -->
+                <div class="row mt-4">
+                  <div class="col-6">
+                    <button type="button" class="btn btn-search w-100" (click)="onSearch()">
+                      Шукати
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <button type="button" class="btn btn-reset w-100" (click)="onReset()">
+                      Скинути фільтри
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side - Tours Section -->
+            <div class="col-lg-4 col-md-6">
+              <div class="tours-section">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h2 class="tours-title">Усі Готелі</h2>
+                  <a routerLink="hotels" class="btn btn-view">
+                    Дивитись
+                  </a>
+                </div>
+                <div>
+                  <img src="/project_images/login_full_start.jpg" alt="Travel destinations with tropical theme"
+                    class="tour-image">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5 mb-5">
+    <div class="col-8 mx-auto">
+      <h2 class="suntrip-section-title">Онлайн турагенція SunTrip</h2>
+
+      <p class="suntrip-paragraph">Шановні туристи, раді вітати Вас на сайті турагенції SunTrip. Ми є
+        офіційним
+        офісом продажу туроператора SunTrip Україна. На нашому сайті можна підібрати путівку та забронювати
+        онлайн.
+        На сьогоднішній день офіси компанії відкриті на багатьох курортах світу. Постійне розширення географії
+        послуг і любов до своєї справи допомогло компанії стати кращою в туристичній галузі.</p>
+
+      <h2 class="suntrip-section-title">SunTrip Україна - купити тур онлайн</h2>
+
+      <p class="suntrip-paragraph">SunTrip знає як зробити відпочинок незабутнім! Багаторічний досвід роботи в
+        туристичному сегменті дозволяє щорічно відправляти туристів на зустріч новим пригодам. Замовляючи тур
+        в
+        нашій туристичній агенції, Ви можете бути впевненими в якості свого відпочинку. Тури з SunTrip -
+        набагато
+        більше, ніж авіаквитки і номер в готелі, це позитивні враження які залишаться на все життя.</p>
+
+      <h2 class="suntrip-section-title">Турагентство - підбір і пошук авіа путівок</h2>
+
+      <ul class="suntrip-services-list">
+        <li class="suntrip-service-item"><span class="suntrip-service-name">Пошук турів</span> - на нашому
+          сайті Ви
+          можете підібрати і купити пакетні авіа та автобусні тури, а також тільки проживання в готелі.
+        </li>
+
+        <li class="suntrip-service-item"><span class="suntrip-service-name">Підбір туру</span> - зверніться до
+          наших
+          менеджерів для підбору та пошуку туру, який буде відповідати всім Вашим вимогам. Ми підберемо
+          оптимальне
+          рішення для відпочинку під Ваш бюджет.
+        </li>
+
+        <li class="suntrip-service-item"><span class="suntrip-service-name">Гарячі путівки</span> - це
+          пропозиції на
+          найближчі дати. Подивитися гарячі тури можна скориставшись пошуком туру на сайті. Це унікальні
+          пропозиції
+          для бюджетних туристів, і тих, хто не проти заощадити на відпочинку. Турагентство SunTrip пропонує
+          гарячі
+          путівки в кращі курорти світу.
+        </li>
+
+        <li class="suntrip-service-item"><span class="suntrip-service-name">Партнерські відносини</span> -
+          наша
+          турагенція є офіційним представником SunTrip і співпрацює з основними туроператорами України, що
+          дозволяє
+          охопити всю широту послуг і напрямків туристичної галузі.
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row mt-5 mb-3">
+    <div class="col-10 mx-auto">
+      <div class="closing-phrase-container">
+        <div class="mx-auto w-50">
+          <p class="closing-phrase">Туристична агенція SunTrip - ми пропонуємо не просто відпочинок, а
+            втілення мрій,
+            яскраві емоції та нові враження.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

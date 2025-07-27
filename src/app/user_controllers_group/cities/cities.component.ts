@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IMinCityEntity } from '../../../interfaces/country-block/i-min-city.entity';
 import { CityService } from '../../../services/city.service';
 import { ICityEntity } from '../../../interfaces/country-block/i-city.entity';
 import { IMainCountryForCityEntity } from '../../../interfaces/country-block/i-main-country-for-city.entity';
 import { IBlobImageEntity } from '../../../interfaces/country-block/i-blob-image.entity';
+import { LoadingComponent } from '../../loading/loading.component';
 
 @Component({
   selector: 'app-cities',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, LoadingComponent],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.css'
 })
@@ -25,6 +26,10 @@ export class CitiesComponent implements OnInit {
   readonly cities = computed(() => this.citiesSignal());
   readonly isLoading = computed(() => this.loadingSignal());
   readonly countryName = computed(() => this.countryNameSignal());
+
+  public cancelError = false;
+
+  @ViewChild("top") top!: ElementRef;
 
   async ngOnInit(): Promise<void> {
     const countryId = this.route.snapshot.paramMap.get('id');
@@ -42,6 +47,10 @@ export class CitiesComponent implements OnInit {
         if (cities.length > 0) {
           this.countryNameSignal.set(cities[0].country.name);
         }
+
+        this.cancelError = true;
+      } else {
+        this.cancelError = false;
       }
     } catch (error) {
       console.error('Error loading cities:', error);

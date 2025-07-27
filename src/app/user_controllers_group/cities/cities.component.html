@@ -23,10 +23,7 @@
     </div>
 
     <ng-template #loadingTemplate>
-      <div class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Loading cities...</p>
-      </div>
+      <app-loading [cancelationToken]="cancelError"></app-loading>
     </ng-template>
 
     <div class="empty-state" *ngIf="cities().length === 0 && !isLoading()">

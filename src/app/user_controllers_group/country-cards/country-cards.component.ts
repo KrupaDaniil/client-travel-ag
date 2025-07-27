@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal, Signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, signal, Signal, ViewChild } from '@angular/core';
 import { ICountryEntity } from '../../../interfaces/country-block/i-country.entity';
 import { EntityStorage } from '../../../storage/entity.storage';
 import { CountryService } from '../../../services/country.service';
@@ -16,6 +16,8 @@ export class CountryCardsComponent {
   private readonly countryService = inject(CountryService);
 
   readonly countries: Signal<ICountryEntity[]> = computed(() => this.store.countriesEntities());
+
+  @ViewChild("top") top!: ElementRef;
 
   constructor() {
     this.loadCountriesIfEmpty();
