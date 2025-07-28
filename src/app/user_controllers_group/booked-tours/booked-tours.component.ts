@@ -48,11 +48,10 @@ export class BookedToursComponent implements OnInit {
             if (this.tours.length === 0) {
                 this.orderService.getAllOrderTours(this.username).then((r: IOrderTour[] | undefined): void => {
                     if (r) {
-                        console.log(r);
                         this.store2.setAllOrderTour(r);
                         this.loadingFailed.set(false);
                     } else {
-                        this.toast.error("Помилка завантаження", this.getPrObj());
+                        this.toast.error("Тут порожньо", this.getPrObj());
                         this.loadingFailed.set(true);
                     }
                 });

@@ -46,7 +46,7 @@ export class BookedHotelsComponent implements OnInit {
     private checkUser(): void {
         if (this.username === "") {
             localStorage.setItem(LocalConstants.L_URL, this.router.url);
-            this.router.navigate(["/authorization"]);
+            this.router.navigate(["/authorization"]).then();
         }
     }
 

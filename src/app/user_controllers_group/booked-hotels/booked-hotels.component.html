@@ -1,7 +1,4 @@
 <div class="container">
-    @if (isLoadingFailed()) {
-        <div class="my-5 text-center fw-semibold fs-4">Схоже щось пішло не так...</div>
-    }
 
     @if (hotelsList() && hotelsList()!.length > 0 && !isLoadingFailed()) {
         @for (order of hotelsList()! | paginate: {itemsPerPage: itemsCount, currentPage: page}; track $index) {
@@ -46,7 +43,7 @@
                     <div class="col d-flex align-items-center justify-content-end mb-3">
                         <button class="btn btn-sm px-4 btn-outline-dark rounded-5"
                                 [attr.data-order-id]="order.id" (click)="cancelOrder($event)"
-                                [ngClass]="{'disabled': (order.status === stCanceled)}"
+                                [ngClass]="{'disabled': (order.status === stCanceled || order.orderProcessed)}"
                         >Скасувати
                         </button>
                     </div>
@@ -59,7 +56,11 @@
                                  [nextLabel]="''"></pagination-controls>
         </div>
     } @else {
-        <app-loading></app-loading>
+        @if (isLoadingFailed()) {
+            <div class="my-5 text-center fw-semibold fs-4">Схоже не має даних для відображення...</div>
+        } @else {
+            <app-loading></app-loading>
+        }
     }
 
 </div>

@@ -631,17 +631,7 @@ export class HttpService {
     );
   }
 
-  public loadingTourToAdmin(id: number): Observable<IAdminTour | IError> {
-    return this.http.get(`${this.baseUrl}/tour/${id}`, { observe: "response" }).pipe(
-      map((response: HttpResponse<Object>): IAdminTour | IError => {
-        if (response.status === HttpStatusCode.Ok) {
-          return response.body as IAdminTour;
-        } else {
-          return new ErrorMessage(HttpStatusCode.BadRequest, "Failed to load tour");
-        }
-      })
-    );
-  }
+
 
   public loadingDetailTourToClient(id: number): Observable<ITourDetail | IError> {
     return this.http.get(`${this.baseUrl}/client/tour/${id}`, { observe: "response" }).pipe(
@@ -701,10 +691,24 @@ export class HttpService {
         }
       }),
       catchError(
-        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to load order tours"))
+        (error: HttpErrorResponse): Observable<IError> =>
+                    of(this.getErrorMessage(error, "Failed to load order tours"))
       )
     );
   }
+
+    public loadingAllOrderedToursToManager(): Observable<IOrderTour[] | IError> {
+        return this.http.get(`${this.baseUrl}/ordered-tours-mn`, {observe: "response"}).pipe(
+            map((response: HttpResponse<Object>): IOrderTour[] | IError => {
+                if (response.status === HttpStatusCode.Ok) {
+                    return response.body as IOrderTour[];
+                } else {
+                    return new ErrorMessage(HttpStatusCode.BadRequest, "Invalid data");
+                }
+            }), catchError((error: HttpErrorResponse): Observable<IError> =>
+                of(this.getErrorMessage(error, "Failed to load order tours")))
+        );
+    }
 
   public loadingAllOrderHotelToUser(username: string): Observable<IOrderHotels[] | IError> {
     return this.http.get(`${this.baseUrl}/hotel/all-booking-hotel/${username}`, { observe: "response" }).pipe(
@@ -716,10 +720,24 @@ export class HttpService {
         }
       }),
       catchError(
-        (error: HttpErrorResponse): Observable<IError> => of(this.getErrorMessage(error, "Failed to load order hotels"))
+        (error: HttpErrorResponse): Observable<IError> =>
+                    of(this.getErrorMessage(error, "Failed to load order hotels"))
       )
     );
   }
+
+    public loadingAllOrderedHotelsToManager(): Observable<IOrderHotels[] | IError> {
+        return this.http.get(`${this.baseUrl}/hotel/all-ordered-hotels`, {observe: "response"}).pipe(
+            map((response: HttpResponse<Object>): IOrderHotels[] | IError => {
+                if (response.status === HttpStatusCode.Ok) {
+                    return response.body as IOrderHotels[];
+                } else {
+                    return new ErrorMessage(HttpStatusCode.BadRequest, "Invalid data");
+                }
+            }), catchError((error: HttpErrorResponse): Observable<IError> =>
+                of(this.getErrorMessage(error, "ailed to load order hotels")))
+        );
+    }
 
   // block adding // ------------------------------------------------------------
   addUser(user: INewUser): Observable<IUser | IError> {
@@ -1115,7 +1133,18 @@ export class HttpService {
     );
   }
 
-  canceledOrderHotel(orderId: number): Observable<IOrderHotels | IError> {
+  tourOrderConfirmation(orderId: number): Observable<IOrderTour | IError> {
+        return this.http.get(`${this.baseUrl}/tour-reservation-confirmation/${orderId}`, {observe: "response"}).pipe(
+            map((response: HttpResponse<Object>): IOrderTour | IError => {
+                if (response.status === HttpStatusCode.Ok) {
+                    return response.body as IOrderTour
+                } else {
+                    return new ErrorMessage(HttpStatusCode.BadRequest, "Unable to confirm tour");
+                }
+            }), catchError((error: HttpErrorResponse): Observable<IError> =>
+                of(this.getErrorMessage(error, "Unable to confirm tour")))
+        )
+    }canceledOrderHotel(orderId: number): Observable<IOrderHotels | IError> {
     return this.http.get(`${this.baseUrl}/hotel/canceled-booking-hotel/${orderId}`, { observe: "response" }).pipe(
       map((response: HttpResponse<Object>): IOrderHotels | IError => {
         if (response.status === HttpStatusCode.Ok) {
@@ -1131,7 +1160,19 @@ export class HttpService {
     );
   }
 
-  //delete block // ------------------------------------------------------------
+  hotelOrderConfirmation(orderId: number): Observable<IOrderHotels | IError> {
+        return this.http.get(`${this.baseUrl}/hotel/reservation-confirmation/${orderId}`, {observe: "response"}).pipe(
+            map((response: HttpResponse<Object>): IOrderHotels | IError => {
+                if (response.status === HttpStatusCode.Ok) {
+                    return response.body as IOrderHotels;
+                } else {
+                    return new ErrorMessage(HttpStatusCode.BadRequest, "Unable to confirm hotel");
+                }
+            }), catchError((error: HttpErrorResponse): Observable<IError> =>
+                of(this.getErrorMessage(error, "Unable to confirm tour"))
+            )
+        );
+    }//delete block // ------------------------------------------------------------
   deleteUser(id: number): Observable<boolean | IError> {
     return this.http.delete(`${this.baseUrl}/delete-user/${id}`, { observe: "response" }).pipe(
       map((response: HttpResponse<Object>): boolean | IError => {
