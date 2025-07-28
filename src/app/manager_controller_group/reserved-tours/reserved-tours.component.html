@@ -86,8 +86,10 @@
 
 } @else {
     <div class="d-flex align-items-center justify-content-center mt-3 flex-column">
-        @if (!isLoading()) {
+        @if (isLoading()) {
             <app-loading></app-loading>
+        } @else {
+            <div class="fw-semibold fs-4 my-4 text-center">There are no reservations...</div>
         }
     </div>
 }

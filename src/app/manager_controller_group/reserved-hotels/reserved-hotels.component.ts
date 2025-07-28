@@ -68,7 +68,9 @@ export class ReservedHotelsComponent implements OnInit {
 
     ngOnInit(): void {
         this.orderHotelsService.getAllOrderedHotels().then((r: boolean): void => {
-            this.isLoading.set(r);
+            if (!r) {
+                this.isLoading.set(r);
+            }
         });
         this.createSearchForm();
     }

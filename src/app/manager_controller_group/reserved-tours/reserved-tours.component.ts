@@ -39,7 +39,7 @@ export class ReservedToursComponent implements OnInit {
 
     private orderedTours: Signal<IOrderTour[]> = computed((): IOrderTour[] => this.store.orderedToursEntities());
     protected displayOrderedTours: WritableSignal<IOrderTour[] | null> = signal<IOrderTour[] | null>(null);
-    protected isLoading: WritableSignal<boolean> = signal<boolean>(false);
+    protected isLoading: WritableSignal<boolean> = signal<boolean>(true);
 
     private orderedBlock: Signal<ElementRef<HTMLTableSectionElement> | undefined> =
         viewChild<ElementRef<HTMLTableSectionElement>>("orderedToursBlock");
@@ -66,7 +66,9 @@ export class ReservedToursComponent implements OnInit {
 
     ngOnInit(): void {
         this.orderTourService.getAllOrderedTours().then((r: boolean): void => {
-            this.isLoading.set(r);
+            if (!r) {
+                this.isLoading.set(r);
+            }
         });
         this.createSearchForm();
     }
