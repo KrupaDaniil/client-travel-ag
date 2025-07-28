@@ -44,7 +44,7 @@ export class ReservedHotelsComponent implements OnInit {
     private readonly orderedHotels: Signal<IOrderHotels[]> = computed((): IOrderHotels[] => this.store.orderHotelsEntities());
 
     protected displayOrderHotels: WritableSignal<IOrderHotels[] | null> = signal<IOrderHotels[] | null>(null);
-    protected isLoading: WritableSignal<boolean> = signal<boolean>(false);
+    protected isLoading: WritableSignal<boolean> = signal<boolean>(true);
 
     protected page: number;
     protected displaySize: number;
